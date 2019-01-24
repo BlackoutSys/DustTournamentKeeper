@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DustTournamentKeeper", "DustTournamentKeeper\DustTournamentKeeper.csproj", "{3AFBB5AF-1727-4713-9278-4E228EE312D4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3AFBB5AF-1727-4713-9278-4E228EE312D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AFBB5AF-1727-4713-9278-4E228EE312D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AFBB5AF-1727-4713-9278-4E228EE312D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AFBB5AF-1727-4713-9278-4E228EE312D4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A75CAA74-B855-4B98-9352-41393573378E}
+	EndGlobalSection
+EndGlobal
