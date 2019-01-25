@@ -45,6 +45,7 @@ namespace DustTournamentKeeper
             }
 
             app.UseHttpsRedirection();
+            app.UseStatusCodePages();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
