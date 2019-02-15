@@ -9,7 +9,7 @@ namespace DustTournamentKeeper.Controllers
 {
     public class RankingsController : Controller
     {
-        private ITournamentRepository _repository;
+        private readonly ITournamentRepository _repository;
 
         public RankingsController(ITournamentRepository repository)
         {

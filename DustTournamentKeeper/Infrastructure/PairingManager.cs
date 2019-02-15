@@ -223,35 +223,34 @@ namespace DustTournamentKeeper.Infrastructure
                 var playerMatches = tournament.Round
                     .SelectMany(r => r.Match.Where(m => m.PlayerAid == player.Id || m.PlayerBid == player.Id));
 
+                // Check for bye
+                if (playerMatches.Any(pm => pm.PlayerAid == player.UserId && pm.PlayerBid == null))
+                {
+                    score.HadBye = true;
+                }
+
+                // Distinct list of boards player had played on
+                score.Boards = playerMatches.Select(pm => pm.BoardType).Distinct().ToList();
+
+                // Total score
                 foreach (var match in playerMatches)
                 {
+                    UserToTournament chosenPlayer = null;
                     var playerA = tournament.UserToTournament.FirstOrDefault(u => u.UserId == match.PlayerAid);
+                    var playerB = tournament.UserToTournament.FirstOrDefault(u => u.UserId == match.PlayerBid);
                     if (match.PlayerAid != player.UserId && !score.Opponents.Contains(playerA))
                     {
-                        score.Opponents.Add(playerA);
-                        score.TotalBigPoints += match.Bpa ?? 0;
-                        score.TotalSmallPoints += match.Spa ?? 0;
-                        score.TotalSoS += match.SoSa ?? 0;
+                        chosenPlayer = playerA;
+                    }
+                    else
+                    {
+                        chosenPlayer = playerB;
                     }
 
-                    var playerB = tournament.UserToTournament.FirstOrDefault(u => u.UserId == match.PlayerBid);
-                    if (match.PlayerBid != player.UserId && !score.Opponents.Contains(playerB))
-                    {
-                        score.Opponents.Add(playerB);
-                        score.TotalBigPoints += match.Bpb ?? 0;
-                        score.TotalSmallPoints += match.Spb ?? 0;
-                        score.TotalSoS += match.SoSb ?? 0;
-                    }
-
-                    if (match.PlayerAid == player.UserId && match.PlayerBid == null)
-                    {
-                        score.HadBye = true;
-                    }
-
-                    if (!score.Boards.Contains(match.BoardType))
-                    {
-                        score.Boards.Add(match.BoardType);
-                    }
+                    score.Opponents.Add(chosenPlayer);
+                    score.TotalBigPoints += match.Bpb ?? 0;
+                    score.TotalSmallPoints += match.Spb ?? 0;
+                    score.TotalSoS += match.SoSb ?? 0;
                 }
 
                 playerScores.Add(score);
