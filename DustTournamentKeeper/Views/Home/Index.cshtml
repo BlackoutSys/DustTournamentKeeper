@@ -1,6 +1,19 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<Game>
+
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["GameTitle"];
 }
 
-<h2>Home Page</h2>
+<h2>@Localizer["ChooseYourGame"]</h2>
+
+@foreach (var game in Model)
+{
+    <a asp-action="Index" asp-controller="Tournaments" asp-route-gameId="@game.Id">
+        <img src="@game.Logo" alt="@game.Name" />
+    </a>
+}
 

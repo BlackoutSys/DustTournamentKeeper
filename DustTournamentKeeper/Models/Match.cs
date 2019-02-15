@@ -17,6 +17,7 @@ namespace DustTournamentKeeper.Models
         public int? Spb { get; set; }
         public int? SoSa { get; set; }
         public int? SoSb { get; set; }
+        public int? BoardNumber { get; set; }
 
         public BoardType BoardType { get; set; }
         public User PlayerA { get; set; }

@@ -15,7 +15,7 @@ namespace DustTournamentKeeper.Models
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public virtual ICollection<BoardTypeToTournament> BoardTypeToTournament { get; set; }
-        public virtual ICollection<Match> Match { get; set; }
+        public ICollection<BoardTypeToTournament> BoardTypeToTournament { get; set; }
+        public ICollection<Match> Match { get; set; }
     }
 }

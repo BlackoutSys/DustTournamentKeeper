@@ -18,17 +18,20 @@ namespace DustTournamentKeeper.Models
         public virtual DbSet<BoardTypeToTournament> BoardTypeToTournament { get; set; }
         public virtual DbSet<Club> Club { get; set; }
         public virtual DbSet<Faction> Faction { get; set; }
+        public virtual DbSet<Game> Game { get; set; }
         public virtual DbSet<Match> Match { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<RoleToUser> RoleToUser { get; set; }
         public virtual DbSet<Round> Round { get; set; }
         public virtual DbSet<Tournament> Tournament { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<UserToTournament> UserToTournament { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=PPS026;Database=DustTournamentKeeper;Trusted_Connection=True;");
             }
         }
@@ -38,6 +41,8 @@ namespace DustTournamentKeeper.Models
             modelBuilder.Entity<Block>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.GameId).HasColumnName("GameID");
 
                 entity.Property(e => e.Icon)
                     .HasMaxLength(100)
@@ -55,6 +60,11 @@ namespace DustTournamentKeeper.Models
                 entity.Property(e => e.Slogan)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.Block)
+                    .HasForeignKey(d => d.GameId)
+                    .HasConstraintName("FK_Block_Game");
             });
 
             modelBuilder.Entity<BoardType>(entity =>
@@ -132,6 +142,8 @@ namespace DustTournamentKeeper.Models
 
                 entity.Property(e => e.BlockId).HasColumnName("BlockID");
 
+                entity.Property(e => e.GameId).HasColumnName("GameID");
+
                 entity.Property(e => e.Icon)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -153,6 +165,35 @@ namespace DustTournamentKeeper.Models
                     .WithMany(p => p.Faction)
                     .HasForeignKey(d => d.BlockId)
                     .HasConstraintName("FK_Faction_Block");
+
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.Faction)
+                    .HasForeignKey(d => d.GameId)
+                    .HasConstraintName("FK_Faction_Game");
+            });
+
+            modelBuilder.Entity<Game>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Description).IsUnicode(false);
+
+                entity.Property(e => e.Icon)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Logo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Slogan)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Match>(entity =>
@@ -293,6 +334,10 @@ namespace DustTournamentKeeper.Models
 
                 entity.Property(e => e.ClubId).HasColumnName("ClubID");
 
+                entity.Property(e => e.Country)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Created).HasColumnType("datetime");
 
                 entity.Property(e => e.DateEnd).HasColumnType("datetime");
@@ -303,9 +348,11 @@ namespace DustTournamentKeeper.Models
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
+                entity.Property(e => e.GameId).HasColumnName("GameID");
+
                 entity.Property(e => e.LastModified).HasColumnType("datetime");
 
-                entity.Property(e => e.OrganizatorId).HasColumnName("OrganizatorID");
+                entity.Property(e => e.OrganizerId).HasColumnName("OrganizerID");
 
                 entity.Property(e => e.Slogan)
                     .HasMaxLength(100)
@@ -330,9 +377,14 @@ namespace DustTournamentKeeper.Models
                     .HasForeignKey(d => d.ClubId)
                     .HasConstraintName("FK_Tournament_Club");
 
-                entity.HasOne(d => d.Organizator)
+                entity.HasOne(d => d.Game)
                     .WithMany(p => p.Tournament)
-                    .HasForeignKey(d => d.OrganizatorId)
+                    .HasForeignKey(d => d.GameId)
+                    .HasConstraintName("FK_Tournament_Game");
+
+                entity.HasOne(d => d.Organizer)
+                    .WithMany(p => p.Tournament)
+                    .HasForeignKey(d => d.OrganizerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Tournament_User");
             });
@@ -374,6 +426,52 @@ namespace DustTournamentKeeper.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Club)
+                    .WithMany(p => p.User)
+                    .HasForeignKey(d => d.ClubId)
+                    .HasConstraintName("FK_User_Club");
+            });
+
+            modelBuilder.Entity<UserToTournament>(entity =>
+            {
+                entity.ToTable("User_To_Tournament");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.BlockId).HasColumnName("BlockID");
+
+                entity.Property(e => e.Bp).HasColumnName("BP");
+
+                entity.Property(e => e.FactionId).HasColumnName("FactionID");
+
+                entity.Property(e => e.Sp).HasColumnName("SP");
+
+                entity.Property(e => e.TournamentId).HasColumnName("TournamentID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.Block)
+                    .WithMany(p => p.UserToTournament)
+                    .HasForeignKey(d => d.BlockId)
+                    .HasConstraintName("FK_User_To_Tournament_Block");
+
+                entity.HasOne(d => d.Faction)
+                    .WithMany(p => p.UserToTournament)
+                    .HasForeignKey(d => d.FactionId)
+                    .HasConstraintName("FK_User_To_Tournament_Faction");
+
+                entity.HasOne(d => d.Tournament)
+                    .WithMany(p => p.UserToTournament)
+                    .HasForeignKey(d => d.TournamentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_To_Tournament_Tournament");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserToTournament)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_To_Tournament_User");
             });
         }
     }

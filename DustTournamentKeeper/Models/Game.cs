@@ -3,23 +3,24 @@ using System.Collections.Generic;
 
 namespace DustTournamentKeeper.Models
 {
-    public partial class Club
+    public partial class Game
     {
-        public Club()
+        public Game()
         {
+            Block = new HashSet<Block>();
+            Faction = new HashSet<Faction>();
             Tournament = new HashSet<Tournament>();
-            User = new HashSet<User>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public string City { get; set; }
         public string Logo { get; set; }
         public string Icon { get; set; }
         public string Slogan { get; set; }
-        public string Address { get; set; }
+        public string Description { get; set; }
 
+        public ICollection<Block> Block { get; set; }
+        public ICollection<Faction> Faction { get; set; }
         public ICollection<Tournament> Tournament { get; set; }
-        public ICollection<User> User { get; set; }
     }
 }

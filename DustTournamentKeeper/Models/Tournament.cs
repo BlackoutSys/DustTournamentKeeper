@@ -9,6 +9,7 @@ namespace DustTournamentKeeper.Models
         {
             BoardTypeToTournament = new HashSet<BoardTypeToTournament>();
             Round = new HashSet<Round>();
+            UserToTournament = new HashSet<UserToTournament>();
         }
 
         public int Id { get; set; }
@@ -25,7 +26,7 @@ namespace DustTournamentKeeper.Models
         public int Rounds { get; set; }
         public int ArmyPoints { get; set; }
         public string SpecificRules { get; set; }
-        public int OrganizatorId { get; set; }
+        public int OrganizerId { get; set; }
         public DateTime Created { get; set; }
         public DateTime? LastModified { get; set; }
         public double Fee { get; set; }
@@ -33,10 +34,14 @@ namespace DustTournamentKeeper.Models
         public int? Bpwin { get; set; }
         public int? Bptie { get; set; }
         public int? Bploss { get; set; }
+        public string Country { get; set; }
+        public int? GameId { get; set; }
 
         public Club ClubNavigation { get; set; }
-        public User Organizator { get; set; }
+        public Game Game { get; set; }
+        public User Organizer { get; set; }
         public ICollection<BoardTypeToTournament> BoardTypeToTournament { get; set; }
         public ICollection<Round> Round { get; set; }
+        public ICollection<UserToTournament> UserToTournament { get; set; }
     }
 }
