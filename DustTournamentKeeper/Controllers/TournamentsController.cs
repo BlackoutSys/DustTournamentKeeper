@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DustTournamentKeeper.Infrastructure;
 using DustTournamentKeeper.Models;
+using DustTournamentKeeper.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -56,8 +57,10 @@ namespace DustTournamentKeeper.Controllers
                 .Include(t => t.ClubNavigation)
                 .Include(t => t.Organizer)
                 .Include(t => t.BoardTypeToTournament)
-                .Include(t => t.Round)
-                .Include(t => t.UserToTournament)
+                .Include(t => t.Round).ThenInclude(r => r.Match).ThenInclude(m => m.BoardType)
+                .Include(t => t.UserToTournament).ThenInclude(u => u.User)
+                .Include(t => t.UserToTournament).ThenInclude(u => u.Block)
+                .Include(t => t.UserToTournament).ThenInclude(u => u.Faction)
                 .FirstOrDefault(t => t.Id == id);
 
             if (tournament == null)
@@ -65,7 +68,7 @@ namespace DustTournamentKeeper.Controllers
                 return NotFound();
             }
 
-            return View(tournament);
+            return View("Details", new TournamentViewModel(tournament));
         }
 
         public IActionResult Create()
@@ -102,18 +105,18 @@ namespace DustTournamentKeeper.Controllers
             return Details(tournamentId);
         }
 
-        public IActionResult AssignPairsForFirstRound(int tournamentId)
+        public IActionResult AssignPairsForFirstRound(int id)
         {
-            var pairingSuccssfull = PairingManager.AssignPlayersForFirstRound(tournamentId, _repository);
+            var pairingSuccssfull = PairingManager.AssignPlayersForFirstRound(id, _repository);
 
-            return pairingSuccssfull ? Details(tournamentId) : View("Error");
+            return pairingSuccssfull ? Details(id) : View("Error");
         }
 
-        public IActionResult AssignPairsForNewRound(int tournamentId)
+        public IActionResult AssignPairsForNewRound(int id)
         {
-            var pairingSuccssfull = PairingManager.AssignPairsForNewRound(tournamentId, _repository);
+            var pairingSuccssfull = PairingManager.AssignPairsForNewRound(id, _repository);
 
-            return pairingSuccssfull ? Details(tournamentId) : View("Error");
+            return pairingSuccssfull ? Details(id) : View("Error");
         }
     }
 }

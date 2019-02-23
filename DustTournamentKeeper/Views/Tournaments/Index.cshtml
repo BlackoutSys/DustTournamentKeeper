@@ -35,7 +35,7 @@
             var club = tournament.ClubNavigation != null ? tournament.ClubNavigation.Name : tournament.Club;
             var fee = tournament.Fee + " " + tournament.FeeCurrency;
             <tr>
-                <th scope="row">@tournament.Title</th>
+                <th scope="row"><a asp-controller="Tournaments" asp-action="Details" asp-route-id="@tournament.Id">@tournament.Title</a></th>
                 <td>@tournament.Country</td>
                 <td>@tournament.City</td>
                 <td>@tournament.Address</td>

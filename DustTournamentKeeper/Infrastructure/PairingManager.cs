@@ -18,8 +18,9 @@ namespace DustTournamentKeeper.Infrastructure
         {
             // Prepare tournament data
             var tournament = repository.Tournaments
-                .Include(t => t.UserToTournament)
+                .Include(t => t.UserToTournament).ThenInclude(u => u.User)
                 .Include(t => t.Round)
+                .Include(t => t.BoardTypeToTournament)
                 .FirstOrDefault(t => t.Id == tournamentId);
             if (tournament == null)
             {

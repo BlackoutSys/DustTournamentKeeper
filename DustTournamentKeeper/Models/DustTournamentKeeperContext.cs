@@ -34,7 +34,6 @@ namespace DustTournamentKeeper.Models
                 optionsBuilder.UseSqlServer("Server=PPS026;Database=DustTournamentKeeper;Trusted_Connection=True;");
             }
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Block>(entity =>
