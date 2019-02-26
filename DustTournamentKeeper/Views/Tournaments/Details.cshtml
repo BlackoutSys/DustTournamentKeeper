@@ -7,7 +7,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@Model.Title</h2>
+<h2>@Model.Title</h2><a asp-controller="Tournaments" asp-action="Upsert" asp-route-id="@Model.Id">@Localizer["Edit"]</a><br />
+@if (!string.IsNullOrEmpty(Model.Slogan))
+{
+    <h3>@Model.Slogan</h3>
+}
 
 <div id="tournamentDetails" class="container">
     <div class="row">

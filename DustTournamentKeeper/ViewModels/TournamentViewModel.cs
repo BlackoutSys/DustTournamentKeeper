@@ -1,8 +1,8 @@
 ﻿using DustTournamentKeeper.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DustTournamentKeeper.ViewModels
 {
@@ -32,7 +32,26 @@ namespace DustTournamentKeeper.ViewModels
         public bool NextRoundAvailable { get; set; }
         public List<PlayerViewModel> PlayersList { get; set; }
 
+        public TournamentViewModel(int id, ITournamentRepository repository)
+        {
+            var tournament = repository.Tournaments
+                        .Include(t => t.ClubNavigation)
+                        .Include(t => t.Organizer)
+                        .Include(t => t.BoardTypeToTournament)
+                        .Include(t => t.Round).ThenInclude(r => r.Match).ThenInclude(m => m.BoardType)
+                        .Include(t => t.UserToTournament).ThenInclude(u => u.User)
+                        .Include(t => t.UserToTournament).ThenInclude(u => u.Block)
+                        .Include(t => t.UserToTournament).ThenInclude(u => u.Faction)
+                        .FirstOrDefault(t => t.Id == id);
+            PrepareViewModel(tournament);
+        }
+
         public TournamentViewModel(Tournament tournament)
+        {
+            PrepareViewModel(tournament);
+        }
+
+        private void PrepareViewModel(Tournament tournament)
         {
             Id = tournament.Id;
             DateStart = tournament.DateStart;
@@ -40,7 +59,7 @@ namespace DustTournamentKeeper.ViewModels
             Country = tournament.Country ?? "-";
             City = tournament.City ?? "-";
             Address = tournament.Address ?? "-";
-            Club = tournament?.ClubNavigation.Name ?? tournament.Club ?? "";
+            Club = tournament?.ClubNavigation?.Name ?? tournament?.Club ?? "";
             Title = tournament.Title ?? "-";
             Slogan = tournament.Slogan ?? "-";
             PlayerLimit = tournament.PlayerLimit.ToString();
@@ -52,7 +71,7 @@ namespace DustTournamentKeeper.ViewModels
             Bpwin = tournament?.Bpwin.ToString() ?? "-";
             Bptie = tournament?.Bptie.ToString() ?? "-";
             Bploss = tournament?.Bploss.ToString() ?? "-";
-            Organizer = tournament?.Organizer.Nickname ?? "-";
+            Organizer = tournament?.Organizer?.Nickname ?? "-";
 
             FirstRoundAvailable = tournament.Round.Count == 0;
             NextRoundAvailable = tournament.Round.Count < tournament.Rounds;

@@ -1,0 +1,170 @@
+﻿@model Tournament
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = " tournament";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@(Model.Id > 0 ? Localizer["EditTournament"] : Localizer["CreateTournament"])</h2>
+<p class="text-danger">@ViewData["ErrorMessage"]</p>
+
+<form asp-action="Upsert" method="post">
+    <div class="form-group">
+        <label>@Localizer["Title"]</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["Slogan"]</label>
+        <input asp-for="Slogan" class="form-control" />
+        <span asp-validation-for="Slogan"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["Status"]</label>
+        <input asp-for="Status" class="form-control" />
+        <span asp-validation-for="Status"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["DateStart"]</label>
+        <input asp-for="DateStart" class="form-control" />
+        <span asp-validation-for="DateStart"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["DateEnd"]</label>
+        <input asp-for="DateEnd" class="form-control" />
+        <span asp-validation-for="DateEnd"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["Country"]</label>
+        <input asp-for="Country" class="form-control" />
+        <span asp-validation-for="Country"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["City"]</label>
+        <input asp-for="City" class="form-control" />
+        <span asp-validation-for="City"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["Address"]</label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address"></span>
+    </div><div class="form-group">
+        <label>@Localizer["ClubText"]</label>
+        <input asp-for="Club" class="form-control" />
+        <span asp-validation-for="Club"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["ClubEntity"]</label>
+        <input asp-for="ClubId" class="form-control" />
+        <span asp-validation-for="ClubId"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["PlayerLimit"]</label>
+        <input asp-for="PlayerLimit" class="form-control" />
+        <span asp-validation-for="PlayerLimit"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["Rounds"]</label>
+        <input asp-for="Rounds" class="form-control" />
+        <span asp-validation-for="Rounds"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["ArmyPoints"]</label>
+        <input asp-for="ArmyPoints" class="form-control" />
+        <span asp-validation-for="ArmyPoints"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["SpecificRules"]</label>
+        <input asp-for="SpecificRules" class="form-control" />
+        <span asp-validation-for="SpecificRules"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["Organizer"]</label>
+        <input asp-for="OrganizerId" class="form-control" />
+        <span asp-validation-for="OrganizerId"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["Fee"]</label>
+        <input asp-for="Fee" class="form-control" />
+        <span asp-validation-for="Fee"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["FeeCurrency"]</label>
+        <input asp-for="FeeCurrency" class="form-control" />
+        <span asp-validation-for="FeeCurrency"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["Bpwin"]</label>
+        <input asp-for="Bpwin" class="form-control" />
+        <span asp-validation-for="Bpwin"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["Bptie"]</label>
+        <input asp-for="Bptie" class="form-control" />
+        <span asp-validation-for="Bptie"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["Bploss"]</label>
+        <input asp-for="Bploss" class="form-control" />
+        <span asp-validation-for="Bploss"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["Game"]</label>
+        <input asp-for="GameId" class="form-control" />
+        <span asp-validation-for="GameId"></span>
+    </div>
+
+    <p>@Localizer["Rounds"]</p>
+    @for (int i = 0; i < Model.Round.Count; i++)
+    {
+        <div class="row">
+            <p>@Localizer["Round"] @Model.Round[i].Number</p>
+            <label>@Localizer["Comment"]</label>
+            <input asp-for="@Model.Round[i].Comment" class="form-control" />
+            <span asp-validation-for="@Model.Round[i].Comment"></span>
+            <table class="table table-striped table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">@Localizer["PlayerA"]</th>
+                        <th scope="col">@Localizer["PlayerB"]</th>
+                        <th scope="col">@Localizer["Status"]</th>
+                        <th scope="col">@Localizer["BoardNumber"]</th>
+                        <th scope="col">@Localizer["BoardType"]</th>
+                        <th scope="col">@Localizer["Bpa"]</th>
+                        <th scope="col">@Localizer["Bpb"]</th>
+                        <th scope="col">@Localizer["Spa"]</th>
+                        <th scope="col">@Localizer["Spb"]</th>
+                        <th scope="col">@Localizer["SoSa"]</th>
+                        <th scope="col">@Localizer["SoSb"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var j = 0; j < Model.Round[i].Match.Count; j++)
+                    {
+                    <tr>
+                        <th scope="row"><input asp-for="@Model.Round[i].Match[j].PlayerAid" class="form-control" /></th>
+                        <td><input asp-for="@Model.Round[i].Match[j].PlayerBid" class="form-control" /></td>
+                        <td><input asp-for="@Model.Round[i].Match[j].Status" class="form-control" /></td>
+                        <td><input asp-for="@Model.Round[i].Match[j].BoardNumber" class="form-control" /></td>
+                        <td><input asp-for="@Model.Round[i].Match[j].BoardTypeId" class="form-control" /></td>
+                        <td><input asp-for="@Model.Round[i].Match[j].Bpa" class="form-control" /></td>
+                        <td><input asp-for="@Model.Round[i].Match[j].Bpb" class="form-control" /></td>
+                        <td><input asp-for="@Model.Round[i].Match[j].Spa" class="form-control" /></td>
+                        <td><input asp-for="@Model.Round[i].Match[j].Spb" class="form-control" /></td>
+                        <td><input asp-for="@Model.Round[i].Match[j].SoSa" class="form-control" /></td>
+                        <td><input asp-for="@Model.Round[i].Match[j].SoSb" class="form-control" /></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="text-center">
+        <input class="btn btn-primary" type="submit" value="@Localizer["Save"]" />
+        <a class="btn btn-primary" asp-controller="Tournaments" asp-action="Index">@Localizer["Discard"]</a>
+    </div>
+</form>
+

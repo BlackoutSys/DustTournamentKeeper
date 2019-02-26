@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DustTournamentKeeper.Models
 {
@@ -248,6 +246,39 @@ namespace DustTournamentKeeper.Models
             _context.SaveChanges();
         }
 
+        public void UpdateDeep(Round round, Round newRound)
+        {
+            round.Comment = newRound.Comment;
+            round.Number = newRound.Number;
+            round.TournamentId = newRound.TournamentId;
+
+            var matches = round.Match.ToList();
+            var newMatches = newRound.Match.ToList();
+
+            for (var i = 0; i < round.Match.Count; i++)
+            {
+                var match = matches[i];
+                var newMatch = newMatches[i];
+
+                match.BoardNumber = newMatch.BoardNumber;
+                match.BoardTypeId = newMatch.BoardTypeId;
+                match.Bpa = newMatch.Bpa;
+                match.Bpb = newMatch.Bpb;
+                match.Spa = newMatch.Spa;
+                match.Spa = newMatch.Spa;
+                match.Spb = newMatch.Spb;
+                match.SoSa = newMatch.SoSa;
+                match.SoSb = newMatch.SoSb;
+                match.PlayerAid = newMatch.PlayerAid;
+                match.PlayerBid = newMatch.PlayerBid;
+                match.Status = newMatch.Status;
+            }
+
+            round.Match = matches;
+
+            _context.SaveChanges();
+        }
+
         public void Update(Tournament tournament, Tournament newTournament)
         {
             tournament.Address = newTournament.Address;
@@ -273,6 +304,30 @@ namespace DustTournamentKeeper.Models
             tournament.Title = newTournament.Title;
 
             tournament.LastModified = DateTime.UtcNow;
+
+            for (var i = 0; i < tournament.Round.Count; i++)
+            {
+                tournament.Round[i].Comment = newTournament.Round[i].Comment;
+                tournament.Round[i].Number = newTournament.Round[i].Number;
+
+                for (var j = 0; j < tournament.Round[i].Match.Count; j++)
+                {
+                    tournament.Round[i].Match[j].BoardNumber = newTournament.Round[i].Match[j].BoardNumber;
+                    tournament.Round[i].Match[j].BoardTypeId = newTournament.Round[i].Match[j].BoardTypeId;
+                    tournament.Round[i].Match[j].Bpa = newTournament.Round[i].Match[j].Bpa;
+                    tournament.Round[i].Match[j].Bpb = newTournament.Round[i].Match[j].Bpb;
+                    tournament.Round[i].Match[j].Spa = newTournament.Round[i].Match[j].Spa;
+                    tournament.Round[i].Match[j].Spa = newTournament.Round[i].Match[j].Spa;
+                    tournament.Round[i].Match[j].Spb = newTournament.Round[i].Match[j].Spb;
+                    tournament.Round[i].Match[j].SoSa = newTournament.Round[i].Match[j].SoSa;
+                    tournament.Round[i].Match[j].SoSb = newTournament.Round[i].Match[j].SoSb;
+                    tournament.Round[i].Match[j].PlayerAid = newTournament.Round[i].Match[j].PlayerAid;
+                    tournament.Round[i].Match[j].PlayerBid = newTournament.Round[i].Match[j].PlayerBid;
+                    tournament.Round[i].Match[j].Status = newTournament.Round[i].Match[j].Status;
+                }
+            }
+
+            _context.SaveChanges();
         }
 
         public void Update(User user, User newUser)

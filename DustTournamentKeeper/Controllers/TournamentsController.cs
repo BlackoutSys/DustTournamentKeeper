@@ -71,9 +71,54 @@ namespace DustTournamentKeeper.Controllers
             return View("Details", new TournamentViewModel(tournament));
         }
 
-        public IActionResult Create()
+        public ViewResult Upsert(int id)
         {
-            return View();
+            var tournament = _repository.Tournaments
+                .Include(t => t.ClubNavigation)
+                .Include(t => t.Organizer)
+                .Include(t => t.BoardTypeToTournament)
+                .Include(t => t.Round).ThenInclude(r => r.Match).ThenInclude(m => m.BoardType)
+                .Include(t => t.UserToTournament).ThenInclude(u => u.User)
+                .Include(t => t.UserToTournament).ThenInclude(u => u.Block)
+                .Include(t => t.UserToTournament).ThenInclude(u => u.Faction)
+                .FirstOrDefault(t => t.Id == id);
+
+            return View(tournament ?? new Tournament()
+                {
+                    GameId = HttpContext.Session.GetInt32("GameSystemId")
+                    // OrganizerId = current user
+                });
+        }
+
+        [HttpPost]
+        public IActionResult Upsert(Tournament tournament)
+        {
+            if (ModelState.IsValid)
+            {
+                if (tournament.Id > 0)
+                {
+                    var oldTournament = _repository.Tournaments
+                        .Include(t => t.ClubNavigation)
+                        .Include(t => t.Organizer)
+                        .Include(t => t.BoardTypeToTournament)
+                        .Include(t => t.Round).ThenInclude(r => r.Match).ThenInclude(m => m.BoardType)
+                        .Include(t => t.UserToTournament).ThenInclude(u => u.User)
+                        .Include(t => t.UserToTournament).ThenInclude(u => u.Block)
+                        .Include(t => t.UserToTournament).ThenInclude(u => u.Faction)
+                        .FirstOrDefault(t => t.Id == tournament.Id);
+                    _repository.Update(oldTournament, tournament);
+                }
+                else
+                {
+                    _repository.Add(tournament);
+                }
+
+                return View("Details", new TournamentViewModel(tournament.Id, _repository));
+            }
+            else
+            {
+                return View(tournament);
+            }
         }
 
         public IActionResult RegisterUserToTournament(int tournamentId, int userId)

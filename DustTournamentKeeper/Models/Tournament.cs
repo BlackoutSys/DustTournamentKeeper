@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace DustTournamentKeeper.Models
 {
-    public partial class Tournament
+    public class Tournament
     {
         public Tournament()
         {
-            BoardTypeToTournament = new HashSet<BoardTypeToTournament>();
-            Round = new HashSet<Round>();
-            UserToTournament = new HashSet<UserToTournament>();
+            BoardTypeToTournament = new List<BoardTypeToTournament>();
+            Round = new List<Round>();
+            UserToTournament = new List<UserToTournament>();
         }
 
         public int Id { get; set; }
@@ -40,8 +40,8 @@ namespace DustTournamentKeeper.Models
         public Club ClubNavigation { get; set; }
         public Game Game { get; set; }
         public User Organizer { get; set; }
-        public ICollection<BoardTypeToTournament> BoardTypeToTournament { get; set; }
-        public ICollection<Round> Round { get; set; }
-        public ICollection<UserToTournament> UserToTournament { get; set; }
+        public IList<BoardTypeToTournament> BoardTypeToTournament { get; set; }
+        public IList<Round> Round { get; set; }
+        public IList<UserToTournament> UserToTournament { get; set; }
     }
 }
