@@ -1,4 +1,5 @@
-﻿using DustTournamentKeeper.Models;
+﻿using DustTournamentKeeper.Infrastructure;
+using DustTournamentKeeper.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -30,28 +31,29 @@ namespace DustTournamentKeeper.ViewModels
         public List<RoundViewModel> RoundsList { get; set; }
         public bool FirstRoundAvailable { get; set; }
         public bool NextRoundAvailable { get; set; }
+        public bool FinishAvailable { get; set; }
         public List<PlayerViewModel> PlayersList { get; set; }
 
-        public TournamentViewModel(int id, ITournamentRepository repository)
+        public TournamentViewModel(int id, ITournamentRepository repository, bool userIsOrganizer)
         {
             var tournament = repository.Tournaments
                         .Include(t => t.ClubNavigation)
                         .Include(t => t.Organizer)
-                        .Include(t => t.BoardTypeToTournament)
-                        .Include(t => t.Round).ThenInclude(r => r.Match).ThenInclude(m => m.BoardType)
-                        .Include(t => t.UserToTournament).ThenInclude(u => u.User)
-                        .Include(t => t.UserToTournament).ThenInclude(u => u.Block)
-                        .Include(t => t.UserToTournament).ThenInclude(u => u.Faction)
+                        .Include(t => t.TournamentBoardTypes)
+                        .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches).ThenInclude(m => m.BoardType)
+                        .Include(t => t.TournamentUsers).ThenInclude(u => u.User)
+                        .Include(t => t.TournamentUsers).ThenInclude(u => u.Block)
+                        .Include(t => t.TournamentUsers).ThenInclude(u => u.Faction)
                         .FirstOrDefault(t => t.Id == id);
-            PrepareViewModel(tournament);
+            PrepareViewModel(tournament, userIsOrganizer);
         }
 
-        public TournamentViewModel(Tournament tournament)
+        public TournamentViewModel(Tournament tournament, bool userIsOrganizer)
         {
-            PrepareViewModel(tournament);
+            PrepareViewModel(tournament, userIsOrganizer);
         }
 
-        private void PrepareViewModel(Tournament tournament)
+        private void PrepareViewModel(Tournament tournament, bool userIsOrganizer)
         {
             Id = tournament.Id;
             DateStart = tournament.DateStart;
@@ -71,19 +73,20 @@ namespace DustTournamentKeeper.ViewModels
             Bpwin = tournament?.Bpwin.ToString() ?? "-";
             Bptie = tournament?.Bptie.ToString() ?? "-";
             Bploss = tournament?.Bploss.ToString() ?? "-";
-            Organizer = tournament?.Organizer?.Nickname ?? "-";
+            Organizer = tournament?.Organizer?.UserName ?? "-";
 
-            FirstRoundAvailable = tournament.Round.Count == 0;
-            NextRoundAvailable = tournament.Round.Count < tournament.Rounds;
+            FirstRoundAvailable = userIsOrganizer && tournament.RoundsNavigation.Count == 0;
+            NextRoundAvailable = userIsOrganizer && tournament.RoundsNavigation.Count < tournament.Rounds;
+            FinishAvailable = userIsOrganizer && tournament.Status == nameof(TournamentStatus.Ongoing);
 
             RoundsList = new List<RoundViewModel>();
-            foreach (var round in tournament.Round)
+            foreach (var round in tournament.RoundsNavigation)
             {
                 RoundsList.Add(new RoundViewModel(round));
             }
 
             PlayersList = new List<PlayerViewModel>();
-            foreach (var player in tournament.UserToTournament)
+            foreach (var player in tournament.TournamentUsers)
             {
                 PlayersList.Add(new PlayerViewModel(player));
             }

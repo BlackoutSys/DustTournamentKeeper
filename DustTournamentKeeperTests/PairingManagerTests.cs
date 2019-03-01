@@ -48,7 +48,7 @@ namespace DustTournamentKeeper.Tests
                 ClubId = club1.Id,
                 Email = "email1",
                 Name = "Name1",
-                Nickname = "Nickname1",
+                UserName = "Nickname1",
                 Country = "Country1",
                 Surname = "Surname1"
             };
@@ -58,7 +58,7 @@ namespace DustTournamentKeeper.Tests
                 City = "City1",
                 Email = "email2",
                 Name = "Name2",
-                Nickname = "Nickname2",
+                UserName = "Nickname2",
                 Country = "Country1",
                 Surname = "Surname2"
             };
@@ -68,7 +68,7 @@ namespace DustTournamentKeeper.Tests
                 City = "City2",
                 Email = "email3",
                 Name = "Name3",
-                Nickname = "Nickname3",
+                UserName = "Nickname3",
                 Country = "Country1",
                 Surname = "Surname3"
             };
@@ -79,7 +79,7 @@ namespace DustTournamentKeeper.Tests
                 ClubId = club2.Id,
                 Email = "email4",
                 Name = "Name4",
-                Nickname = "Nickname4",
+                UserName = "Nickname4",
                 Country = "Country1",
                 Surname = "Surname4"
             };
@@ -90,7 +90,7 @@ namespace DustTournamentKeeper.Tests
                 ClubId = club2.Id,
                 Email = "email5",
                 Name = "Name5",
-                Nickname = "Nickname5",
+                UserName = "Nickname5",
                 Country = "Country1",
                 Surname = "Surname5"
             };
@@ -100,7 +100,7 @@ namespace DustTournamentKeeper.Tests
                 City = "City3",
                 Email = "email6",
                 Name = "Name6",
-                Nickname = "Nickname6",
+                UserName = "Nickname6",
                 Country = "Country1",
                 Surname = "Surname6"
             };
@@ -209,7 +209,7 @@ namespace DustTournamentKeeper.Tests
 
             _dataRepository.Add(tournament);
 
-            var userToTournament1 = new UserToTournament()
+            var userToTournament1 = new TournamentUser()
             {
                 UserId = user1.Id,
                 TournamentId = tournament.Id,
@@ -217,7 +217,7 @@ namespace DustTournamentKeeper.Tests
                 FactionId = faction1.Id
             };
 
-            var userToTournament2 = new UserToTournament()
+            var userToTournament2 = new TournamentUser()
             {
                 UserId = user2.Id,
                 TournamentId = tournament.Id,
@@ -225,7 +225,7 @@ namespace DustTournamentKeeper.Tests
                 FactionId = faction1.Id
             };
 
-            var userToTournament3 = new UserToTournament()
+            var userToTournament3 = new TournamentUser()
             {
                 UserId = user3.Id,
                 TournamentId = tournament.Id,
@@ -233,7 +233,7 @@ namespace DustTournamentKeeper.Tests
                 FactionId = faction2.Id
             };
 
-            var userToTournament4 = new UserToTournament()
+            var userToTournament4 = new TournamentUser()
             {
                 UserId = user4.Id,
                 TournamentId = tournament.Id,
@@ -241,14 +241,14 @@ namespace DustTournamentKeeper.Tests
                 FactionId = faction2.Id
             };
 
-            var userToTournament5 = new UserToTournament()
+            var userToTournament5 = new TournamentUser()
             {
                 UserId = user5.Id,
                 TournamentId = tournament.Id,
                 BlockId = block2.Id
             };
 
-            var userToTournament6 = new UserToTournament()
+            var userToTournament6 = new TournamentUser()
             {
                 UserId = user6.Id,
                 TournamentId = tournament.Id,
@@ -262,21 +262,21 @@ namespace DustTournamentKeeper.Tests
             _dataRepository.Add(userToTournament5);
             _dataRepository.Add(userToTournament6);
 
-            var boardToTournament1 = new BoardTypeToTournament()
+            var boardToTournament1 = new TournamentBoardType()
             {
                 BoardTypeId = board1.Id,
                 TournamentId = tournament.Id,
                 Number = 1
             };
 
-            var boardToTournament2 = new BoardTypeToTournament()
+            var boardToTournament2 = new TournamentBoardType()
             {
                 BoardTypeId = board1.Id,
                 TournamentId = tournament.Id,
                 Number = 2
             };
 
-            var boardToTournament3 = new BoardTypeToTournament()
+            var boardToTournament3 = new TournamentBoardType()
             {
                 BoardTypeId = board2.Id,
                 TournamentId = tournament.Id,
@@ -368,7 +368,7 @@ namespace DustTournamentKeeper.Tests
             Assert.Equal(3, matchesInRound.Count);
 
             var playerProfiles = new Dictionary<int, Tuple<int?, int?>>();
-            foreach (var utt in _dataRepository.UsersToTournaments.Where(u => u.TournamentId == 1))
+            foreach (var utt in _dataRepository.TournamentUsers.Where(u => u.TournamentId == 1))
             {
                 playerProfiles.Add(utt.UserId, new Tuple<int?, int?>(utt.BlockId, utt.FactionId));
             }
@@ -405,7 +405,7 @@ namespace DustTournamentKeeper.Tests
             Assert.Equal(3, matchesInRound.Count);
 
             var playerProfiles = new Dictionary<int, Tuple<int?, int?>>();
-            foreach(var utt in _dataRepository.UsersToTournaments.Where(u => u.TournamentId == tournamentId))
+            foreach(var utt in _dataRepository.TournamentUsers.Where(u => u.TournamentId == tournamentId))
             {
                 playerProfiles.Add(utt.UserId, new Tuple<int?, int?>(utt.BlockId, utt.FactionId));
             }

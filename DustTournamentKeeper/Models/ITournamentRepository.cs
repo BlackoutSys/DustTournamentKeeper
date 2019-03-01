@@ -16,10 +16,9 @@ namespace DustTournamentKeeper.Models
         IQueryable<Round> Rounds { get; }
         IQueryable<Tournament> Tournaments { get; }
         IQueryable<User> Users { get; }
-        IQueryable<UserToTournament> UsersToTournaments { get; }
+        IQueryable<TournamentUser> TournamentUsers { get; }
         IQueryable<Game> Games { get; }
-        IQueryable<BoardTypeToTournament> BoardTypeToTournaments { get; }
-
+        IQueryable<TournamentBoardType> TournamentBoardTypes { get; }
 
         void Add(Block block);
         void Update(Block block, Block newBlock);
@@ -57,16 +56,16 @@ namespace DustTournamentKeeper.Models
         void Update(User user, User newUser);
         void Delete(User user);
 
-        void Add(UserToTournament userToTournament);
-        void Update(UserToTournament userToTournament, UserToTournament newUserToTournament);
-        void Delete(UserToTournament userToTournament);
+        void Add(TournamentUser tournamentUser);
+        void Update(TournamentUser tournamentUser, TournamentUser newTournamentUser);
+        void Delete(TournamentUser tournamentUser);
 
         void Add(Game game);
         void Update(Game game, Game newGame);
         void Delete(Game game);
 
-        void Add(BoardTypeToTournament boardTypeToTournament);
-        void Update(BoardTypeToTournament boardTypeToTournament, BoardTypeToTournament newBoardTypeToTournament);
-        void Delete(BoardTypeToTournament boardTypeToTournament);
+        void Add(TournamentBoardType tournamentBoardType);
+        void Update(TournamentBoardType tournamentBoardType, TournamentBoardType newTournamentBoardType);
+        void Delete(TournamentBoardType tournamentBoardType);
     }
 }

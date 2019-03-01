@@ -18,9 +18,9 @@ namespace DustTournamentKeeper.Infrastructure
         {
             // Prepare tournament data
             var tournament = repository.Tournaments
-                .Include(t => t.UserToTournament).ThenInclude(u => u.User)
-                .Include(t => t.Round)
-                .Include(t => t.BoardTypeToTournament)
+                .Include(t => t.TournamentUsers).ThenInclude(u => u.User)
+                .Include(t => t.RoundsNavigation)
+                .Include(t => t.TournamentBoardTypes)
                 .FirstOrDefault(t => t.Id == tournamentId);
             if (tournament == null)
             {
@@ -31,19 +31,19 @@ namespace DustTournamentKeeper.Infrastructure
             var round = new Round()
             {
                 TournamentId = tournament.Id,
-                Number = tournament.Round.Count + 1
+                Number = tournament.RoundsNavigation.Count + 1
             };
             repository.Add(round);
 
-            var availablePlayers = tournament.UserToTournament.ToList();
-            var availableBoards = tournament.BoardTypeToTournament.ToList();
-            var pairings = new List<Tuple<int, int, BoardTypeToTournament>>();
+            var availablePlayers = tournament.TournamentUsers.ToList();
+            var availableBoards = tournament.TournamentBoardTypes.ToList();
+            var pairings = new List<Tuple<int, int, TournamentBoardType>>();
 
             var rand = new Random();
             while (availablePlayers.Count > 1)
             {
                 var playerA = availablePlayers[0];
-                UserToTournament playerB;
+                TournamentUser playerB;
 
                 var playersUniqueLevel3 = availablePlayers
                     .Where(ap => ap.User.City != playerA.User.City
@@ -81,7 +81,7 @@ namespace DustTournamentKeeper.Infrastructure
                     playerB = availablePlayers[index];
                 }
 
-                BoardTypeToTournament chosenBoard = availableBoards[0];
+                TournamentBoardType chosenBoard = availableBoards[0];
                 availableBoards.Remove(chosenBoard);
 
                 pairings.Add(Tuple.Create(playerA.UserId, playerB.UserId, chosenBoard));
@@ -93,7 +93,7 @@ namespace DustTournamentKeeper.Infrastructure
             // Assign bye
             if (availablePlayers.Count == 1)
             {
-                pairings.Add(Tuple.Create(availablePlayers[0].UserId, 0, new BoardTypeToTournament()));
+                pairings.Add(Tuple.Create(availablePlayers[0].UserId, 0, new TournamentBoardType()));
             }
 
             // Create Match entities
@@ -130,8 +130,8 @@ namespace DustTournamentKeeper.Infrastructure
         {
             // Prepare tournament data
             var tournament = repository.Tournaments
-                .Include(t => t.UserToTournament)
-                .Include(t => t.Round)
+                .Include(t => t.TournamentUsers)
+                .Include(t => t.RoundsNavigation)
                 .FirstOrDefault(t => t.Id == tournamentId);
             if (tournament == null)
             {
@@ -142,7 +142,7 @@ namespace DustTournamentKeeper.Infrastructure
             var round = new Round()
             {
                 TournamentId = tournament.Id,
-                Number = tournament.Round.Count + 1
+                Number = tournament.RoundsNavigation.Count + 1
             };
             repository.Add(round);
 
@@ -151,10 +151,10 @@ namespace DustTournamentKeeper.Infrastructure
 
             // Assign pairs and boards
             var pairings = new List<Tuple<int, int, int>>();
-            var availableBoards = tournament.BoardTypeToTournament.ToList();
+            var availableBoards = tournament.TournamentBoardTypes.ToList();
             for (int i = 0; playerScoresSorted.Count > 1;)
             {
-                BoardTypeToTournament chosenBoard = null;
+                TournamentBoardType chosenBoard = null;
 
                 var playerA = playerScoresSorted[i];
                 var playerB = playerScoresSorted[i + 1];
@@ -217,12 +217,12 @@ namespace DustTournamentKeeper.Infrastructure
         public static List<PlayersTournamentScore> CalculatePlayersScores(Tournament tournament)
         {
             var playerScores = new List<PlayersTournamentScore>();
-            foreach (var player in tournament.UserToTournament)
+            foreach (var player in tournament.TournamentUsers)
             {
                 var score = new PlayersTournamentScore(player);
 
-                var playerMatches = tournament.Round
-                    .SelectMany(r => r.Match.Where(m => m.PlayerAid == player.Id || m.PlayerBid == player.Id));
+                var playerMatches = tournament.RoundsNavigation
+                    .SelectMany(r => r.Matches.Where(m => m.PlayerAid == player.Id || m.PlayerBid == player.Id));
 
                 // Check for bye
                 if (playerMatches.Any(pm => pm.PlayerAid == player.UserId && pm.PlayerBid == null))
@@ -236,9 +236,9 @@ namespace DustTournamentKeeper.Infrastructure
                 // Total score
                 foreach (var match in playerMatches)
                 {
-                    UserToTournament chosenPlayer = null;
-                    var playerA = tournament.UserToTournament.FirstOrDefault(u => u.UserId == match.PlayerAid);
-                    var playerB = tournament.UserToTournament.FirstOrDefault(u => u.UserId == match.PlayerBid);
+                    TournamentUser chosenPlayer = null;
+                    var playerA = tournament.TournamentUsers.FirstOrDefault(u => u.UserId == match.PlayerAid);
+                    var playerB = tournament.TournamentUsers.FirstOrDefault(u => u.UserId == match.PlayerBid);
                     if (match.PlayerAid != player.UserId && !score.Opponents.Contains(playerA))
                     {
                         chosenPlayer = playerA;
@@ -254,11 +254,14 @@ namespace DustTournamentKeeper.Infrastructure
                     score.TotalSoS += match.SoSb ?? 0;
                 }
 
+                score.BonusPoints = player.BonusPoints ?? 0;
+                score.PenaltyPoints = player.PenaltyPoints ?? 0;
+
                 playerScores.Add(score);
             }
 
-            // Sort players by their score - BP, SP, SoS, Bye
-            return playerScores.OrderByDescending(ps => ps.TotalBigPoints)
+            // Sort players by their score - BP + Bonus - Penalty, SP, SoS, Bye
+            return playerScores.OrderByDescending(ps => ps.TotalBigPoints + ps.BonusPoints - ps.PenaltyPoints)
                 .ThenByDescending(ps => ps.TotalSmallPoints)
                 .ThenByDescending(ps => ps.TotalSoS)
                 .ThenByDescending(ps => ps.HadBye)
@@ -275,7 +278,7 @@ namespace DustTournamentKeeper.Infrastructure
         {
             // Prepare player profiles for quick lookups
             var playerProfiles = new Dictionary<int, Tuple<int?, int?>>();
-            foreach (var utt in repository.UsersToTournaments.Where(u => u.TournamentId == tournamentId))
+            foreach (var utt in repository.TournamentUsers.Where(u => u.TournamentId == tournamentId))
             {
                 playerProfiles.Add(utt.UserId, new Tuple<int?, int?>(utt.BlockId, utt.FactionId));
             }

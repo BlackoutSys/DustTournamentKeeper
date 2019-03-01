@@ -1,27 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DustTournamentKeeper.Infrastructure;
+﻿using DustTournamentKeeper.Infrastructure;
 using DustTournamentKeeper.Models;
 using DustTournamentKeeper.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace DustTournamentKeeper.Controllers
 {
+    [Authorize]
     public class TournamentsController : Controller
     {
         private readonly ITournamentRepository _repository;
         private readonly IStringLocalizer<TournamentsController> _localizer;
+        private readonly UserManager<User> _userManager;
 
-        public TournamentsController(ITournamentRepository repository, IStringLocalizer<TournamentsController> localizer)
+        public TournamentsController(ITournamentRepository repository, IStringLocalizer<TournamentsController> localizer, UserManager<User> userManager)
         {
             _repository = repository;
             _localizer = localizer;
+            _userManager = userManager;
         }
 
+        [AllowAnonymous]
         public IActionResult Index(int gameId)
         {
             var gameIdInSession = HttpContext.Session.GetInt32("GameSystemId");
@@ -46,7 +52,8 @@ namespace DustTournamentKeeper.Controllers
                 .ToList());
         }
 
-        public IActionResult Details(int? id)
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -56,11 +63,11 @@ namespace DustTournamentKeeper.Controllers
             var tournament = _repository.Tournaments
                 .Include(t => t.ClubNavigation)
                 .Include(t => t.Organizer)
-                .Include(t => t.BoardTypeToTournament)
-                .Include(t => t.Round).ThenInclude(r => r.Match).ThenInclude(m => m.BoardType)
-                .Include(t => t.UserToTournament).ThenInclude(u => u.User)
-                .Include(t => t.UserToTournament).ThenInclude(u => u.Block)
-                .Include(t => t.UserToTournament).ThenInclude(u => u.Faction)
+                .Include(t => t.TournamentBoardTypes)
+                .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches).ThenInclude(m => m.BoardType)
+                .Include(t => t.TournamentUsers).ThenInclude(u => u.User)
+                .Include(t => t.TournamentUsers).ThenInclude(u => u.Block)
+                .Include(t => t.TournamentUsers).ThenInclude(u => u.Faction)
                 .FirstOrDefault(t => t.Id == id);
 
             if (tournament == null)
@@ -68,26 +75,32 @@ namespace DustTournamentKeeper.Controllers
                 return NotFound();
             }
 
-            return View("Details", new TournamentViewModel(tournament));
+            var currentUserName = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            User user = await _userManager.FindByNameAsync(currentUserName);
+
+            return View("Details", new TournamentViewModel(tournament, user.Id == tournament.OrganizerId));
         }
 
-        public ViewResult Upsert(int id)
+        public async Task<ViewResult> Upsert(int? id)
         {
             var tournament = _repository.Tournaments
                 .Include(t => t.ClubNavigation)
                 .Include(t => t.Organizer)
-                .Include(t => t.BoardTypeToTournament)
-                .Include(t => t.Round).ThenInclude(r => r.Match).ThenInclude(m => m.BoardType)
-                .Include(t => t.UserToTournament).ThenInclude(u => u.User)
-                .Include(t => t.UserToTournament).ThenInclude(u => u.Block)
-                .Include(t => t.UserToTournament).ThenInclude(u => u.Faction)
+                .Include(t => t.TournamentBoardTypes)
+                .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches).ThenInclude(m => m.BoardType)
+                .Include(t => t.TournamentUsers).ThenInclude(u => u.User)
+                .Include(t => t.TournamentUsers).ThenInclude(u => u.Block)
+                .Include(t => t.TournamentUsers).ThenInclude(u => u.Faction)
                 .FirstOrDefault(t => t.Id == id);
+
+            var currentUserName = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            User user = await _userManager.FindByNameAsync(currentUserName);
 
             return View(tournament ?? new Tournament()
                 {
-                    GameId = HttpContext.Session.GetInt32("GameSystemId")
-                    // OrganizerId = current user
-                });
+                    GameId = HttpContext.Session.GetInt32("GameSystemId"),
+                    OrganizerId = user.Id
+            });
         }
 
         [HttpPost]
@@ -100,11 +113,11 @@ namespace DustTournamentKeeper.Controllers
                     var oldTournament = _repository.Tournaments
                         .Include(t => t.ClubNavigation)
                         .Include(t => t.Organizer)
-                        .Include(t => t.BoardTypeToTournament)
-                        .Include(t => t.Round).ThenInclude(r => r.Match).ThenInclude(m => m.BoardType)
-                        .Include(t => t.UserToTournament).ThenInclude(u => u.User)
-                        .Include(t => t.UserToTournament).ThenInclude(u => u.Block)
-                        .Include(t => t.UserToTournament).ThenInclude(u => u.Faction)
+                        .Include(t => t.TournamentBoardTypes)
+                        .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches).ThenInclude(m => m.BoardType)
+                        .Include(t => t.TournamentUsers).ThenInclude(u => u.User)
+                        .Include(t => t.TournamentUsers).ThenInclude(u => u.Block)
+                        .Include(t => t.TournamentUsers).ThenInclude(u => u.Faction)
                         .FirstOrDefault(t => t.Id == tournament.Id);
                     _repository.Update(oldTournament, tournament);
                 }
@@ -113,7 +126,7 @@ namespace DustTournamentKeeper.Controllers
                     _repository.Add(tournament);
                 }
 
-                return View("Details", new TournamentViewModel(tournament.Id, _repository));
+                return RedirectToAction("Details", tournament.Id);
             }
             else
             {
@@ -121,47 +134,71 @@ namespace DustTournamentKeeper.Controllers
             }
         }
 
-        public IActionResult RegisterUserToTournament(int tournamentId, int userId)
+        public IActionResult Finish(int id)
+        {
+            var tournament = _repository.Tournaments.FirstOrDefault(t => t.Id == id);
+            var newTournament = _repository.Tournaments.FirstOrDefault(t => t.Id == id);
+
+            if (tournament != null)
+            {
+                tournament.Status = "Finished";
+                _repository.Update(tournament, newTournament);
+                return RedirectToAction("Details", new { id });
+            }
+
+            return NotFound();
+        }
+
+        public async Task<IActionResult> RegisterUserToTournament(int tournamentId)
         {
             var tournament = _repository.Tournaments
-                .Include(t => t.UserToTournament)
+                .Include(t => t.TournamentUsers)
                 .FirstOrDefault(t => t.Id == tournamentId);
             if (tournament == null)
             {
                 return NotFound();
             }
 
-            var user = _repository.Users.FirstOrDefault(u => u.Id == userId);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            var currentUserName = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            User user = await _userManager.FindByNameAsync(currentUserName);
 
-            if (!tournament.UserToTournament.Any(utt => utt.UserId == userId))
+            if (!tournament.TournamentUsers.Any(utt => utt.UserId == user.Id))
             {
-                _repository.Add(new UserToTournament()
+                _repository.Add(new TournamentUser()
                     {
                         TournamentId = tournamentId,
-                        UserId = userId
+                        UserId = user.Id
                     }
                 );
             }
 
-            return Details(tournamentId);
+            return RedirectToAction("Details", new { id = tournamentId });
         }
 
         public IActionResult AssignPairsForFirstRound(int id)
         {
             var pairingSuccssfull = PairingManager.AssignPlayersForFirstRound(id, _repository);
 
-            return pairingSuccssfull ? Details(id) : View("Error");
+            if (pairingSuccssfull)
+            {
+                return RedirectToAction("Details", new { id });
+            }
+
+            return View("Error");
         }
 
         public IActionResult AssignPairsForNewRound(int id)
         {
             var pairingSuccssfull = PairingManager.AssignPairsForNewRound(id, _repository);
 
-            return pairingSuccssfull ? Details(id) : View("Error");
+            if (pairingSuccssfull)
+            {
+                return RedirectToAction("Details", new { id });
+            }
+            else
+            {
+                return View("Error");
+            }
         }
     }
 }

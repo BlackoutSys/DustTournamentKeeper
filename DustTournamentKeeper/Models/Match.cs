@@ -19,9 +19,9 @@ namespace DustTournamentKeeper.Models
         public int? SoSb { get; set; }
         public int? BoardNumber { get; set; }
 
-        public BoardType BoardType { get; set; }
-        public User PlayerA { get; set; }
-        public User PlayerB { get; set; }
-        public Round Round { get; set; }
+        public virtual BoardType BoardType { get; set; }
+        public virtual User PlayerA { get; set; }
+        public virtual User PlayerB { get; set; }
+        public virtual Round Round { get; set; }
     }
 }

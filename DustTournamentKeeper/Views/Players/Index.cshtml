@@ -1,4 +1,7 @@
 ﻿@model IEnumerable<User>
+
+@inject IViewLocalizer Localizer
+
 @{
     ViewData["Title"] = "Players";
 }
@@ -17,15 +20,16 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var user in Model) {
-        <tr>
-            <th scope="row">@user.Nickname</th>
-            <td>@user.Name</td>
-            <td>@user.Surname</td>
-            <td>@user.Country</td>
-            <td>@user.City</td>
-            <td>@user.Club.Name</td>
-        </tr>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <th scope="row"><a asp-controller="Players" asp-action="Details" asp-route-id="@user.Id">@user.UserName</a></th>
+                <td>@user.Name</td>
+                <td>@user.Surname</td>
+                <td>@user.Country</td>
+                <td>@user.City</td>
+                <td>@(user?.Club?.Name ?? "-")</td>
+            </tr>
         }
     </tbody>
 </table>

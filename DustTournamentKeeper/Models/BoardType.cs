@@ -7,15 +7,15 @@ namespace DustTournamentKeeper.Models
     {
         public BoardType()
         {
-            BoardTypeToTournament = new HashSet<BoardTypeToTournament>();
-            Match = new HashSet<Match>();
+            Matches = new List<Match>();
+            TournamentBoardTypes = new List<TournamentBoardType>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public ICollection<BoardTypeToTournament> BoardTypeToTournament { get; set; }
-        public ICollection<Match> Match { get; set; }
+        public virtual IList<Match> Matches { get; set; }
+        public virtual IList<TournamentBoardType> TournamentBoardTypes { get; set; }
     }
 }

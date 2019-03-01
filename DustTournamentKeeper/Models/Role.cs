@@ -1,19 +1,17 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 
 namespace DustTournamentKeeper.Models
 {
-    public partial class Role
+    public class Role: IdentityRole<int>
     {
         public Role()
         {
-            RoleToUser = new HashSet<RoleToUser>();
+            RoleClaims = new List<RoleClaim>();
+            UserRoles = new List<UserRole>();
         }
 
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-
-        public ICollection<RoleToUser> RoleToUser { get; set; }
+        public virtual IList<RoleClaim> RoleClaims { get; set; }
+        public virtual IList<UserRole> UserRoles { get; set; }
     }
 }

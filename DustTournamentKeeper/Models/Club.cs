@@ -7,8 +7,8 @@ namespace DustTournamentKeeper.Models
     {
         public Club()
         {
-            Tournament = new HashSet<Tournament>();
-            User = new HashSet<User>();
+            Tournaments = new List<Tournament>();
+            Users = new List<User>();
         }
 
         public int Id { get; set; }
@@ -19,7 +19,7 @@ namespace DustTournamentKeeper.Models
         public string Slogan { get; set; }
         public string Address { get; set; }
 
-        public ICollection<Tournament> Tournament { get; set; }
-        public ICollection<User> User { get; set; }
+        public virtual IList<Tournament> Tournaments { get; set; }
+        public virtual IList<User> Users { get; set; }
     }
 }

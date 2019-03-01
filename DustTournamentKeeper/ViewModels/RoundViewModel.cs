@@ -12,7 +12,7 @@ namespace DustTournamentKeeper.ViewModels
         {
             Number = round.Number;
             Matches = new List<MatchViewModel>();
-            foreach (var match in round.Match)
+            foreach (var match in round.Matches)
             {
                 Matches.Add(new MatchViewModel(match));
             }

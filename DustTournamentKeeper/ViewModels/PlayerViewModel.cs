@@ -15,7 +15,7 @@ namespace DustTournamentKeeper.ViewModels
         public string Faction { get; set; }
         public string User { get; set; }
 
-        public PlayerViewModel(UserToTournament player)
+        public PlayerViewModel(TournamentUser player)
         {
             BonusPoints = player.BonusPoints.HasValue ? player.BonusPoints.ToString() : "0";
             PenaltyPoints = player.PenaltyPoints.HasValue ? player.PenaltyPoints.ToString() : "0";
@@ -27,7 +27,7 @@ namespace DustTournamentKeeper.ViewModels
                 + player?.Bp ?? 0).ToString();
             Block = player?.Block?.Name ?? "-";
             Faction = player?.Faction?.Name ?? "-";
-            User = player?.User?.Nickname ?? player?.User?.Name ?? "-";
+            User = player?.User?.UserName ?? player?.User?.Name ?? "-";
         }
     }
 }

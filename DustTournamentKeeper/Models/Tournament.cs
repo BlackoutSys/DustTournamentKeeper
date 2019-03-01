@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace DustTournamentKeeper.Models
 {
-    public class Tournament
+    public partial class Tournament
     {
         public Tournament()
         {
-            BoardTypeToTournament = new List<BoardTypeToTournament>();
-            Round = new List<Round>();
-            UserToTournament = new List<UserToTournament>();
+            RoundsNavigation = new List<Round>();
+            TournamentBoardTypes = new List<TournamentBoardType>();
+            TournamentUsers = new List<TournamentUser>();
         }
 
         public int Id { get; set; }
@@ -37,11 +37,11 @@ namespace DustTournamentKeeper.Models
         public string Country { get; set; }
         public int? GameId { get; set; }
 
-        public Club ClubNavigation { get; set; }
-        public Game Game { get; set; }
-        public User Organizer { get; set; }
-        public IList<BoardTypeToTournament> BoardTypeToTournament { get; set; }
-        public IList<Round> Round { get; set; }
-        public IList<UserToTournament> UserToTournament { get; set; }
+        public virtual Club ClubNavigation { get; set; }
+        public virtual Game Game { get; set; }
+        public virtual User Organizer { get; set; }
+        public virtual IList<Round> RoundsNavigation { get; set; }
+        public virtual IList<TournamentBoardType> TournamentBoardTypes { get; set; }
+        public virtual IList<TournamentUser> TournamentUsers { get; set; }
     }
 }

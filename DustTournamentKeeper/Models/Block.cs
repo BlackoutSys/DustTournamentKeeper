@@ -7,8 +7,8 @@ namespace DustTournamentKeeper.Models
     {
         public Block()
         {
-            Faction = new HashSet<Faction>();
-            UserToTournament = new HashSet<UserToTournament>();
+            Factions = new List<Faction>();
+            TournamentUsers = new List<TournamentUser>();
         }
 
         public int Id { get; set; }
@@ -18,8 +18,8 @@ namespace DustTournamentKeeper.Models
         public string Slogan { get; set; }
         public int? GameId { get; set; }
 
-        public Game Game { get; set; }
-        public ICollection<Faction> Faction { get; set; }
-        public ICollection<UserToTournament> UserToTournament { get; set; }
+        public virtual Game Game { get; set; }
+        public virtual IList<Faction> Factions { get; set; }
+        public virtual IList<TournamentUser> TournamentUsers { get; set; }
     }
 }

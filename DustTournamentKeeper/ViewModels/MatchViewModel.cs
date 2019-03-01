@@ -27,8 +27,8 @@ namespace DustTournamentKeeper.ViewModels
             SoSb = match.SoSb.HasValue ? match.SoSb.ToString() : "-";
             BoardNumber = match.BoardNumber.HasValue ? match.BoardNumber.ToString() : "-";
             BoardName = match.BoardType?.Name ?? "-";
-            PlayerA = match.PlayerA.Nickname;
-            PlayerB = match?.PlayerB?.Nickname ?? "Bye";
+            PlayerA = match.PlayerA.UserName;
+            PlayerB = match?.PlayerB?.UserName ?? "Bye";
         }
     }
 }

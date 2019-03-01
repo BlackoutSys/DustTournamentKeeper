@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using DustTournamentKeeper.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -44,6 +42,10 @@ namespace DustTournamentKeeper
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
+            services.AddIdentity<User, Role>()
+             .AddEntityFrameworkStores<DustTournamentKeeperContext>()
+             .AddDefaultTokenProviders();
+
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
@@ -78,6 +80,7 @@ namespace DustTournamentKeeper
                 app.UseHsts();
             }
 
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStatusCodePages();
             app.UseStaticFiles();

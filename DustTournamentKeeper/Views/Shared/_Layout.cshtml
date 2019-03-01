@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims;
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+@inject IViewLocalizer Localizer
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -25,13 +32,32 @@
                     <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Contact" asp-action="Index">Contact Us</a></li>
                 </ul>
             </div>
+            <div class="navbar-nav mr-auto">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <form asp-controller="Account" asp-action="SignOff" method="post" id="logoutForm" class="navbar-right">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a asp-controller="Players" asp-action="Details" title="@Localizer["Manage"]">@Localizer["Hello"] @UserManager.GetUserName(User)!</a>
+                            </li>
+                            <li>
+                                <button type="submit" class="btn btn-link navbar-btn navbar-link">@Localizer["LogOff"]</button>
+                            </li>
+                        </ul>
+                    </form>
+                }
+                else
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a asp-area="" asp-controller="Account" asp-action="Login">@Localizer["LogIn"]</a></li>
+                    </ul>
+                }
+            </div>
         </div>
     </nav>
 
-    <header>
+    <header></header>
 
-    </header>
-    
     <main>
 
     </main>
@@ -39,7 +65,7 @@
     <footer class="footer">
         <div class="container">
 
-        </div>        
+        </div>
     </footer>
 
     <partial name="_CookieConsentPartial" />

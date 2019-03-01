@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DustTournamentKeeper.Models
 {
-    public partial class UserToTournament
+    public partial class TournamentUser
     {
         public int Id { get; set; }
         public int UserId { get; set; }
@@ -16,9 +16,9 @@ namespace DustTournamentKeeper.Models
         public int? BlockId { get; set; }
         public int? FactionId { get; set; }
 
-        public Block Block { get; set; }
-        public Faction Faction { get; set; }
-        public Tournament Tournament { get; set; }
-        public User User { get; set; }
+        public virtual Block Block { get; set; }
+        public virtual Faction Faction { get; set; }
+        public virtual Tournament Tournament { get; set; }
+        public virtual User User { get; set; }
     }
 }

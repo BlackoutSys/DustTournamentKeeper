@@ -167,15 +167,19 @@
             </table>
         </div>
     }
-    
+
     <br /><br />
 
     @if (Model.FirstRoundAvailable)
     {
         <a asp-controller="Tournaments" asp-action="AssignPairsForFirstRound" asp-route-id="@Model.Id">@Localizer["GenerateFirstRound"]</a>
     }
-    @if(!Model.FirstRoundAvailable && Model.NextRoundAvailable)
+    else if (!Model.FirstRoundAvailable && Model.NextRoundAvailable)
     {
         <a asp-controller="Tournaments" asp-action="AssignPairsForNewRound" asp-route-id="@Model.Id"> @Localizer["GenerateNextRound"]</a>
+    }
+    else if (!Model.FirstRoundAvailable && !Model.NextRoundAvailable && Model.FinishAvailable)
+    {
+        <a asp-controller="Tournaments" asp-action="Finish" asp-route-id="@Model.Id"> @Localizer["Finish"]</a>
     }
 </div>

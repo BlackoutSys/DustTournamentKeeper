@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace DustTournamentKeeper.Models
 {
-    public class DustTournamentKeeperContext : DbContext
+    public class DustTournamentKeeperContext : IdentityDbContext<User, Role, int, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
     {
         public DustTournamentKeeperContext()
         {
@@ -13,19 +14,16 @@ namespace DustTournamentKeeper.Models
         {
         }
 
-        public virtual DbSet<Block> Block { get; set; }
-        public virtual DbSet<BoardType> BoardType { get; set; }
-        public virtual DbSet<BoardTypeToTournament> BoardTypeToTournament { get; set; }
-        public virtual DbSet<Club> Club { get; set; }
-        public virtual DbSet<Faction> Faction { get; set; }
-        public virtual DbSet<Game> Game { get; set; }
-        public virtual DbSet<Match> Match { get; set; }
-        public virtual DbSet<Role> Role { get; set; }
-        public virtual DbSet<RoleToUser> RoleToUser { get; set; }
-        public virtual DbSet<Round> Round { get; set; }
-        public virtual DbSet<Tournament> Tournament { get; set; }
-        public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<UserToTournament> UserToTournament { get; set; }
+        public virtual DbSet<Block> Blocks { get; set; }
+        public virtual DbSet<BoardType> BoardTypes { get; set; }
+        public virtual DbSet<Club> Clubs { get; set; }
+        public virtual DbSet<Faction> Factions { get; set; }
+        public virtual DbSet<Game> Games { get; set; }
+        public virtual DbSet<Match> Matches { get; set; }
+        public virtual DbSet<Round> Rounds { get; set; }
+        public virtual DbSet<TournamentBoardType> TournamentBoardTypes { get; set; }
+        public virtual DbSet<TournamentUser> TournamentUsers { get; set; }
+        public virtual DbSet<Tournament> Tournaments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -34,8 +32,11 @@ namespace DustTournamentKeeper.Models
                 optionsBuilder.UseSqlServer("Server=PPS026;Database=DustTournamentKeeper;Trusted_Connection=True;");
             }
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
+
             modelBuilder.Entity<Block>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -60,9 +61,9 @@ namespace DustTournamentKeeper.Models
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.Game)
-                    .WithMany(p => p.Block)
+                    .WithMany(p => p.Blocks)
                     .HasForeignKey(d => d.GameId)
-                    .HasConstraintName("FK_Block_Game");
+                    .HasConstraintName("FK_Blocks_Games");
             });
 
             modelBuilder.Entity<BoardType>(entity =>
@@ -77,29 +78,6 @@ namespace DustTournamentKeeper.Models
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<BoardTypeToTournament>(entity =>
-            {
-                entity.ToTable("BoardType_To_Tournament");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.BoardTypeId).HasColumnName("BoardTypeID");
-
-                entity.Property(e => e.TournamentId).HasColumnName("TournamentID");
-
-                entity.HasOne(d => d.BoardType)
-                    .WithMany(p => p.BoardTypeToTournament)
-                    .HasForeignKey(d => d.BoardTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BoardType_To_Tournament_BoardType");
-
-                entity.HasOne(d => d.Tournament)
-                    .WithMany(p => p.BoardTypeToTournament)
-                    .HasForeignKey(d => d.TournamentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BoardType_To_Tournament_Tournament");
             });
 
             modelBuilder.Entity<Club>(entity =>
@@ -160,14 +138,14 @@ namespace DustTournamentKeeper.Models
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.Block)
-                    .WithMany(p => p.Faction)
+                    .WithMany(p => p.Factions)
                     .HasForeignKey(d => d.BlockId)
-                    .HasConstraintName("FK_Faction_Block");
+                    .HasConstraintName("FK_Factions_Blocks");
 
                 entity.HasOne(d => d.Game)
-                    .WithMany(p => p.Faction)
+                    .WithMany(p => p.Factions)
                     .HasForeignKey(d => d.GameId)
-                    .HasConstraintName("FK_Faction_Game");
+                    .HasConstraintName("FK_Factions_Games");
             });
 
             modelBuilder.Entity<Game>(entity =>
@@ -224,64 +202,41 @@ namespace DustTournamentKeeper.Models
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.BoardType)
-                    .WithMany(p => p.Match)
+                    .WithMany(p => p.Matches)
                     .HasForeignKey(d => d.BoardTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Match_BoardType");
+                    .HasConstraintName("FK_Matches_BoardTypes");
 
                 entity.HasOne(d => d.PlayerA)
-                    .WithMany(p => p.MatchPlayerA)
+                    .WithMany(p => p.MatchesPlayerA)
                     .HasForeignKey(d => d.PlayerAid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Match_User_A");
+                    .HasConstraintName("FK_Matches_User_A");
 
                 entity.HasOne(d => d.PlayerB)
-                    .WithMany(p => p.MatchPlayerB)
+                    .WithMany(p => p.MatchesPlayerB)
                     .HasForeignKey(d => d.PlayerBid)
-                    .HasConstraintName("FK_Match_User_B");
+                    .HasConstraintName("FK_Matches_User_B");
 
                 entity.HasOne(d => d.Round)
-                    .WithMany(p => p.Match)
+                    .WithMany(p => p.Matches)
                     .HasForeignKey(d => d.RoundId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Match_Round");
+                    .HasConstraintName("FK_Matches_Rounds");
+            });
+
+            modelBuilder.Entity<RoleClaim>(entity =>
+            {
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.RoleClaims)
+                    .HasForeignKey(d => d.RoleId);
             });
 
             modelBuilder.Entity<Role>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Name).HasMaxLength(256);
 
-                entity.Property(e => e.Description)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<RoleToUser>(entity =>
-            {
-                entity.ToTable("Role_To_User");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.RoleId).HasColumnName("RoleID");
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.RoleToUser)
-                    .HasForeignKey(d => d.RoleId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Role_To_User_Role");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.RoleToUser)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Role_To_User_User");
+                entity.Property(e => e.NormalizedName).HasMaxLength(256);
             });
 
             modelBuilder.Entity<Round>(entity =>
@@ -295,10 +250,70 @@ namespace DustTournamentKeeper.Models
                 entity.Property(e => e.TournamentId).HasColumnName("TournamentID");
 
                 entity.HasOne(d => d.Tournament)
-                    .WithMany(p => p.Round)
+                    .WithMany(p => p.RoundsNavigation)
                     .HasForeignKey(d => d.TournamentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Round_Tournament");
+                    .HasConstraintName("FK_Rounds_Tournaments");
+            });
+
+            modelBuilder.Entity<TournamentBoardType>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.BoardTypeId).HasColumnName("BoardTypeID");
+
+                entity.Property(e => e.TournamentId).HasColumnName("TournamentID");
+
+                entity.HasOne(d => d.BoardType)
+                    .WithMany(p => p.TournamentBoardTypes)
+                    .HasForeignKey(d => d.BoardTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BoardTypes_TournamentBoardTypes");
+
+                entity.HasOne(d => d.Tournament)
+                    .WithMany(p => p.TournamentBoardTypes)
+                    .HasForeignKey(d => d.TournamentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BoardTypes_Tournaments");
+            });
+
+            modelBuilder.Entity<TournamentUser>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.BlockId).HasColumnName("BlockID");
+
+                entity.Property(e => e.Bp).HasColumnName("BP");
+
+                entity.Property(e => e.FactionId).HasColumnName("FactionID");
+
+                entity.Property(e => e.Sp).HasColumnName("SP");
+
+                entity.Property(e => e.TournamentId).HasColumnName("TournamentID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.Block)
+                    .WithMany(p => p.TournamentUsers)
+                    .HasForeignKey(d => d.BlockId)
+                    .HasConstraintName("FK_Users_Block");
+
+                entity.HasOne(d => d.Faction)
+                    .WithMany(p => p.TournamentUsers)
+                    .HasForeignKey(d => d.FactionId)
+                    .HasConstraintName("FK_Users_Factions");
+
+                entity.HasOne(d => d.Tournament)
+                    .WithMany(p => p.TournamentUsers)
+                    .HasForeignKey(d => d.TournamentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Users_Tournaments");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.TournamentUsers)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Users_Users");
             });
 
             modelBuilder.Entity<Tournament>(entity =>
@@ -371,105 +386,100 @@ namespace DustTournamentKeeper.Models
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.ClubNavigation)
-                    .WithMany(p => p.Tournament)
+                    .WithMany(p => p.Tournaments)
                     .HasForeignKey(d => d.ClubId)
-                    .HasConstraintName("FK_Tournament_Club");
+                    .HasConstraintName("FK_Tournaments_Clubs");
 
                 entity.HasOne(d => d.Game)
-                    .WithMany(p => p.Tournament)
+                    .WithMany(p => p.Tournaments)
                     .HasForeignKey(d => d.GameId)
-                    .HasConstraintName("FK_Tournament_Game");
+                    .HasConstraintName("FK_Tournaments_Games");
 
                 entity.HasOne(d => d.Organizer)
-                    .WithMany(p => p.Tournament)
+                    .WithMany(p => p.Tournaments)
                     .HasForeignKey(d => d.OrganizerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Tournament_User");
+                    .HasConstraintName("FK_Tournaments_Users");
+            });
+
+            modelBuilder.Entity<UserClaim>(entity =>
+            {
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserClaims)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<UserLogin>(entity =>
+            {
+                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+
+                entity.Property(e => e.LoginProvider).HasMaxLength(128);
+
+                entity.Property(e => e.ProviderKey).HasMaxLength(128);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserLogins)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<UserRole>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RoleId });
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.UserRoles)
+                    .HasForeignKey(d => d.RoleId);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserRoles)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<UserToken>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+
+                entity.Property(e => e.LoginProvider).HasMaxLength(128);
+
+                entity.Property(e => e.Name).HasMaxLength(128);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserTokens)
+                    .HasForeignKey(d => d.UserId);
             });
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
                 entity.Property(e => e.City)
                     .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.Country)
                     .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.Email)
                     .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .HasMaxLength(256);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .HasMaxLength(50);
 
-                entity.Property(e => e.Nickname)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
 
-                entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasMaxLength(64);
+                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
 
                 entity.Property(e => e.Surname)
                     .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.UserName).HasMaxLength(256);
 
                 entity.HasOne(d => d.Club)
-                    .WithMany(p => p.User)
+                    .WithMany(p => p.Users)
                     .HasForeignKey(d => d.ClubId)
-                    .HasConstraintName("FK_User_Club");
-            });
-
-            modelBuilder.Entity<UserToTournament>(entity =>
-            {
-                entity.ToTable("User_To_Tournament");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.BlockId).HasColumnName("BlockID");
-
-                entity.Property(e => e.Bp).HasColumnName("BP");
-
-                entity.Property(e => e.FactionId).HasColumnName("FactionID");
-
-                entity.Property(e => e.Sp).HasColumnName("SP");
-
-                entity.Property(e => e.TournamentId).HasColumnName("TournamentID");
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.Block)
-                    .WithMany(p => p.UserToTournament)
-                    .HasForeignKey(d => d.BlockId)
-                    .HasConstraintName("FK_User_To_Tournament_Block");
-
-                entity.HasOne(d => d.Faction)
-                    .WithMany(p => p.UserToTournament)
-                    .HasForeignKey(d => d.FactionId)
-                    .HasConstraintName("FK_User_To_Tournament_Faction");
-
-                entity.HasOne(d => d.Tournament)
-                    .WithMany(p => p.UserToTournament)
-                    .HasForeignKey(d => d.TournamentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_User_To_Tournament_Tournament");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.UserToTournament)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_User_To_Tournament_User");
+                    .HasConstraintName("FK_Users_Clubs");
             });
         }
     }
