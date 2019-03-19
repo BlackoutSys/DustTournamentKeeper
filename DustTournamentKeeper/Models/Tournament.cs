@@ -1,9 +1,10 @@
-﻿using System;
+﻿using DustTournamentKeeper.Infrastructure;
+using System;
 using System.Collections.Generic;
 
 namespace DustTournamentKeeper.Models
 {
-    public partial class Tournament
+    public class Tournament
     {
         public Tournament()
         {
@@ -13,8 +14,8 @@ namespace DustTournamentKeeper.Models
         }
 
         public int Id { get; set; }
-        public DateTime DateStart { get; set; }
-        public DateTime DateEnd { get; set; }
+        public DateTime DateStart { get; set; } = DateTime.Now;
+        public DateTime DateEnd { get; set; } = DateTime.Now;
         public string City { get; set; }
         public string Address { get; set; }
         public string Club { get; set; }
@@ -22,12 +23,12 @@ namespace DustTournamentKeeper.Models
         public string Title { get; set; }
         public string Slogan { get; set; }
         public int PlayerLimit { get; set; }
-        public string Status { get; set; }
+        public string Status { get; set; } = nameof(TournamentStatus.Draft);
         public int Rounds { get; set; }
         public int ArmyPoints { get; set; }
         public string SpecificRules { get; set; }
         public int OrganizerId { get; set; }
-        public DateTime Created { get; set; }
+        public DateTime Created { get; set; } = DateTime.Now;
         public DateTime? LastModified { get; set; }
         public double Fee { get; set; }
         public string FeeCurrency { get; set; }

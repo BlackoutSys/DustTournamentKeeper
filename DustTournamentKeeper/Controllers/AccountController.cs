@@ -69,18 +69,31 @@ namespace DustTournamentKeeper.Controllers
                     var applicationRole = await _roleManager.FindByIdAsync(roleId);
                     if (applicationRole != null)
                     {
-                        IdentityResult roleResult = await _userManager.AddToRoleAsync(user, applicationRole.Name);
+                        IdentityResult roleResult = await _userManager.AddToRoleAsync(user, applicationRole.NormalizedName);
                         if (roleResult.Succeeded)
                         {
                             return RedirectToAction("Index");
                         }
                     }
                 }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(error.Code, error.Description);
+                    }
+                    return View(registerUserViewModel);
+                }
 
-                return RedirectToLocal(ViewData["ReturnUrl"].ToString());
+                return RedirectToLocal(ViewData["ReturnUrl"]?.ToString());
             }
             else
             {
+                registerUserViewModel.Clubs = _repository.Clubs.Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                }).ToList();
                 return View(registerUserViewModel);
             }
         }
@@ -131,6 +144,46 @@ namespace DustTournamentKeeper.Controllers
         public async Task<IActionResult> SignOff()
         {
             await _signInManager.SignOutAsync();
+            return RedirectToAction("Login");
+        }
+
+        public IActionResult GenerateClubs()
+        {
+            TestDataGenerator.GenerateClubs(5, _repository);
+            return RedirectToAction("Login");
+        }
+
+        public async Task<IActionResult> GenerateUsers()
+        {
+            await TestDataGenerator.GenerateUsers(10, _repository, _userManager, _roleManager);
+            return RedirectToAction("Login");
+        }
+
+        public IActionResult GenerateBoards()
+        {
+            TestDataGenerator.GenerateBoards(5, _repository);
+            return RedirectToAction("Login");
+        }
+
+        public IActionResult GenerateTournaments()
+        {
+            TestDataGenerator.GenerateTournaments(5, _repository);
+            return RedirectToAction("Login");
+        }
+
+        public async Task<IActionResult> GenerateBundle()
+        {
+            TestDataGenerator.GenerateClubs(5, _repository);
+            await TestDataGenerator.GenerateUsers(30, _repository, _userManager, _roleManager);
+            await TestDataGenerator.GenerateAdmin(_repository, _userManager, _roleManager);
+            TestDataGenerator.GenerateBoards(10, _repository);
+            TestDataGenerator.GenerateTournaments(5, _repository);
+            return RedirectToAction("Login");
+        }
+
+        public async Task<IActionResult> NukeDb()
+        {
+            await TestDataGenerator.NukeDb(_repository, _userManager);
             return RedirectToAction("Login");
         }
     }

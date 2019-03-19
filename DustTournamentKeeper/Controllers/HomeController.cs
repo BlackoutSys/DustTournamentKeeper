@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DustTournamentKeeper.Models;
+﻿using DustTournamentKeeper.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace DustTournamentKeeper.Controllers
 {
@@ -21,5 +18,7 @@ namespace DustTournamentKeeper.Controllers
             var games = _repository.Games.ToList();
             return View(games);
         }
+
+        public IActionResult Privacy => View();
     }
 }

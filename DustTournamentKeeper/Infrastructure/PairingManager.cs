@@ -37,7 +37,7 @@ namespace DustTournamentKeeper.Infrastructure
 
             var availablePlayers = tournament.TournamentUsers.ToList();
             var availableBoards = tournament.TournamentBoardTypes.ToList();
-            var pairings = new List<Tuple<int, int, TournamentBoardType>>();
+            var pairings = new List<Tuple<int, int?, TournamentBoardType>>();
 
             var rand = new Random();
             while (availablePlayers.Count > 1)
@@ -84,7 +84,7 @@ namespace DustTournamentKeeper.Infrastructure
                 TournamentBoardType chosenBoard = availableBoards[0];
                 availableBoards.Remove(chosenBoard);
 
-                pairings.Add(Tuple.Create(playerA.UserId, playerB.UserId, chosenBoard));
+                pairings.Add(Tuple.Create(playerA.UserId, (int?)playerB.UserId, chosenBoard));
 
                 availablePlayers.Remove(playerA);
                 availablePlayers.Remove(playerB);
@@ -93,7 +93,7 @@ namespace DustTournamentKeeper.Infrastructure
             // Assign bye
             if (availablePlayers.Count == 1)
             {
-                pairings.Add(Tuple.Create(availablePlayers[0].UserId, 0, new TournamentBoardType()));
+                pairings.Add(Tuple.Create(availablePlayers[0].UserId, (int?)null, availableBoards[0]));
             }
 
             // Create Match entities
@@ -130,13 +130,18 @@ namespace DustTournamentKeeper.Infrastructure
         {
             // Prepare tournament data
             var tournament = repository.Tournaments
-                .Include(t => t.TournamentUsers)
-                .Include(t => t.RoundsNavigation)
+                .Include(t => t.TournamentUsers).ThenInclude(u => u.User)
+                .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches)
+                .Include(t => t.TournamentBoardTypes).ThenInclude(tb => tb.BoardType)
                 .FirstOrDefault(t => t.Id == tournamentId);
+
             if (tournament == null)
             {
                 return false;
             }
+
+            List<TournamentUser> tournamentUsers = null;
+            List<TournamentUser> oldTournamentUsers = null;
 
             // Create new round
             var round = new Round()
@@ -148,9 +153,10 @@ namespace DustTournamentKeeper.Infrastructure
 
             // Calculate player scores so far
             var playerScoresSorted = CalculatePlayersScores(tournament);
+            var playersScoresSortedReadOnly = playerScoresSorted.ToList();
 
             // Assign pairs and boards
-            var pairings = new List<Tuple<int, int, int>>();
+            var pairings = new List<Tuple<int, int?, TournamentBoardType>>();
             var availableBoards = tournament.TournamentBoardTypes.ToList();
             for (int i = 0; playerScoresSorted.Count > 1;)
             {
@@ -179,9 +185,9 @@ namespace DustTournamentKeeper.Infrastructure
                 availableBoards.Remove(chosenBoard);
 
 
-                pairings.Add(Tuple.Create(playerScoresSorted[i].Player.Id,
-                    playerScoresSorted[i + 1].Player.Id,
-                    chosenBoard.Id));
+                pairings.Add(Tuple.Create(playerA.Player.UserId,
+                    (int?)playerB.Player.UserId,
+                    chosenBoard));
                 playerScoresSorted.RemoveAt(i);
                 playerScoresSorted.RemoveAt(i);
             }
@@ -189,8 +195,11 @@ namespace DustTournamentKeeper.Infrastructure
             // Assign bye
             if (playerScoresSorted.Count > 0)
             {
-                pairings.Add(Tuple.Create(playerScoresSorted[0].Player.Id, 0, 0));
+                pairings.Add(Tuple.Create(playerScoresSorted[0].Player.UserId, (int?)null, availableBoards[0]));
             }
+
+            tournamentUsers = repository.TournamentUsers.Where(tu => tu.TournamentId == tournamentId).ToList();
+            oldTournamentUsers = tournamentUsers.ToList();
 
             // Create Match entities
             foreach (var pairing in pairings)
@@ -199,11 +208,30 @@ namespace DustTournamentKeeper.Infrastructure
                 {
                     PlayerAid = pairing.Item1,
                     PlayerBid = pairing.Item2,
-                    BoardTypeId = pairing.Item3,
+                    BoardTypeId = pairing.Item3.BoardTypeId,
+                    BoardNumber = pairing.Item3.Number,
                     RoundId = round.Id,
                     Status = "Pending"
                 };
+                CalculatePlayersStrengthOfSchedule(match, playersScoresSortedReadOnly);
                 repository.Add(match);
+
+                var tournamentUserA = tournamentUsers.FirstOrDefault(tu => tu.UserId == match.PlayerAid);
+                var tournamentUserB = tournamentUsers.FirstOrDefault(tu => tu.UserId == match.PlayerBid);
+
+                if (tournamentUserA != null)
+                {
+                    tournamentUserA.SoS = match.SoSa;
+
+                    repository.Update(oldTournamentUsers.FirstOrDefault(tu => tu.Id == tournamentUserA.Id), tournamentUserA);
+                }
+
+                if (tournamentUserB != null)
+                {
+                    tournamentUserB.SoS = match.SoSb;
+
+                    repository.Update(oldTournamentUsers.FirstOrDefault(tu => tu.Id == tournamentUserB.Id), tournamentUserB);
+                }
             }
 
             return true;
@@ -222,13 +250,7 @@ namespace DustTournamentKeeper.Infrastructure
                 var score = new PlayersTournamentScore(player);
 
                 var playerMatches = tournament.RoundsNavigation
-                    .SelectMany(r => r.Matches.Where(m => m.PlayerAid == player.Id || m.PlayerBid == player.Id));
-
-                // Check for bye
-                if (playerMatches.Any(pm => pm.PlayerAid == player.UserId && pm.PlayerBid == null))
-                {
-                    score.HadBye = true;
-                }
+                    .SelectMany(r => r.Matches.Where(m => m.PlayerAid == player.UserId || m.PlayerBid == player.UserId));
 
                 // Distinct list of boards player had played on
                 score.Boards = playerMatches.Select(pm => pm.BoardType).Distinct().ToList();
@@ -236,22 +258,54 @@ namespace DustTournamentKeeper.Infrastructure
                 // Total score
                 foreach (var match in playerMatches)
                 {
-                    TournamentUser chosenPlayer = null;
                     var playerA = tournament.TournamentUsers.FirstOrDefault(u => u.UserId == match.PlayerAid);
                     var playerB = tournament.TournamentUsers.FirstOrDefault(u => u.UserId == match.PlayerBid);
-                    if (match.PlayerAid != player.UserId && !score.Opponents.Contains(playerA))
+                    if (match.PlayerAid == player.UserId && !score.Opponents.Contains(playerB))
                     {
-                        chosenPlayer = playerA;
+                        score.Opponents.Add(playerB);
+                        score.TotalBigPoints += match.Bpa ?? 0;
+                        score.TotalSmallPoints += match.Spa ?? 0;
+                        score.TotalSoS = Math.Max(score.TotalSoS, match.SoSa ?? 0);
+
+                        if (match.PlayerBid == null)
+                        {
+                            score.Byes++;
+                        }
+                        else if (match.Bpa > match.Bpb)
+                        {
+                            score.Wins++;
+                        }
+                        else if (match.Bpa == match.Bpb)
+                        {
+                            score.Ties++;
+                        }
+                        else
+                        {
+                            score.Loses++;
+                        }
                     }
                     else
                     {
-                        chosenPlayer = playerB;
+                        score.Opponents.Add(playerA);
+                        score.TotalBigPoints += match.Bpb ?? 0;
+                        score.TotalSmallPoints += match.Spb ?? 0;
+                        score.TotalSoS = Math.Max(score.TotalSoS, match.SoSb ?? 0);
+
+                        if (match.Bpb > match.Bpa)
+                        {
+                            score.Wins++;
+                        }
+                        else if (match.Bpb == match.Bpa)
+                        {
+                            score.Ties++;
+                        }
+                        else
+                        {
+                            score.Loses++;
+                        }
                     }
 
-                    score.Opponents.Add(chosenPlayer);
-                    score.TotalBigPoints += match.Bpb ?? 0;
-                    score.TotalSmallPoints += match.Spb ?? 0;
-                    score.TotalSoS += match.SoSb ?? 0;
+                    //CalculatePlayersStrengthOfSchedule(match, playerScores);
                 }
 
                 score.BonusPoints = player.BonusPoints ?? 0;
@@ -264,8 +318,39 @@ namespace DustTournamentKeeper.Infrastructure
             return playerScores.OrderByDescending(ps => ps.TotalBigPoints + ps.BonusPoints - ps.PenaltyPoints)
                 .ThenByDescending(ps => ps.TotalSmallPoints)
                 .ThenByDescending(ps => ps.TotalSoS)
-                .ThenByDescending(ps => ps.HadBye)
+                .ThenByDescending(ps => ps.Byes)
                 .ToList();
+        }
+
+        public static void CalculatePlayersStrengthOfSchedule(Match match, List<PlayersTournamentScore> scores)
+        {
+            if (match.PlayerBid.HasValue && scores.Count > 0)
+            {
+                match.SoSa = ((2 * scores.FirstOrDefault(s => s.Player.UserId == match.PlayerAid)?.TotalBigPoints ?? 0)
+                    + scores.FirstOrDefault(s => s.Player.UserId == match.PlayerBid.Value)?.TotalBigPoints ?? 0) / 3;
+
+                if (scores.FirstOrDefault(s => s.Player.UserId == match.PlayerAid) != null)
+                {
+                    scores.Find(s => s.Player.UserId == match.PlayerAid).TotalSoS = Math.Max(match.SoSa.Value, scores.FirstOrDefault(s => s.Player.UserId == match.PlayerAid)?.TotalSoS ?? 0);
+                }
+
+                match.SoSb = ((2 * scores.FirstOrDefault(s => s.Player.UserId == match.PlayerBid.Value)?.TotalBigPoints ?? 0)
+                    + scores.FirstOrDefault(s => s.Player.UserId == match.PlayerAid)?.TotalBigPoints ?? 0) / 3;
+
+                if (scores.FirstOrDefault(s => s.Player.UserId == match.PlayerBid.Value) != null)
+                {
+                    scores.Find(s => s.Player.UserId == match.PlayerBid.Value).TotalSoS = Math.Max(match.SoSb.Value, scores.FirstOrDefault(s => s.Player.UserId == match.PlayerBid.Value)?.TotalSoS ?? 0);
+                }
+            }
+            else if (scores.Count > 0)
+            {
+                match.SoSa = scores.FirstOrDefault(s => s.Player.UserId == match.PlayerAid)?.TotalSoS;
+            }
+            else
+            {
+                match.SoSa = null;
+                match.SoSb = null;
+            }
         }
 
         /// <summary>

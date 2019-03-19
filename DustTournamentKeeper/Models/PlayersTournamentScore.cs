@@ -12,7 +12,10 @@ namespace DustTournamentKeeper.Models
         public int TotalSoS { get; set; }
         public int BonusPoints { get; set; }
         public int PenaltyPoints { get; set; }
-        public bool HadBye { get; set; }
+        public int Byes { get; set; }
+        public int Wins { get; set; }
+        public int Ties { get; set; }
+        public int Loses { get; set; }
 
         public PlayersTournamentScore(TournamentUser player)
         {

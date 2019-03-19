@@ -3,7 +3,7 @@
 @inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Localizer["PlayersDetails"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -60,7 +60,7 @@
                 @foreach (var history in Model.History)
                 {
                     <tr>
-                        <th scope="col">@history.Title</th>
+                        <th scope="col"><a asp-controller="Tournaments" asp-action="Details" asp-route-id="@history.TournamentId">@history.Title</a></th>
                         <td>@history.Game</td>
                         <td>@history.Country</td>
                         <td>@history.City</td>

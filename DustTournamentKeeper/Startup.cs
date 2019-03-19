@@ -1,15 +1,19 @@
-﻿using System;
-using System.Globalization;
-using DustTournamentKeeper.Models;
+﻿using DustTournamentKeeper.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Localization.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace DustTournamentKeeper
 {
@@ -26,6 +30,32 @@ namespace DustTournamentKeeper
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix,
+                    options => options.ResourcesPath = "Resources"
+                )
+                .AddDataAnnotationsLocalization();
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new List<CultureInfo>
+                    {
+                        new CultureInfo("en-US"),
+                        new CultureInfo("pl")
+                    };
+
+                options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+                options.RequestCultureProviders = new List<IRequestCultureProvider>
+                {
+                    new CookieRequestCultureProvider(),
+                };
+            });
+
             services.AddDistributedMemoryCache();
 
             services.AddSession(options =>
@@ -40,35 +70,31 @@ namespace DustTournamentKeeper
             var connection = "Server=PPS026;Database=DustTournamentKeeper;Trusted_Connection=True;";
             services.AddDbContext<DustTournamentKeeperContext>(options => options.UseSqlServer(connection));
 
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
-
             services.AddIdentity<User, Role>()
              .AddEntityFrameworkStores<DustTournamentKeeperContext>()
              .AddDefaultTokenProviders();
-
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            var supportedCultures = new[]
+            var supportedCultures = new List<CultureInfo>
             {
                 new CultureInfo("en-US"),
                 new CultureInfo("pl")
             };
 
-            app.UseRequestLocalization(new RequestLocalizationOptions
+            var locOptions = new RequestLocalizationOptions()
             {
-                DefaultRequestCulture = new RequestCulture("en-US"),
-                // Formatting numbers, dates, etc.
+                DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US"),
                 SupportedCultures = supportedCultures,
-                // UI strings that we have localized.
-                SupportedUICultures = supportedCultures
-            });
-
+                SupportedUICultures = supportedCultures,
+                RequestCultureProviders = new List<IRequestCultureProvider>
+                {
+                    new CookieRequestCultureProvider(),
+                }
+            };
+            app.UseRequestLocalization(locOptions);
 
             if (env.IsDevelopment())
             {
@@ -93,6 +119,21 @@ namespace DustTournamentKeeper
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            //app.UseRouter(routes =>
+            //{
+            //    routes.MapMiddlewareRoute("{*mvcRoute}", subApp =>
+            //    {
+            //        subApp.UseRequestLocalization(locOptions);
+
+            //        subApp.UseMvc(mvcRoutes =>
+            //        {
+            //            mvcRoutes.MapRoute(
+            //                name: "default",
+            //                template: "{controller=Home}/{action=Index}");
+            //        });
+            //    });
+            //});
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DustTournamentKeeper.Models;
 using Microsoft.AspNetCore.Mvc;
+using PagedList;
 
 namespace DustTournamentKeeper.Controllers
 {

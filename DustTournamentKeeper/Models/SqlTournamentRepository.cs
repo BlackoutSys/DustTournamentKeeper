@@ -69,6 +69,7 @@ namespace DustTournamentKeeper.Models
 
         public void Add(Tournament tournament)
         {
+            tournament.Created = DateTime.Now;
             _context.Tournaments.Add(tournament);
             _context.SaveChanges();
         }
@@ -220,8 +221,6 @@ namespace DustTournamentKeeper.Models
             match.PlayerAid = newMatch.PlayerAid;
             match.PlayerBid = newMatch.PlayerBid;
             match.RoundId = newMatch.RoundId;
-            match.SoSa = newMatch.SoSa;
-            match.SoSb = newMatch.SoSb;
             match.Spa = newMatch.Spa;
             match.Spb = newMatch.Spb;
             match.Status = newMatch.Status;
@@ -269,7 +268,7 @@ namespace DustTournamentKeeper.Models
             tournament.Status = newTournament.Status;
             tournament.Title = newTournament.Title;
 
-            tournament.LastModified = DateTime.UtcNow;
+            tournament.LastModified = DateTime.Now;
 
             for (var i = 0; i < tournament.RoundsNavigation.Count; i++)
             {

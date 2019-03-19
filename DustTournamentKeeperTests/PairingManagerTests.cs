@@ -22,7 +22,7 @@ namespace DustTournamentKeeper.Tests
         /// <summary>
         /// Prepares fresh repository
         /// </summary>
-        private void PrepareContextData()
+        private void PrepareContextData(bool makePlayersNumberEven = false)
         {
             _fakeContext = new DustTournamentKeeperContext(CreateNewContextOptions());
             _dataRepository = new SqlTournamentRepository(_fakeContext);
@@ -248,19 +248,22 @@ namespace DustTournamentKeeper.Tests
                 BlockId = block2.Id
             };
 
-            var userToTournament6 = new TournamentUser()
-            {
-                UserId = user6.Id,
-                TournamentId = tournament.Id,
-                BlockId = block2.Id
-            };
-
             _dataRepository.Add(userToTournament1);
             _dataRepository.Add(userToTournament2);
             _dataRepository.Add(userToTournament3);
             _dataRepository.Add(userToTournament4);
             _dataRepository.Add(userToTournament5);
-            _dataRepository.Add(userToTournament6);
+
+            if (makePlayersNumberEven)
+            {
+                var userToTournament6 = new TournamentUser()
+                {
+                    UserId = user6.Id,
+                    TournamentId = tournament.Id,
+                    BlockId = block2.Id
+                };
+                _dataRepository.Add(userToTournament6);
+            }
 
             var boardToTournament1 = new TournamentBoardType()
             {
@@ -323,7 +326,7 @@ namespace DustTournamentKeeper.Tests
         [InlineData(1, 6, 2, 5, 4, null)]
         public void ResolveHorrorMatchesTest(int player1, int? player2, int player3, int? player4, int player5, int? player6)
         {
-            PrepareContextData();
+            PrepareContextData(true);
 
             var match1 = new Match()
             {
@@ -391,7 +394,7 @@ namespace DustTournamentKeeper.Tests
         [Fact]
         public void RandomizeFirstRoundTest()
         {
-            PrepareContextData();
+            PrepareContextData(true);
 
             var tournamentId = _dataRepository.Tournaments.FirstOrDefault().Id;
             var pairingsAssigned = PairingManager.AssignPlayersForFirstRound(tournamentId, _dataRepository);
@@ -429,6 +432,8 @@ namespace DustTournamentKeeper.Tests
             var tournamentId = _dataRepository.Tournaments.FirstOrDefault().Id;
             var firstRoundAssigned = PairingManager.AssignPlayersForFirstRound(tournamentId, _dataRepository);
 
+            var players = _dataRepository.TournamentUsers.Where(tu => tu.TournamentId == tournamentId).Select(tu => tu.UserId).ToList();
+
             Assert.True(firstRoundAssigned);
 
             var matchesInRound = _dataRepository.Matches.Where(m => m.RoundId == _dataRepository.Rounds.Max(r => r.Id)).ToList();
@@ -465,14 +470,24 @@ namespace DustTournamentKeeper.Tests
 
             matchesInRound = _dataRepository.Matches.Where(m => m.RoundId == _dataRepository.Rounds.Max(r => r.Id)).ToList();
 
+            // Assert round players exist in repo
+            foreach (var match in matchesInRound)
+            {
+                Assert.Contains(match.PlayerAid, players);
+                if (match.PlayerBid.HasValue)
+                {
+                    Assert.Contains(match.PlayerBid.Value, players);
+                }
+            }
+
             // Assert number of matches
             Assert.NotEmpty(matchesInRound);
             Assert.Equal(3, matchesInRound.Count);
 
             // Assert boards assingment
-            Assert.NotEqual(matchesInRound[0].BoardTypeId, matchesInRound[1].BoardTypeId);
-            Assert.NotEqual(matchesInRound[1].BoardTypeId, matchesInRound[2].BoardTypeId);
-            Assert.NotEqual(matchesInRound[2].BoardTypeId, matchesInRound[0].BoardTypeId);
+            Assert.NotEqual(matchesInRound[0].BoardNumber, matchesInRound[1].BoardNumber);
+            Assert.NotEqual(matchesInRound[1].BoardNumber, matchesInRound[2].BoardNumber);
+            Assert.NotEqual(matchesInRound[2].BoardNumber, matchesInRound[0].BoardNumber);
         }
 
         [Fact]
@@ -482,6 +497,8 @@ namespace DustTournamentKeeper.Tests
 
             var tournamentId = _dataRepository.Tournaments.FirstOrDefault().Id;
             var firstRoundAssigned = PairingManager.AssignPlayersForFirstRound(tournamentId, _dataRepository);
+
+            var players = _dataRepository.TournamentUsers.Where(tu => tu.TournamentId == tournamentId).Select(tu => tu.UserId).ToList();
 
             Assert.True(firstRoundAssigned);
 
@@ -551,25 +568,34 @@ namespace DustTournamentKeeper.Tests
 
             matchesInRound = _dataRepository.Matches.Where(m => m.RoundId == _dataRepository.Rounds.Max(r => r.Id)).ToList();
 
+            // Assert round players exist in repo
+            foreach (var match in matchesInRound)
+            {
+                Assert.Contains(match.PlayerAid, players);
+                if (match.PlayerBid.HasValue)
+                {
+                    Assert.Contains(match.PlayerBid.Value, players);
+                }
+            }
+
             // Assert number of matches
             Assert.NotEmpty(matchesInRound);
             Assert.Equal(3, matchesInRound.Count);
 
             // Assert boards assingment
-            Assert.NotEqual(matchesInRound[0].BoardTypeId, matchesInRound[1].BoardTypeId);
-            Assert.NotEqual(matchesInRound[1].BoardTypeId, matchesInRound[2].BoardTypeId);
-            Assert.NotEqual(matchesInRound[2].BoardTypeId, matchesInRound[0].BoardTypeId);
+            Assert.NotEqual(matchesInRound[0].BoardNumber, matchesInRound[1].BoardNumber);
+            Assert.NotEqual(matchesInRound[1].BoardNumber, matchesInRound[2].BoardNumber);
+            Assert.NotEqual(matchesInRound[2].BoardNumber, matchesInRound[0].BoardNumber);
 
             // Assert players scores are meaningfull
             var playersScoresSorted = PairingManager.CalculatePlayersScores(_dataRepository.Tournaments.FirstOrDefault());
 
             Assert.NotEmpty(playersScoresSorted);
-            Assert.Equal(6, playersScoresSorted.Count);
+            Assert.Equal(5, playersScoresSorted.Count);
             Assert.True(playersScoresSorted[0].TotalBigPoints >= playersScoresSorted[1].TotalBigPoints);
             Assert.True(playersScoresSorted[1].TotalBigPoints >= playersScoresSorted[2].TotalBigPoints);
             Assert.True(playersScoresSorted[2].TotalBigPoints >= playersScoresSorted[3].TotalBigPoints);
             Assert.True(playersScoresSorted[3].TotalBigPoints >= playersScoresSorted[4].TotalBigPoints);
-            Assert.True(playersScoresSorted[4].TotalBigPoints >= playersScoresSorted[5].TotalBigPoints);
         }
 
         public void Dispose()

@@ -18,60 +18,59 @@
     <link rel="stylesheet" asp-href-include="lib/bootstrap/dist/css/bootstrap.css" />
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-fixed-top navbar-dark bg-dark">
-        <div class="container">
-            <div class="navbar-header">
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Dust Tournament Keeper</a>
-            </div>
-            <div>
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Tournaments" asp-action="Index">Tournaments</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Players" asp-action="Index">Players</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Rankings" asp-action="Index">Rankings</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Contact" asp-action="Index">Contact Us</a></li>
-                </ul>
-            </div>
-            <div class="navbar-nav mr-auto">
-                @if (SignInManager.IsSignedIn(User))
-                {
-                    <form asp-controller="Account" asp-action="SignOff" method="post" id="logoutForm" class="navbar-right">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li>
-                                <a asp-controller="Players" asp-action="Details" title="@Localizer["Manage"]">@Localizer["Hello"] @UserManager.GetUserName(User)!</a>
-                            </li>
-                            <li>
-                                <button type="submit" class="btn btn-link navbar-btn navbar-link">@Localizer["LogOff"]</button>
-                            </li>
-                        </ul>
-                    </form>
-                }
-                else
-                {
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a asp-area="" asp-controller="Account" asp-action="Login">@Localizer["LogIn"]</a></li>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-fixed-top navbar-dark bg-dark">
+            <div class="container">
+                <div class="navbar-header">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Dust Tournament Keeper</a>
+                </div>
+                <div>
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Tournaments" asp-action="Index">@Localizer["Tournaments"]</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Players" asp-action="Index">@Localizer["Players"]</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Clubs" asp-action="Index">@Localizer["Clubs"]</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Rankings" asp-action="Index">@Localizer["Rankings"]</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Contact" asp-action="Index">@Localizer["ContactUs"]</a></li>
                     </ul>
-                }
+                </div>
+                <div>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <form asp-controller="Account" asp-action="SignOff" method="post" id="logoutForm" class="navbar-right">
+                            <ul class="navbar-nav mr-auto">
+                                <li>
+                                    <a class="btn btn-link navbar-btn navbar-link" asp-controller="Players" asp-action="Details" title="@Localizer["Manage"]">@Localizer["Hello"] @UserManager.GetUserName(User)!</a>
+                                </li>
+                                <li>
+                                    <button type="submit" class="btn btn-link navbar-btn navbar-link">@Localizer["LogOff"]</button>
+                                </li>
+                            </ul>
+                        </form>
+                    }
+                    else
+                    {
+                        <ul class="navbar-nav mr-auto">
+                            <li><a asp-area="" asp-controller="Account" asp-action="Login">@Localizer["LogIn"]</a></li>
+                        </ul>
+                    }
+                </div>
+                <div>
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Language" asp-action="ChangeLanguage" asp-route-language="en-US">EN</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Language" asp-action="ChangeLanguage" asp-route-language="pl">PL</a></li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
-    <header></header>
-
-    <main>
-
-    </main>
-
-    <footer class="footer">
-        <div class="container">
-
-        </div>
-    </footer>
-
-    <partial name="_CookieConsentPartial" />
 
     <div class="container body-content">
-        @RenderBody()
+        <partial name="_CookieConsentPartial" />
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
         <hr />
         <footer class="footer">
             <div class="container">

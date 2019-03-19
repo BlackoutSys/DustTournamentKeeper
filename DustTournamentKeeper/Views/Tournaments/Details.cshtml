@@ -3,88 +3,93 @@
 @inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Tournament Details";
+    ViewData["Title"] = Localizer["TournamentDetails"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@Model.Title</h2><a asp-controller="Tournaments" asp-action="Upsert" asp-route-id="@Model.Id">@Localizer["Edit"]</a><br />
+<h2>@Model.Title</h2><a class="btn btn-dark" asp-controller="Tournaments" asp-action="Upsert" asp-route-id="@Model.Id">@Localizer["Edit"]</a><br />
 @if (!string.IsNullOrEmpty(Model.Slogan))
 {
     <h3>@Model.Slogan</h3>
 }
 
-<div id="tournamentDetails" class="container">
-    <div class="row">
-        <div class="col-md-4"><p>@Localizer["Status"]</p></div>
-        <div class="col-md-4"><p>@Model.Status</p></div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4"><p>@Localizer["Start"]</p></div>
-        <div class="col-md-4"><p>@Model.DateStart</p></div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4"><p>@Localizer["End"]</p></div>
-        <div class="col-md-4"><p>@Model.DateEnd</p></div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4"><p>@Localizer["Country"]</p></div>
-        <div class="col-md-4"><p>@Model.Country</p></div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4"><p>@Localizer["City"]</p></div>
-        <div class="col-md-4"><p>@Model.City</p></div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4"><p>@Localizer["Address"]</p></div>
-        <div class="col-md-4"><p>@Model.Address</p></div>
-    </div>
-
-    @if (!string.IsNullOrEmpty(Model.Club))
-    {
+    <div id="tournamentDetails" class="container">
         <div class="row">
-            <div class="col-md-4"><p>@Localizer["Club"]</p></div>
-            <div class="col-md-4"><p>@Model.Club</p></div>
+            <div class="col-md-4"><p>@Localizer["Status"]</p></div>
+            <div class="col-md-4"><p>@Model.Status</p></div>
         </div>
-    }
-    
-    <div class="row">
-        <div class="col-md-4"><p>@Localizer["ArmyPoints"]</p></div>
-        <div class="col-md-4"><p>@Model.ArmyPoints</p></div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-4"><p>@Localizer["Fee"]</p></div>
-        <div class="col-md-4"><p>@Model.Fee</p></div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4"><p>@Localizer["BPWin"]</p></div>
-        <div class="col-md-4"><p>@Model.Bpwin</p></div>
-    </div>
-    <div class="row">
-
-        <div class="col-md-4"><p>@Localizer["BPTie"]</p></div>
-        <div class="col-md-4"><p>@Model.Bptie</p></div>
-    </div>
-    <div class="row">
-
-        <div class="col-md-4"><p>@Localizer["BPLoss"]</p></div>
-        <div class="col-md-4"><p>@Model.Bploss</p></div>
-    </div>
-
-    @if (!string.IsNullOrEmpty(Model.SpecificRules))
-    {
         <div class="row">
-            <div class="col-md-4"><p>@Localizer["SpecificRules"]</p></div>
-            <div class="col-md-4"><p>@Model.SpecificRules</p></div>
+            <div class="col-md-4"><p>@Localizer["Starts"]</p></div>
+            <div class="col-md-4"><p>@Model.DateStart</p></div>
         </div>
-    }
-</div>
+
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["Ends"]</p></div>
+            <div class="col-md-4"><p>@Model.DateEnd</p></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["Country"]</p></div>
+            <div class="col-md-4"><p>@Model.Country</p></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["City"]</p></div>
+            <div class="col-md-4"><p>@Model.City</p></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["Address"]</p></div>
+            <div class="col-md-4"><p>@Model.Address</p></div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Club))
+        {
+            <div class="row">
+                <div class="col-md-4"><p>@Localizer["Club"]</p></div>
+                <div class="col-md-4"><p>@Model.Club</p></div>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["ArmyPoints"]</p></div>
+            <div class="col-md-4"><p>@Model.ArmyPoints</p></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["Rounds"]</p></div>
+            <div class="col-md-4"><p>@Model.Rounds</p></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["Fee"]</p></div>
+            <div class="col-md-4"><p>@Model.FeeText</p></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["BPWin"]</p></div>
+            <div class="col-md-4"><p>@Model.Bpwin</p></div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-4"><p>@Localizer["BPTie"]</p></div>
+            <div class="col-md-4"><p>@Model.Bptie</p></div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-4"><p>@Localizer["BPLoss"]</p></div>
+            <div class="col-md-4"><p>@Model.Bploss</p></div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.SpecificRules))
+        {
+            <div class="row">
+                <div class="col-md-4"><p>@Localizer["SpecificRules"]</p></div>
+                <div class="col-md-4"><p>@Model.SpecificRules</p></div>
+            </div>
+        }
+    </div>
 
 <br />
 
@@ -107,79 +112,96 @@
         <tbody>
             @foreach (var player in Model.PlayersList)
             {
-            <tr>
-                <th scope="col">@player.User</th>
-                <td>@player.Block</td>
-                <td>@player.Faction</td>
-                <td>@player.BonusPoints</td>
-                <td>@player.PenaltyPoints</td>
-                <td>@player.Bp</td>
-                <td>@player.Sp</td>
-                <td>@player.SoS</td>
-                <td>@player.TotalBigPoints</td>
-            </tr>
+                <tr>
+                    <th scope="col"><a asp-controller="Players" asp-action="Details" asp-route-id="@player.UserId">@player.User</a></th>
+                    <td>@player.Block</td>
+                    <td>@player.Faction</td>
+                    <td>@player.BonusPoints</td>
+                    <td>@player.PenaltyPoints</td>
+                    <td>@player.Bp</td>
+                    <td>@player.Sp</td>
+                    <td>@player.SoS</td>
+                    <td>@player.TotalBigPoints</td>
+                </tr>
             }
-
         </tbody>
     </table>
 </div>
 
 <br />
 
-<div id="rounds" class="container">
-    <p>@Localizer["Rounds"]</p>
-    @foreach (var round in Model.RoundsList)
-    {
-        <div class="row">
-            <p>@Localizer["Round"] @round.Number</p>
-            <table class="table table-striped table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">@Localizer["PlayerA"]</th>
-                        <th scope="col">@Localizer["PlayerB"]</th>
-                        <th scope="col">@Localizer["BoardNumber"]</th>
-                        <th scope="col">@Localizer["BoardType"]</th>
-                        <th scope="col">@Localizer["Bpa"]</th>
-                        <th scope="col">@Localizer["Bpb"]</th>
-                        <th scope="col">@Localizer["Spa"]</th>
-                        <th scope="col">@Localizer["Spb"]</th>
-                        <th scope="col">@Localizer["SoSa"]</th>
-                        <th scope="col">@Localizer["SoSb"]</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var match in round.Matches)
-                    {
+@if (Model.RoundsList.Count > 0)
+{
+    <div id="rounds" class="container">
+        <p>@Localizer["Rounds"]</p>
+        @foreach (var round in Model.RoundsList)
+        {
+            <div class="row">
+                <p>@Localizer["Round"] @round.Number</p>
+                <table class="table table-striped table-dark">
+                    <thead>
                         <tr>
-                            <th scope="row">@match.PlayerA</th>
-                            <td>@match.PlayerB</td>
-                            <td>@match.BoardNumber</td>
-                            <td>@match.BoardName</td>
-                            <td>@match.Bpa</td>
-                            <td>@match.Bpb</td>
-                            <td>@match.Spa</td>
-                            <td>@match.Spb</td>
-                            <td>@match.SoSa</td>
-                            <td>@match.SoSb</td>
+                            <th scope="col">@Localizer["PlayerA"]</th>
+                            <th scope="col">@Localizer["PlayerB"]</th>
+                            <th scope="col">@Localizer["BoardNumber"]</th>
+                            <th scope="col">@Localizer["BoardType"]</th>
+                            <th scope="col">@Localizer["Bpa"]</th>
+                            <th scope="col">@Localizer["Bpb"]</th>
+                            <th scope="col">@Localizer["Spa"]</th>
+                            <th scope="col">@Localizer["Spb"]</th>
+                            <th scope="col">@Localizer["SoSa"]</th>
+                            <th scope="col">@Localizer["SoSb"]</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
+                    </thead>
+                    <tbody>
+                        @foreach (var match in round.Matches)
+                        {
+                            <tr>
+                                <th scope="row">@match.PlayerA</th>
+                                <td>@match.PlayerB</td>
+                                <td>@match.BoardNumber</td>
+                                <td>@match.BoardName</td>
+                                <td>@match.Bpa</td>
+                                <td>@match.Bpb</td>
+                                <td>@match.Spa</td>
+                                <td>@match.Spb</td>
+                                <td>@match.SoSa</td>
+                                <td>@match.SoSb</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+}
+@if (Model.Status == nameof(TournamentStatus.Pending))
+{
+    <a class="btn btn-dark" asp-controller="Tournaments" asp-action="Begin" asp-route-id="@Model.Id">@Localizer["Begin"]</a>
+}
+@if (Model.FirstRoundAvailable)
+{
+    <a class="btn btn-dark" asp-controller="Tournaments" asp-action="AssignPairsForFirstRound" asp-route-id="@Model.Id">@Localizer["GenerateFirstRound"]</a>
+}
+else if (!Model.FirstRoundAvailable && Model.NextRoundAvailable)
+{
+    <a class="btn btn-dark" asp-controller="Tournaments" asp-action="AssignPairsForNewRound" asp-route-id="@Model.Id"> @Localizer["GenerateNextRound"]</a>
+}
+else if (!Model.FirstRoundAvailable && !Model.NextRoundAvailable && Model.FinishAvailable)
+{
+    <a class="btn btn-dark" asp-controller="Tournaments" asp-action="Finish" asp-route-id="@Model.Id"> @Localizer["Finish"]</a>
+}
+<br /><br />
 
-    <br /><br />
 
-    @if (Model.FirstRoundAvailable)
+@if (Model.Status == nameof(TournamentStatus.Pending))
+{
+    @if (Model.CanRegister && !Model.Registered)
     {
-        <a asp-controller="Tournaments" asp-action="AssignPairsForFirstRound" asp-route-id="@Model.Id">@Localizer["GenerateFirstRound"]</a>
+        <a class="btn btn-dark" asp-controller="Tournaments" asp-action="Register" asp-route-tournamentId="@Model.Id" asp-route-userId="@Model.UserId"> @Localizer["Register"]</a>
     }
-    else if (!Model.FirstRoundAvailable && Model.NextRoundAvailable)
+    else
     {
-        <a asp-controller="Tournaments" asp-action="AssignPairsForNewRound" asp-route-id="@Model.Id"> @Localizer["GenerateNextRound"]</a>
+        <a class="btn btn-dark" asp-controller="Tournaments" asp-action="Unregister" asp-route-tournamentId="@Model.Id" asp-route-userId="@Model.UserId"> @Localizer["Unregister"]</a>
     }
-    else if (!Model.FirstRoundAvailable && !Model.NextRoundAvailable && Model.FinishAvailable)
-    {
-        <a asp-controller="Tournaments" asp-action="Finish" asp-route-id="@Model.Id"> @Localizer["Finish"]</a>
-    }
-</div>
+}
