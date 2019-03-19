@@ -94,6 +94,11 @@ namespace DustTournamentKeeper.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Country)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Icon)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -196,11 +201,6 @@ namespace DustTournamentKeeper.Models
 
                 entity.Property(e => e.Spb).HasColumnName("SPB");
 
-                entity.Property(e => e.Status)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
                 entity.HasOne(d => d.BoardType)
                     .WithMany(p => p.Matches)
                     .HasForeignKey(d => d.BoardTypeId)
@@ -242,10 +242,6 @@ namespace DustTournamentKeeper.Models
             modelBuilder.Entity<Round>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Comment)
-                    .HasMaxLength(500)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.TournamentId).HasColumnName("TournamentID");
 

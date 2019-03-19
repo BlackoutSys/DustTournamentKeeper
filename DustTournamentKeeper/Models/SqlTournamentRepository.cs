@@ -223,7 +223,6 @@ namespace DustTournamentKeeper.Models
             match.RoundId = newMatch.RoundId;
             match.Spa = newMatch.Spa;
             match.Spb = newMatch.Spb;
-            match.Status = newMatch.Status;
 
             _context.SaveChanges();
         }
@@ -237,7 +236,6 @@ namespace DustTournamentKeeper.Models
 
         public void Update(Round round, Round newRound)
         {
-            round.Comment = newRound.Comment;
             round.Number = newRound.Number;
             round.TournamentId = newRound.TournamentId;
 
@@ -272,7 +270,6 @@ namespace DustTournamentKeeper.Models
 
             for (var i = 0; i < tournament.RoundsNavigation.Count; i++)
             {
-                tournament.RoundsNavigation[i].Comment = newTournament.RoundsNavigation[i].Comment;
                 tournament.RoundsNavigation[i].Number = newTournament.RoundsNavigation[i].Number;
 
                 for (var j = 0; j < tournament.RoundsNavigation[i].Matches.Count; j++)
@@ -288,7 +285,6 @@ namespace DustTournamentKeeper.Models
                     tournament.RoundsNavigation[i].Matches[j].SoSb = newTournament.RoundsNavigation[i].Matches[j].SoSb;
                     tournament.RoundsNavigation[i].Matches[j].PlayerAid = newTournament.RoundsNavigation[i].Matches[j].PlayerAid;
                     tournament.RoundsNavigation[i].Matches[j].PlayerBid = newTournament.RoundsNavigation[i].Matches[j].PlayerBid;
-                    tournament.RoundsNavigation[i].Matches[j].Status = newTournament.RoundsNavigation[i].Matches[j].Status;
                 }
             }
 

@@ -107,7 +107,6 @@ namespace DustTournamentKeeper.Infrastructure
                     BoardTypeId = pairing.Item3.BoardTypeId,
                     BoardNumber = pairing.Item3.Number,
                     RoundId = round.Id,
-                    Status = "Pending"
                 };
                 matches.Add(match);
             }
@@ -211,7 +210,6 @@ namespace DustTournamentKeeper.Infrastructure
                     BoardTypeId = pairing.Item3.BoardTypeId,
                     BoardNumber = pairing.Item3.Number,
                     RoundId = round.Id,
-                    Status = "Pending"
                 };
                 CalculatePlayersStrengthOfSchedule(match, playersScoresSortedReadOnly);
                 repository.Add(match);
@@ -456,7 +454,6 @@ namespace DustTournamentKeeper.Infrastructure
                         BoardNumber = mashupCandidateMatch.BoardNumber,
                         BoardTypeId = mashupCandidateMatch.BoardTypeId,
                         RoundId = mashupCandidateMatch.RoundId,
-                        Status = mashupCandidateMatch.Status,
                         PlayerAid = playerA1,
                         PlayerBid = playerB1,
                     });
@@ -466,7 +463,6 @@ namespace DustTournamentKeeper.Infrastructure
                         BoardNumber = horrorMatch.BoardNumber,
                         BoardTypeId = horrorMatch.BoardTypeId,
                         RoundId = horrorMatch.RoundId,
-                        Status = horrorMatch.Status,
                         PlayerAid = playerA2,
                         PlayerBid = playerB2,
                     });
@@ -535,7 +531,6 @@ namespace DustTournamentKeeper.Infrastructure
                         BoardNumber = mashupCandidateMatch.BoardNumber,
                         BoardTypeId = mashupCandidateMatch.BoardTypeId,
                         RoundId = mashupCandidateMatch.RoundId,
-                        Status = mashupCandidateMatch.Status,
                         PlayerAid = playerA1,
                         PlayerBid = playerB1,
                     });
@@ -545,7 +540,6 @@ namespace DustTournamentKeeper.Infrastructure
                         BoardNumber = horrorMatch.BoardNumber,
                         BoardTypeId = horrorMatch.BoardTypeId,
                         RoundId = horrorMatch.RoundId,
-                        Status = horrorMatch.Status,
                         PlayerAid = playerA2,
                         PlayerBid = playerB2,
                     });

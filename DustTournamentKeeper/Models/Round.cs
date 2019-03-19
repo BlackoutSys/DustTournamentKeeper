@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DustTournamentKeeper.Models
 {
-    public partial class Round
+    public class Round
     {
         public Round()
         {
@@ -13,7 +12,6 @@ namespace DustTournamentKeeper.Models
         public int Id { get; set; }
         public int Number { get; set; }
         public int TournamentId { get; set; }
-        public string Comment { get; set; }
 
         public virtual Tournament Tournament { get; set; }
         public virtual IList<Match> Matches { get; set; }

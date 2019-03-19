@@ -6,7 +6,6 @@
         public int RoundId { get; set; }
         public int PlayerAid { get; set; }
         public int? PlayerBid { get; set; }
-        public string Status { get; set; } = "Pending";
         public int BoardTypeId { get; set; }
         public int? Bpa { get; set; }
         public int? Bpb { get; set; }

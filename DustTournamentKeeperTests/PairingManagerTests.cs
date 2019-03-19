@@ -335,7 +335,6 @@ namespace DustTournamentKeeper.Tests
                 PlayerAid = player1,
                 PlayerBid = player2,
                 RoundId = 1,
-                Status = "Pending"
             };
 
             var match2 = new Match()
@@ -345,7 +344,6 @@ namespace DustTournamentKeeper.Tests
                 PlayerAid = player3,
                 PlayerBid = player4,
                 RoundId = 1,
-                Status = "Pending"
             };
 
             var match3 = new Match()
@@ -355,7 +353,6 @@ namespace DustTournamentKeeper.Tests
                 PlayerAid = player5,
                 PlayerBid = player6,
                 RoundId = 1,
-                Status = "Pending"
             };
 
             var matchesInRound = new List<Match>()

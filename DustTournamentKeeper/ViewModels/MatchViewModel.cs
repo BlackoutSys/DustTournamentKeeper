@@ -42,7 +42,6 @@ namespace DustTournamentKeeper.ViewModels
         {
             Id = match.Id;
             RoundId = match.RoundId;
-            Status = match.Status;
             Bpa = match.Bpa;
             Bpb = match.Bpb;
             Spa = match.Spa;
