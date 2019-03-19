@@ -304,8 +304,6 @@ namespace DustTournamentKeeper.Infrastructure
                             score.Loses++;
                         }
                     }
-
-                    //CalculatePlayersStrengthOfSchedule(match, playerScores);
                 }
 
                 score.BonusPoints = player.BonusPoints ?? 0;

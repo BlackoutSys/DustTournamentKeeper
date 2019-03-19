@@ -1,6 +1,6 @@
 ﻿namespace DustTournamentKeeper.Infrastructure
 {
-    public enum RoleEnum
+    public enum Roles
     {
         User = 1,
         Administrator

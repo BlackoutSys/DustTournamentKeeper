@@ -29,7 +29,7 @@ namespace DustTournamentKeeper.Infrastructure
             var admin = repository.Users.FirstOrDefault(u => u.UserName == "Admin");
             if (admin != null) return;
 
-            var roleId = repository.Roles.Where(r => r.Name == nameof(RoleEnum.Administrator)).Select(r => r.Id).FirstOrDefault().ToString();
+            var roleId = repository.Roles.Where(r => r.Name == nameof(Roles.Administrator)).Select(r => r.Id).FirstOrDefault().ToString();
             var applicationRole = await roleManager.FindByIdAsync(roleId);
 
             if (applicationRole == null)
@@ -51,7 +51,7 @@ namespace DustTournamentKeeper.Infrastructure
             IdentityResult result = await userManager.CreateAsync(user, "K4k@o123456");
             if (result.Succeeded)
             {
-                IdentityResult roleResult = await userManager.AddToRoleAsync(user, applicationRole.NormalizedName);
+                await userManager.AddToRoleAsync(user, applicationRole.NormalizedName);
             }
         }
 
@@ -59,7 +59,7 @@ namespace DustTournamentKeeper.Infrastructure
         {
             Random rand = new Random();
 
-            var roleId = repository.Roles.Where(r => r.Name == nameof(RoleEnum.User)).Select(r => r.Id).FirstOrDefault().ToString();
+            var roleId = repository.Roles.Where(r => r.Name == nameof(Roles.User)).Select(r => r.Id).FirstOrDefault().ToString();
             var applicationRole = await roleManager.FindByIdAsync(roleId);
 
             if (applicationRole == null)
@@ -89,7 +89,7 @@ namespace DustTournamentKeeper.Infrastructure
                 IdentityResult result = await userManager.CreateAsync(user, "K4k@o123456");
                 if (result.Succeeded)
                 {
-                    IdentityResult roleResult = await userManager.AddToRoleAsync(user, applicationRole.Name);
+                    await userManager.AddToRoleAsync(user, applicationRole.Name);
                 }
             }
         }

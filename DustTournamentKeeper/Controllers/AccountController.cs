@@ -65,7 +65,7 @@ namespace DustTournamentKeeper.Controllers
                 IdentityResult result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
                 if (result.Succeeded)
                 {
-                    var roleId = _repository.Roles.Where(r => r.Name == nameof(RoleEnum.User)).Select(r => r.Id).FirstOrDefault().ToString();
+                    var roleId = _repository.Roles.Where(r => r.Name == nameof(Roles.User)).Select(r => r.Id).FirstOrDefault().ToString();
                     var applicationRole = await _roleManager.FindByIdAsync(roleId);
                     if (applicationRole != null)
                     {

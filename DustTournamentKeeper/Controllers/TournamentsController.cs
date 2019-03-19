@@ -19,13 +19,11 @@ namespace DustTournamentKeeper.Controllers
     public class TournamentsController : Controller
     {
         private readonly ITournamentRepository _repository;
-        private readonly IStringLocalizer<TournamentsController> _localizer;
         private readonly UserManager<User> _userManager;
 
         public TournamentsController(ITournamentRepository repository, IStringLocalizer<TournamentsController> localizer, UserManager<User> userManager)
         {
             _repository = repository;
-            _localizer = localizer;
             _userManager = userManager;
         }
 
@@ -90,7 +88,7 @@ namespace DustTournamentKeeper.Controllers
             {
                 FinishAvailable =
                 (tournament.OrganizerId == userId
-                    || await _userManager.IsInRoleAsync(user, nameof(RoleEnum.Administrator)))
+                    || await _userManager.IsInRoleAsync(user, nameof(Roles.Administrator)))
                 && tournament.Status == nameof(TournamentStatus.Ongoing)
             };
 

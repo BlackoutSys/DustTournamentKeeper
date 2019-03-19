@@ -70,7 +70,7 @@ namespace DustTournamentKeeper.Controllers
             else if (id.HasValue)
             {
                 user = GetUser(id.Value);
-                if (!(user.UserName == User.Identity.Name || User.IsInRole(nameof(RoleEnum.Administrator))))
+                if (!(user.UserName == User.Identity.Name || User.IsInRole(nameof(Roles.Administrator))))
                 {
                     user = null;
                 }

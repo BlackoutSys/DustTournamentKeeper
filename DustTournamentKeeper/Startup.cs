@@ -119,21 +119,6 @@ namespace DustTournamentKeeper
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            //app.UseRouter(routes =>
-            //{
-            //    routes.MapMiddlewareRoute("{*mvcRoute}", subApp =>
-            //    {
-            //        subApp.UseRequestLocalization(locOptions);
-
-            //        subApp.UseMvc(mvcRoutes =>
-            //        {
-            //            mvcRoutes.MapRoute(
-            //                name: "default",
-            //                template: "{controller=Home}/{action=Index}");
-            //        });
-            //    });
-            //});
         }
     }
 }
