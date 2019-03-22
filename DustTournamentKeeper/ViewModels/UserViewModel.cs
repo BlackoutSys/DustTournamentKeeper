@@ -49,7 +49,7 @@ namespace DustTournamentKeeper.ViewModels
             City = user.City;
             Club = user?.Club?.Name;
             ClubId = user?.ClubId;
-            Email = user?.Email;
+            Email = user.Email;
 
             History = new List<UserHistoryViewModel>();
             foreach (var tournamentUser in user.TournamentUsers)

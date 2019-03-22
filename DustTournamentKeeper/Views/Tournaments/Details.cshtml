@@ -198,7 +198,7 @@ else if (!Model.FirstRoundAvailable && !Model.NextRoundAvailable && Model.Finish
 {
     @if (Model.CanRegister && !Model.Registered)
     {
-        <a class="btn btn-dark" asp-controller="Tournaments" asp-action="Register" asp-route-tournamentId="@Model.Id" asp-route-userId="@Model.UserId"> @Localizer["Register"]</a>
+        <a class="btn btn-dark" asp-controller="Tournaments" asp-action="Register" asp-route-tournamentId="@Model.Id" asp-route-user="@Model.UserId"> @Localizer["Register"]</a>
     }
     else
     {

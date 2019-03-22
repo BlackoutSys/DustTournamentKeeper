@@ -117,31 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Create" xml:space="preserve">
-    <value>Utwórz</value>
+  <data name="CreateBoardType" xml:space="preserve">
+    <value>Create Board type</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Opis</value>
+    <value>Description</value>
   </data>
-  <data name="Games" xml:space="preserve">
-    <value>Gry</value>
+  <data name="Discard" xml:space="preserve">
+    <value>Discard</value>
   </data>
-  <data name="GamesTitle" xml:space="preserve">
-    <value>Lista gier</value>
-  </data>
-  <data name="Icon" xml:space="preserve">
-    <value>Ikona</value>
-  </data>
-  <data name="Logo" xml:space="preserve">
-    <value>Logo</value>
+  <data name="EditBoardType" xml:space="preserve">
+    <value>Edit Board type</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Nazwa</value>
+    <value>Name</value>
   </data>
-  <data name="NoGames" xml:space="preserve">
-    <value>Brak gier</value>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
   </data>
-  <data name="Slogan" xml:space="preserve">
-    <value>Slogan</value>
+  <data name="UpsertBoardType" xml:space="preserve">
+    <value>Upsert Board type</value>
   </data>
 </root>

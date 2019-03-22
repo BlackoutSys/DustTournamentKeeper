@@ -1,0 +1,22 @@
+﻿@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["ManagementTitle"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4"><a class="btn btn-dark" asp-controller="Game" asp-action="Index">@Localizer["Games"]</a></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"><a class="btn btn-dark" asp-controller="Block" asp-action="Index">@Localizer["Blocks"]</a></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"><a class="btn btn-dark" asp-controller="Faction" asp-action="Index">@Localizer["Factions"]</a></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"><a class="btn btn-dark" asp-controller="BoardType" asp-action="Index">@Localizer["BoardTypes"]</a></div>
+    </div>
+</div>
+

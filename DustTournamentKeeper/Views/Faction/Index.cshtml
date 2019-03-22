@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Faction>
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["FactionsTitle"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Localizer["Factions"]</h2>
+<a class="btn btn-dark" asp-controller="Faction" asp-action="Upsert">@Localizer["Create"]</a>
+
+<table class="table table-striped table-dark">
+    <thead>
+        <tr>
+            <th scope="col">@Localizer["Name"]</th>
+            <th scope="col">@Localizer["Game"]</th>
+            <th scope="col">@Localizer["Block"]</th>
+            <th scope="col">@Localizer["Slogan"]</th>
+            <th scope="col">@Localizer["Logo"]</th>
+            <th scope="col">@Localizer["Icon"]</th>
+            <th scopre="col">@Localizer["Action"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model == null || Model.Count() == 0)
+        {
+            <tr><td colspan="4">@Localizer["NoFactions"]</td></tr>
+        }
+        else
+        {
+            @foreach (var faction in Model)
+            {
+            <tr>
+                <th scope="row"><a asp-controller="Faction" asp-action="Details" asp-route-id="@faction.Id">@faction.Name</a></th>
+                <td>@faction.Game?.Name</td>
+                <td>@faction.Block?.Name</td>
+                <td>@faction.Slogan</td>
+                <td>
+                    @if (faction.Logo != null)
+                    {<img src="@faction.Logo" alt="@faction.Name" />}
+                </td>
+                <td>
+                    @if (faction.Icon != null)
+                    {<img src="@faction.Icon" alt="@faction.Name" />}
+                </td>
+                <td><a asp-controller="Faction" asp-action="Remove" asp-route-id="@faction.Id">@Localizer["Remove"]</a></td>
+            </tr>
+            }
+        }
+    </tbody>
+</table>
+
+

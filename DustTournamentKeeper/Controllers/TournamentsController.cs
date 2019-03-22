@@ -32,7 +32,7 @@ namespace DustTournamentKeeper.Controllers
         {
             var gameIdInSession = HttpContext.Session.GetInt32("GameSystemId");
 
-            if (gameId > 0 && gameIdInSession != null && gameIdInSession.Value != gameId)
+            if (gameId > 0)
             {
                 HttpContext.Session.SetInt32("GameSystemId", gameId);
             }
@@ -40,14 +40,10 @@ namespace DustTournamentKeeper.Controllers
             {
                 gameId = gameIdInSession.Value;
             }
-            else
-            {
-                HttpContext.Session.SetInt32("GameSystemId", gameId);
-            }
 
             if (gameId == 0)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(HomeController.Index), "Home");
             }
 
             return View(_repository.Tournaments
@@ -88,7 +84,7 @@ namespace DustTournamentKeeper.Controllers
             {
                 FinishAvailable =
                 (tournament.OrganizerId == userId
-                    || await _userManager.IsInRoleAsync(user, nameof(Roles.Administrator)))
+                    || (user != null && await _userManager.IsInRoleAsync(user, nameof(Roles.Administrator))))
                 && tournament.Status == nameof(TournamentStatus.Ongoing)
             };
 
@@ -112,7 +108,7 @@ namespace DustTournamentKeeper.Controllers
             tournament.Organizer = user;
 
             var tournamentViewModel = new TournamentViewModel(tournament, user.Id);
-            PrepareTournamentViewModel(tournamentViewModel, tournament);
+            PrepareViewModel(tournamentViewModel, tournament);
 
             return View(tournamentViewModel);
         }
@@ -125,124 +121,127 @@ namespace DustTournamentKeeper.Controllers
             List<TournamentUser> tournamentUsers = null;
             List<TournamentUser> oldTournamentUsers = null;
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                tournament = new Tournament()
+                PrepareViewModel(tournamentViewModel, tournament);
+                return View(tournamentViewModel);
+            }
+
+            tournament = new Tournament()
+            {
+                Id = tournamentViewModel.Id,
+                DateStart = tournamentViewModel.DateStart,
+                DateEnd = tournamentViewModel.DateEnd,
+                City = tournamentViewModel.City,
+                Address = tournamentViewModel.Address,
+                Club = tournamentViewModel.Club,
+                ClubId = tournamentViewModel.ClubId,
+                Title = tournamentViewModel.Title,
+                Slogan = tournamentViewModel.Slogan,
+                PlayerLimit = tournamentViewModel.PlayerLimit,
+                Status = tournamentViewModel.Status,
+                Rounds = tournamentViewModel.Rounds,
+                ArmyPoints = tournamentViewModel.ArmyPoints,
+                SpecificRules = tournamentViewModel.SpecificRules,
+                OrganizerId = tournamentViewModel.OrganizerId,
+                Created = tournamentViewModel.Created,
+                Fee = tournamentViewModel.Fee,
+                FeeCurrency = tournamentViewModel.FeeCurrency,
+                Bpwin = tournamentViewModel.Bpwin,
+                Bptie = tournamentViewModel.Bptie,
+                Bploss = tournamentViewModel.Bploss,
+                Country = tournamentViewModel.Country,
+                GameId = tournamentViewModel.GameId
+            };
+
+            if (tournamentViewModel.Id > 0)
+            {
+                oldTournament = _repository.Tournaments
+                            .Include(t => t.ClubNavigation)
+                            .Include(t => t.Organizer)
+                            .Include(t => t.TournamentBoardTypes)
+                            .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches).ThenInclude(m => m.BoardType)
+                            .FirstOrDefault(t => t.Id == tournamentViewModel.Id);
+
+                tournamentUsers = _repository.TournamentUsers.Where(tu => tu.TournamentId == tournamentViewModel.Id).ToList();
+                oldTournamentUsers = tournamentUsers.ToList();
+
+                foreach (var playerViewModel in tournamentViewModel.PlayersList)
                 {
-                    Id = tournamentViewModel.Id,
-                    DateStart = tournamentViewModel.DateStart,
-                    DateEnd = tournamentViewModel.DateEnd,
-                    City = tournamentViewModel.City,
-                    Address = tournamentViewModel.Address,
-                    Club = tournamentViewModel.Club,
-                    ClubId = tournamentViewModel.ClubId,
-                    Title = tournamentViewModel.Title,
-                    Slogan = tournamentViewModel.Slogan,
-                    PlayerLimit = tournamentViewModel.PlayerLimit,
-                    Status = tournamentViewModel.Status,
-                    Rounds = tournamentViewModel.Rounds,
-                    ArmyPoints = tournamentViewModel.ArmyPoints,
-                    SpecificRules = tournamentViewModel.SpecificRules,
-                    OrganizerId = tournamentViewModel.OrganizerId,
-                    Created = tournamentViewModel.Created,
-                    Fee = tournamentViewModel.Fee,
-                    FeeCurrency = tournamentViewModel.FeeCurrency,
-                    Bpwin = tournamentViewModel.Bpwin,
-                    Bptie = tournamentViewModel.Bptie,
-                    Bploss = tournamentViewModel.Bploss,
-                    Country = tournamentViewModel.Country,
-                    GameId = tournamentViewModel.GameId
+                    var tournamentUser = tournamentUsers.FirstOrDefault(tu => tu.Id == playerViewModel.Id);
+                    var oldTournamentUser = oldTournamentUsers.FirstOrDefault(otu => otu.Id == playerViewModel.Id);
+                    if (tournamentUser != null && oldTournamentUser != null)
+                    {
+                        tournamentUser.BonusPoints = playerViewModel.BonusPoints;
+                        tournamentUser.PenaltyPoints = playerViewModel.PenaltyPoints;
+
+                        _repository.Update(oldTournamentUser, tournamentUser);
+                    }
+                }
+
+                foreach (var tournamentUser in tournamentUsers)
+                {
+                    tournamentUser.Bp = 0;
+                    tournamentUser.Sp = 0;
+                    tournamentUser.SoS = 0;
+                }
+            }
+
+            tournament.RoundsNavigation = new List<Round>();
+            foreach (var roundViewModel in tournamentViewModel.RoundsList)
+            {
+                var round = new Round()
+                {
+                    Id = roundViewModel.Id,
+                    TournamentId = tournamentViewModel.Id,
+                    Number = roundViewModel.Number,
+
                 };
-
-                if (tournamentViewModel.Id > 0)
+                round.Matches = new List<Match>();
+                foreach (var matchViewModel in roundViewModel.Matches)
                 {
-                    oldTournament = _repository.Tournaments
-                                .Include(t => t.ClubNavigation)
-                                .Include(t => t.Organizer)
-                                .Include(t => t.TournamentBoardTypes)
-                                .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches).ThenInclude(m => m.BoardType)
-                                .FirstOrDefault(t => t.Id == tournamentViewModel.Id);
-
-                    tournamentUsers = _repository.TournamentUsers.Where(tu => tu.TournamentId == tournamentViewModel.Id).ToList();
-                    oldTournamentUsers = tournamentUsers.ToList();
-
-                    foreach (var playerViewModel in tournamentViewModel.PlayersList)
+                    var match = new Match()
                     {
-                        var tournamentUser = tournamentUsers.FirstOrDefault(tu => tu.Id == playerViewModel.Id);
-                        var oldTournamentUser = oldTournamentUsers.FirstOrDefault(otu => otu.Id == playerViewModel.Id);
-                        if (tournamentUser != null && oldTournamentUser != null)
-                        {
-                            tournamentUser.BonusPoints = playerViewModel.BonusPoints;
-                            tournamentUser.PenaltyPoints = playerViewModel.PenaltyPoints;
-
-                            _repository.Update(oldTournamentUser, tournamentUser);
-                        }
-                    }
-
-                    foreach (var tournamentUser in tournamentUsers)
-                    {
-                        tournamentUser.Bp = 0;
-                        tournamentUser.Sp = 0;
-                        tournamentUser.SoS = 0;
-                    }
-                }
-
-                tournament.RoundsNavigation = new List<Round>();
-                foreach (var roundViewModel in tournamentViewModel.RoundsList)
-                {
-                    var round = new Round()
-                    {
-                        Id = roundViewModel.Id,
-                        TournamentId = tournamentViewModel.Id,
-                        Number = roundViewModel.Number,
-
+                        Id = matchViewModel.Id,
+                        RoundId = roundViewModel.Id,
+                        BoardTypeId = matchViewModel.BoardTypeId,
+                        BoardNumber = matchViewModel.BoardNumber,
+                        Bpa = matchViewModel.Bpa,
+                        Bpb = matchViewModel.Bpb,
+                        Spa = matchViewModel.Spa,
+                        Spb = matchViewModel.Spb,
+                        PlayerAid = matchViewModel.PlayerAid,
+                        PlayerBid = matchViewModel.PlayerBid
                     };
-                    round.Matches = new List<Match>();
-                    foreach (var matchViewModel in roundViewModel.Matches)
+                    round.Matches.Add(match);
+                    if (matchViewModel.Id > 0)
                     {
-                        var match = new Match()
-                        {
-                            Id = matchViewModel.Id,
-                            RoundId = roundViewModel.Id,
-                            BoardTypeId = matchViewModel.BoardTypeId,
-                            BoardNumber = matchViewModel.BoardNumber,
-                            Bpa = matchViewModel.Bpa,
-                            Bpb = matchViewModel.Bpb,
-                            Spa = matchViewModel.Spa,
-                            Spb = matchViewModel.Spb,
-                            PlayerAid = matchViewModel.PlayerAid,
-                            PlayerBid = matchViewModel.PlayerBid
-                        };
-                        round.Matches.Add(match);
-                        if (matchViewModel.Id > 0)
-                        {
-                            _repository.Update(_repository.Matches.FirstOrDefault(m => m.Id == matchViewModel.Id), match);
-                        }
-
-                        var tournamentUserA = tournamentUsers.FirstOrDefault(tu => tu.UserId == matchViewModel.PlayerAid);
-                        var tournamentUserB = tournamentUsers.FirstOrDefault(tu => tu.UserId == matchViewModel.PlayerBid);
-
-                        if (tournamentUserA != null)
-                        {
-                            tournamentUserA.Bp = tournamentUserA.Bp.GetValueOrDefault() + matchViewModel.Bpa;
-                            tournamentUserA.Sp = tournamentUserA.Sp.GetValueOrDefault() + matchViewModel.Spa;
-                            tournamentUserA.SoS = tournamentUserA.SoS.GetValueOrDefault() + matchViewModel.SoSa;
-
-                            _repository.Update(oldTournamentUsers.FirstOrDefault(tu => tu.Id == tournamentUserA.Id), tournamentUserA);
-                        }
-
-                        if (tournamentUserB != null)
-                        {
-                            tournamentUserB.Bp = tournamentUserB.Bp.GetValueOrDefault() + matchViewModel.Bpb;
-                            tournamentUserB.Sp = tournamentUserB.Sp.GetValueOrDefault() + matchViewModel.Spb;
-                            tournamentUserB.SoS = tournamentUserB.SoS.GetValueOrDefault() + matchViewModel.SoSb;
-
-                            _repository.Update(oldTournamentUsers.FirstOrDefault(tu => tu.Id == tournamentUserB.Id), tournamentUserB);
-                        }
+                        _repository.Update(_repository.Matches.FirstOrDefault(m => m.Id == matchViewModel.Id), match);
                     }
 
-                    tournament.RoundsNavigation.Add(round);
+                    var tournamentUserA = tournamentUsers.FirstOrDefault(tu => tu.UserId == matchViewModel.PlayerAid);
+                    var tournamentUserB = tournamentUsers.FirstOrDefault(tu => tu.UserId == matchViewModel.PlayerBid);
+
+                    if (tournamentUserA != null)
+                    {
+                        tournamentUserA.Bp = tournamentUserA.Bp.GetValueOrDefault() + matchViewModel.Bpa;
+                        tournamentUserA.Sp = tournamentUserA.Sp.GetValueOrDefault() + matchViewModel.Spa;
+                        tournamentUserA.SoS = tournamentUserA.SoS.GetValueOrDefault() + matchViewModel.SoSa;
+
+                        _repository.Update(oldTournamentUsers.FirstOrDefault(tu => tu.Id == tournamentUserA.Id), tournamentUserA);
+                    }
+
+                    if (tournamentUserB != null)
+                    {
+                        tournamentUserB.Bp = tournamentUserB.Bp.GetValueOrDefault() + matchViewModel.Bpb;
+                        tournamentUserB.Sp = tournamentUserB.Sp.GetValueOrDefault() + matchViewModel.Spb;
+                        tournamentUserB.SoS = tournamentUserB.SoS.GetValueOrDefault() + matchViewModel.SoSb;
+
+                        _repository.Update(oldTournamentUsers.FirstOrDefault(tu => tu.Id == tournamentUserB.Id), tournamentUserB);
+                    }
                 }
+
+                tournament.RoundsNavigation.Add(round);
 
                 if (tournamentViewModel.Id > 0)
                 {
@@ -272,14 +271,9 @@ namespace DustTournamentKeeper.Controllers
                         counter++;
                     }
                 }
+            }
 
-                return RedirectToAction("Details", new { id = tournament.Id });
-            }
-            else
-            {
-                PrepareTournamentViewModel(tournamentViewModel, tournament);
-                return View(tournamentViewModel);
-            }
+            return RedirectToAction("Details", new { id = tournament.Id });
         }
 
         public IActionResult Begin(int id)
@@ -312,7 +306,7 @@ namespace DustTournamentKeeper.Controllers
             return NotFound();
         }
 
-        public IActionResult Register(int tournamentId, int userId)
+        public IActionResult Register(int tournamentId, string user)
         {
             var tournament = _repository.Tournaments
                 .Include(t => t.TournamentUsers)
@@ -322,12 +316,26 @@ namespace DustTournamentKeeper.Controllers
                 return NotFound();
             }
 
-            User user = _repository.Users.FirstOrDefault(u => u.Id == userId);
-            if (user == null)
+            User userObj;
+            if (int.TryParse(user, out int userId))
+            {
+                userObj = _repository.Users.FirstOrDefault(u => u.Id == userId);
+            }
+            else
+            {
+                userObj = _repository.Users.FirstOrDefault(u => u.UserName == user);
+            }
+
+            if (userObj == null)
             {
                 return NotFound();
             }
 
+            return RegisterInternal(tournament, userObj);
+        }
+
+        private IActionResult RegisterInternal(Tournament tournament, User user)
+        {
             if (!tournament.TournamentUsers.Any(utt => utt.UserId == user.Id))
             {
                 var blocks = _repository.Blocks.Where(b => b.GameId == tournament.GameId).ToList();
@@ -335,26 +343,26 @@ namespace DustTournamentKeeper.Controllers
 
                 var registerToTournamentViewModel = new RegisterToTournamentViewModel()
                 {
-                    TournamentId = tournamentId,
+                    TournamentId = tournament.Id,
                     TournamentTitle = tournament.Title,
-                    UserId = userId,
+                    UserId = user.Id,
                     UserName = user.UserName,
                     BlocksAvailable = blocks.Select(b => new SelectListItem
-                        {
-                            Text = b.Name,
-                            Value = b.Id.ToString()
-                        }).ToList(),
+                    {
+                        Text = b.Name,
+                        Value = b.Id.ToString()
+                    }).ToList(),
                     FactionsAvailable = factions.Select(f => new SelectListItem
-                        {
-                            Text  = f.Name,
-                            Value = f.Id.ToString()
-                        }).ToList()
+                    {
+                        Text = f.Name,
+                        Value = f.Id.ToString()
+                    }).ToList()
                 };
 
                 return View(registerToTournamentViewModel);
             }
 
-            return RedirectToAction("Details", new { id = tournamentId });
+            return RedirectToAction("Details", new { id = tournament.Id });
         }
 
         [HttpPost]
@@ -423,7 +431,7 @@ namespace DustTournamentKeeper.Controllers
             }
         }
 
-        private void PrepareTournamentViewModel(TournamentViewModel tournamentViewModel, Tournament tournament)
+        private void PrepareViewModel(TournamentViewModel tournamentViewModel, Tournament tournament)
         {
             tournamentViewModel.Boards = _repository.BoardTypes.ToList();
             tournamentViewModel.BoardsSelection = _repository.BoardTypes

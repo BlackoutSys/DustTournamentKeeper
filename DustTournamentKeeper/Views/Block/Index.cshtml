@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Block>
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["BlocksTitle"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Localizer["Blocks"]</h2>
+<a class="btn btn-dark" asp-controller="Block" asp-action="Upsert">@Localizer["Create"]</a>
+
+<table class="table table-striped table-dark">
+    <thead>
+        <tr>
+            <th scope="col">@Localizer["Name"]</th>
+            <th scope="col">@Localizer["Game"]</th>
+            <th scope="col">@Localizer["Slogan"]</th>
+            <th scope="col">@Localizer["Logo"]</th>
+            <th scope="col">@Localizer["Icon"]</th>
+            <th scope="col">@Localizer["Action"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model == null || Model.Count() == 0)
+        {
+            <tr><td colspan="4">@Localizer["NoBlocks"]</td></tr>
+        }
+        else
+        {
+            @foreach (var block in Model)
+            {
+            <tr>
+                <th scope="row"><a asp-controller="Block" asp-action="Details" asp-route-id="@block.Id">@block.Name</a></th>
+                <td>@block.Game?.Name</td>
+                <td>@block.Slogan</td>
+                <td>@if (block.Logo != null)
+                {<img src="@block.Logo" alt="@block.Name" />}</td>
+                <td>@if (block.Icon != null)
+                {<img src="@block.Icon" alt="@block.Name" />}</td>
+                <td><a asp-controller="Block" asp-action="Remove" asp-route-id="@block.Id">@Localizer["Remove"]</a></td>
+            </tr>
+            }
+        }
+    </tbody>
+</table>
+
+

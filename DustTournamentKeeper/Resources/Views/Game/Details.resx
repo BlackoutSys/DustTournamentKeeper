@@ -117,29 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Create" xml:space="preserve">
-    <value>Utwórz</value>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
   </data>
-  <data name="Description" xml:space="preserve">
-    <value>Opis</value>
+  <data name="City" xml:space="preserve">
+    <value>City</value>
   </data>
-  <data name="Games" xml:space="preserve">
-    <value>Gry</value>
+  <data name="ClubDetails" xml:space="preserve">
+    <value>Club details</value>
   </data>
-  <data name="GamesTitle" xml:space="preserve">
-    <value>Lista gier</value>
-  </data>
-  <data name="Icon" xml:space="preserve">
-    <value>Ikona</value>
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
   </data>
   <data name="Logo" xml:space="preserve">
     <value>Logo</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Nazwa</value>
-  </data>
-  <data name="NoGames" xml:space="preserve">
-    <value>Brak gier</value>
+    <value>Name</value>
   </data>
   <data name="Slogan" xml:space="preserve">
     <value>Slogan</value>

@@ -1,0 +1,63 @@
+﻿@model FactionViewModel
+
+@inject  IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["UpsertFaction"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@(Model.Id > 0 ? Localizer["EditFaction"] : Localizer["CreateFaction"])</h2>
+
+<form asp-controller="Faction" asp-action="Upsert" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label>@Localizer["Name"]</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Game"]</label>
+        <select asp-for="GameId" asp-items="@Model.GamesAvailable" class="form-control">
+            <option value="@null">@Localizer["PleaseSelect"]</option>
+        </select>
+        <span asp-validation-for="GameId"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Block"]</label>
+        <select asp-for="BlockId" asp-items="@Model.BlocksAvailable" class="form-control">
+            <option value="@null">@Localizer["PleaseSelect"]</option>
+        </select>
+        <span asp-validation-for="BlockId"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Slogan"]</label>
+        <input asp-for="Slogan" class="form-control" />
+        <span asp-validation-for="Slogan"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Logo"]</label>
+        <input asp-for="Logo" class="form-control" readonly />
+        <button class="btn btn-dark">@Localizer["UploadLogo"]</button>
+        <span asp-validation-for="Logo"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Icon"]</label>
+        <input asp-for="Icon" class="form-control" readonly />
+        <button class="btn btn-dark">@Localizer["UploadIcon"]</button>
+        <span asp-validation-for="Icon"></span>
+    </div>
+
+    <div class="text-center">
+        <input class="btn btn-dark" type="submit" value="@Localizer["Save"]" />
+        <a class="btn btn-dark" asp-controller="Block" asp-action="Index">@Localizer["Discard"]</a>
+    </div>
+</form>

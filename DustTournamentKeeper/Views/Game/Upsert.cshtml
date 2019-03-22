@@ -1,0 +1,53 @@
+﻿@model Game
+
+@inject  IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["UpsertGame"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@(Model.Id > 0 ? Localizer["EditGame"] : Localizer["CreateGame"])</h2>
+
+<form asp-controller="Game" asp-action="Upsert" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label>@Localizer["Name"]</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Slogan"]</label>
+        <input asp-for="Slogan" class="form-control" />
+        <span asp-validation-for="Slogan"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Description"]</label>
+        <input asp-for="Description" class="form-control" />
+        <span asp-validation-for="Description"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Logo"]</label>
+        <input asp-for="Logo" class="form-control" readonly />
+        <button class="btn btn-dark">@Localizer["UploadLogo"]</button>
+        <span asp-validation-for="Logo"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Icon"]</label>
+        <input asp-for="Icon" class="form-control" readonly />
+        <button class="btn btn-dark">@Localizer["UploadIcon"]</button>
+        <span asp-validation-for="Icon"></span>
+    </div>
+
+    <div class="text-center">
+        <input class="btn btn-dark" type="submit" value="@Localizer["Save"]" />
+        <a class="btn btn-dark" asp-controller="Game" asp-action="Index">@Localizer["Discard"]</a>
+    </div>
+</form>

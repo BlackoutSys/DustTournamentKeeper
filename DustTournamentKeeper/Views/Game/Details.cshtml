@@ -1,0 +1,38 @@
+﻿@model Game
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = @Localizer["GameDetails"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Name</h2><a class="btn btn-dark" asp-controller="Game" asp-action="Upsert" asp-route-id="@Model.Id">@Localizer["Edit"]</a><br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-4"><p>@Localizer["Name"]</p></div>
+        <div class="col-md-4"><p>@Model.Name</p></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"><p>@Localizer["Slogan"]</p></div>
+        <div class="col-md-4"><p>@Model.Slogan</p></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"><p>@Localizer["Description"]</p></div>
+        <div class="col-md-4"><p>@Model.Description</p></div>
+    </div>
+    @if (Model.Logo != null)
+    {
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["Logo"]</p></div>
+            <div class="col-md-4"><img src="@Model.Logo" alt="@Model.Name" /></div>
+        </div>
+    }
+    @if (Model.Icon != null)
+    {
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["Icon"]</p></div>
+            <div class="col-md-4"><img src="@Model.Icon" alt="@Model.Name" /></div>
+        </div>
+    }
+</div>

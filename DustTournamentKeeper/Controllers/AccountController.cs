@@ -72,7 +72,7 @@ namespace DustTournamentKeeper.Controllers
                         IdentityResult roleResult = await _userManager.AddToRoleAsync(user, applicationRole.NormalizedName);
                         if (roleResult.Succeeded)
                         {
-                            return RedirectToAction("Index");
+                            return RedirectToAction(nameof(HomeController.Index), "Home");
                         }
                     }
                 }
@@ -85,7 +85,7 @@ namespace DustTournamentKeeper.Controllers
                     return View(registerUserViewModel);
                 }
 
-                return RedirectToLocal(ViewData["ReturnUrl"]?.ToString());
+                return RedirectToAction(nameof(HomeController.Index), "Home");
             }
             else
             {
@@ -165,9 +165,9 @@ namespace DustTournamentKeeper.Controllers
             return RedirectToAction("Login");
         }
 
-        public IActionResult GenerateTournaments()
+        public async Task<IActionResult> GenerateTournaments()
         {
-            TestDataGenerator.GenerateTournaments(5, _repository);
+            await TestDataGenerator.GenerateTournaments(5, _repository, _userManager, _roleManager);
             return RedirectToAction("Login");
         }
 
@@ -177,7 +177,7 @@ namespace DustTournamentKeeper.Controllers
             await TestDataGenerator.GenerateUsers(30, _repository, _userManager, _roleManager);
             await TestDataGenerator.GenerateAdmin(_repository, _userManager, _roleManager);
             TestDataGenerator.GenerateBoards(10, _repository);
-            TestDataGenerator.GenerateTournaments(5, _repository);
+            await TestDataGenerator.GenerateTournaments(5, _repository, _userManager, _roleManager);
             return RedirectToAction("Login");
         }
 

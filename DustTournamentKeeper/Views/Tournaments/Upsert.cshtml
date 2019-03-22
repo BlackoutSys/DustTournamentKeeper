@@ -137,6 +137,18 @@
     }
 
     <p>@Localizer["Players"]</p>
+    <div class="container">
+        <input type="text" id="regUserText" value="" />
+        <a id="regUserLink" asp-controller="Tournaments" asp-action="Register" asp-route-tournamentId="@Model.Id" asp-route-user="xxx" class="btn btn-dark">@Localizer["RegisterPlayer"]</a>
+        <script>
+          $(function () {
+              $('#regUserLink').click(function () {
+              var userName = $("#regUserText").val();
+                  this.href = this.href.replace("xxx", userName);
+            });
+          });
+        </script>
+    </div>
     <table class="table table-striped table-dark">
         <thead>
             <tr>

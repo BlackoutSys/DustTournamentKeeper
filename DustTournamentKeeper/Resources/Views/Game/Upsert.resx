@@ -117,31 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Create" xml:space="preserve">
-    <value>Utwórz</value>
+  <data name="CreateGame" xml:space="preserve">
+    <value>Create game</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Opis</value>
+    <value>Description</value>
   </data>
-  <data name="Games" xml:space="preserve">
-    <value>Gry</value>
+  <data name="Discard" xml:space="preserve">
+    <value>Discard</value>
   </data>
-  <data name="GamesTitle" xml:space="preserve">
-    <value>Lista gier</value>
+  <data name="EditGame" xml:space="preserve">
+    <value>Edit game</value>
   </data>
   <data name="Icon" xml:space="preserve">
-    <value>Ikona</value>
+    <value>Icon</value>
   </data>
   <data name="Logo" xml:space="preserve">
     <value>Logo</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Nazwa</value>
+    <value>Name</value>
   </data>
-  <data name="NoGames" xml:space="preserve">
-    <value>Brak gier</value>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="Slogan" xml:space="preserve">
     <value>Slogan</value>
+  </data>
+  <data name="UploadIcon" xml:space="preserve">
+    <value>Upload icon</value>
+  </data>
+  <data name="UploadLogo" xml:space="preserve">
+    <value>Upload logo</value>
+  </data>
+  <data name="UpsertGame" xml:space="preserve">
+    <value>Upsert game</value>
   </data>
 </root>

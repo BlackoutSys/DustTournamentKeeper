@@ -19,7 +19,7 @@ namespace DustTournamentKeeper.ViewModels
         [Required]
         public string City { get; set; }
         public string Club { get; set; }
-        public int ClubId { get; set; }
+        public int? ClubId { get; set; }
 
         [Required]
         [DataType(DataType.EmailAddress)]

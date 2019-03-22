@@ -18,7 +18,8 @@ namespace DustTournamentKeeper.Infrastructure
                 {
                     Address = $"Address{i}",
                     City = $"City{i}",
-                    Name = $"Club{i}"
+                    Name = $"Club{i}",
+                    Country = $"Country{i}"
                 };
                 repository.Add(club);
             }
@@ -30,7 +31,7 @@ namespace DustTournamentKeeper.Infrastructure
             if (admin != null) return;
 
             var roleId = repository.Roles.Where(r => r.Name == nameof(Roles.Administrator)).Select(r => r.Id).FirstOrDefault().ToString();
-            var applicationRole = await roleManager.FindByIdAsync(roleId);
+            var applicationRole = await roleManager.FindByIdAsync(roleId).ConfigureAwait(false);
 
             if (applicationRole == null)
             {
@@ -48,10 +49,10 @@ namespace DustTournamentKeeper.Infrastructure
                 SecurityStamp = Guid.NewGuid().ToString()
             };
 
-            IdentityResult result = await userManager.CreateAsync(user, "K4k@o123456");
+            IdentityResult result = await userManager.CreateAsync(user, "K4k@o123456").ConfigureAwait(false);
             if (result.Succeeded)
             {
-                await userManager.AddToRoleAsync(user, applicationRole.NormalizedName);
+                await userManager.AddToRoleAsync(user, applicationRole.NormalizedName).ConfigureAwait(false);
             }
         }
 
@@ -60,7 +61,7 @@ namespace DustTournamentKeeper.Infrastructure
             Random rand = new Random();
 
             var roleId = repository.Roles.Where(r => r.Name == nameof(Roles.User)).Select(r => r.Id).FirstOrDefault().ToString();
-            var applicationRole = await roleManager.FindByIdAsync(roleId);
+            var applicationRole = await roleManager.FindByIdAsync(roleId).ConfigureAwait(false);
 
             if (applicationRole == null)
             {
@@ -86,10 +87,10 @@ namespace DustTournamentKeeper.Infrastructure
                     user.ClubId = availableClubs[rand.Next(0, availableClubs.Count)].Id;
                 }
 
-                IdentityResult result = await userManager.CreateAsync(user, "K4k@o123456");
+                IdentityResult result = await userManager.CreateAsync(user, "K4k@o123456").ConfigureAwait(false);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, applicationRole.Name);
+                    await userManager.AddToRoleAsync(user, applicationRole.Name).ConfigureAwait(false);
                 }
             }
         }
@@ -107,9 +108,15 @@ namespace DustTournamentKeeper.Infrastructure
             }
         }
 
-        public static void GenerateTournaments(int number, ITournamentRepository repository)
+        public async static Task GenerateTournaments(int number, ITournamentRepository repository, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             Random rand = new Random();
+
+            var organizer = repository.Users.FirstOrDefault(u => u.UserName == "Admin");
+            if (organizer == null)
+            {
+                await GenerateAdmin(repository, userManager, roleManager);
+            }
 
             var organizerId = repository.Users.FirstOrDefault(u => u.UserName == "Admin").Id;
             var factionsAvailable = repository.Factions.ToList();
@@ -212,9 +219,9 @@ namespace DustTournamentKeeper.Infrastructure
 
             foreach (var user in repository.Users.ToList())
             {
-                if (!await userManager.IsInRoleAsync(user, "Administrator"))
+                if (!await userManager.IsInRoleAsync(user, "Administrator").ConfigureAwait(false))
                 {
-                    await userManager.DeleteAsync(user);
+                    await userManager.DeleteAsync(user).ConfigureAwait(false);
                 }
             }
 
