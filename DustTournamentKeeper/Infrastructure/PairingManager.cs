@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace DustTournamentKeeper.Infrastructure
 {
@@ -310,11 +311,90 @@ namespace DustTournamentKeeper.Infrastructure
                 playerScores.Add(score);
             }
 
-            // Sort players by their score - BP + Bonus - Penalty, SP, SoS, Bye
-            return playerScores.OrderByDescending(ps => ps.TotalBigPoints + ps.BonusPoints - ps.PenaltyPoints)
-                .ThenByDescending(ps => ps.TotalSmallPoints)
-                .ThenByDescending(ps => ps.TotalSoS)
-                .ThenByDescending(ps => ps.Byes)
+            return SortPlayerScoresUseTieBreakers(playerScores, tournament);
+        }
+
+        public static List<PlayersTournamentScore> SortPlayerScoresUseTieBreakers(List<PlayersTournamentScore> playerScores, Tournament tournament)
+        {
+            int tieBreaker1(PlayersTournamentScore ps)
+            {
+                int tieBreaker = tournament.TieBreaker1.HasValue ?
+                    tournament.TieBreaker1.Value :
+                    (int)TieBreaker.BigPoints;
+
+                switch ((TieBreaker)tieBreaker)
+                {
+                    case TieBreaker.BigPoints:
+                        return ps.TotalBigPoints + ps.BonusPoints - ps.PenaltyPoints;
+                    case TieBreaker.SmallPoints:
+                        return ps.TotalSmallPoints;
+                    case TieBreaker.SoS:
+                        return ps.TotalSoS;
+                    case TieBreaker.Bye:
+                        return ps.Byes;
+                    default:
+                        return ps.TotalBigPoints + ps.BonusPoints - ps.PenaltyPoints;
+                }
+            }
+
+            int tieBreaker2(PlayersTournamentScore ps)
+            {
+                if (tournament.TieBreaker2 == null) return tieBreaker1(ps);
+                switch ((TieBreaker)tournament.TieBreaker2)
+                {
+                    case TieBreaker.BigPoints:
+                        return ps.TotalBigPoints + ps.BonusPoints - ps.PenaltyPoints;
+                    case TieBreaker.SmallPoints:
+                        return ps.TotalSmallPoints;
+                    case TieBreaker.SoS:
+                        return ps.TotalSoS;
+                    case TieBreaker.Bye:
+                        return ps.Byes;
+                    default:
+                        return tieBreaker1(ps);
+                }
+            }
+
+            int tieBreaker3(PlayersTournamentScore ps)
+            {
+                if (tournament.TieBreaker3 == null) return tieBreaker2(ps);
+                switch ((TieBreaker)tournament.TieBreaker3)
+                {
+                    case TieBreaker.BigPoints:
+                        return ps.TotalBigPoints + ps.BonusPoints - ps.PenaltyPoints;
+                    case TieBreaker.SmallPoints:
+                        return ps.TotalSmallPoints;
+                    case TieBreaker.SoS:
+                        return ps.TotalSoS;
+                    case TieBreaker.Bye:
+                        return ps.Byes;
+                    default:
+                        return tieBreaker2(ps);
+                }
+            }
+
+            int tieBreaker4(PlayersTournamentScore ps)
+            {
+                if (tournament.TieBreaker4 == null) return tieBreaker3(ps);
+                switch ((TieBreaker)tournament.TieBreaker4)
+                {
+                    case TieBreaker.BigPoints:
+                        return ps.TotalBigPoints + ps.BonusPoints - ps.PenaltyPoints;
+                    case TieBreaker.SmallPoints:
+                        return ps.TotalSmallPoints;
+                    case TieBreaker.SoS:
+                        return ps.TotalSoS;
+                    case TieBreaker.Bye:
+                        return ps.Byes;
+                    default:
+                        return tieBreaker3(ps);
+                }
+            }
+
+            return playerScores.OrderByDescending(tieBreaker1)
+                .ThenByDescending(tieBreaker2)
+                .ThenByDescending(tieBreaker3)
+                .ThenByDescending(tieBreaker4)
                 .ToList();
         }
 

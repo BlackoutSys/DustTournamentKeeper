@@ -151,7 +151,11 @@ namespace DustTournamentKeeper.Controllers
                 Bptie = tournamentViewModel.Bptie,
                 Bploss = tournamentViewModel.Bploss,
                 Country = tournamentViewModel.Country,
-                GameId = tournamentViewModel.GameId
+                GameId = tournamentViewModel.GameId,
+                TieBreaker1 = tournamentViewModel.TieBreaker1,
+                TieBreaker2 = tournamentViewModel.TieBreaker2,
+                TieBreaker3 = tournamentViewModel.TieBreaker3,
+                TieBreaker4 = tournamentViewModel.TieBreaker4
             };
 
             if (tournamentViewModel.Id > 0)
@@ -242,37 +246,37 @@ namespace DustTournamentKeeper.Controllers
                 }
 
                 tournament.RoundsNavigation.Add(round);
-
-                if (tournamentViewModel.Id > 0)
-                {
-                    _repository.Update(oldTournament, tournament);
-                }
-                else
-                {
-                    _repository.Add(tournament);
-                }
-
-                foreach (var tournamentBoardType in tournament.TournamentBoardTypes)
-                {
-                    _repository.Delete(tournamentBoardType);
-                }
-
-                int counter = 1;
-                foreach (var boardSelection in tournamentViewModel.BoardsSelection)
-                {
-                    for (int i = 0; i < boardSelection.Count; i++)
-                    {
-                        _repository.Add(new TournamentBoardType()
-                        {
-                            BoardTypeId = boardSelection.Id,
-                            Number = counter,
-                            TournamentId = tournament.Id
-                        });
-                        counter++;
-                    }
-                }
             }
 
+            if (tournamentViewModel.Id > 0)
+            {
+                _repository.Update(oldTournament, tournament);
+            }
+            else
+            {
+                _repository.Add(tournament);
+            }
+
+            foreach (var tournamentBoardType in tournament.TournamentBoardTypes)
+            {
+                _repository.Delete(tournamentBoardType);
+            }
+
+            int counter = 1;
+            foreach (var boardSelection in tournamentViewModel.BoardsSelection)
+            {
+                for (int i = 0; i < boardSelection.Count; i++)
+                {
+                    _repository.Add(new TournamentBoardType()
+                    {
+                        BoardTypeId = boardSelection.Id,
+                        Number = counter,
+                        TournamentId = tournament.Id
+                    });
+                    counter++;
+                }
+            }
+            
             return RedirectToAction("Details", new { id = tournament.Id });
         }
 

@@ -33,7 +33,8 @@
             {
             <tr>
                 <th scope="row"><a asp-controller="Faction" asp-action="Details" asp-route-id="@faction.Id">@faction.Name</a></th>
-                <td>@faction.Game?.Name</td>
+                <td><a asp-controller="Faction" asp-action="GetAvailableFactions" asp-route-blockId="@faction.BlockId">@faction.BlockId</a></td>
+                @*<td>@faction.Game?.Name</td>*@
                 <td>@faction.Block?.Name</td>
                 <td>@faction.Slogan</td>
                 <td>

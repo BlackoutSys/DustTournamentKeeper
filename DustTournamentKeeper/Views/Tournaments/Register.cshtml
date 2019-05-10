@@ -7,6 +7,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<script src="~/js/RegisterToTournament.js"></script>
+
 <div class="container">
     @Localizer["User"]: @Model.UserName <br />
     @Localizer["Tournament"]: @Model.TournamentTitle <br />
@@ -22,7 +24,7 @@
 
     <div class="form-group">
         <label>@Localizer["Block"]</label>
-        <select asp-for="BlockId" asp-items="@Model.BlocksAvailable" class="form-control">
+        <select id="blockSelect" asp-for="BlockId" asp-items="@Model.BlocksAvailable" class="form-control">
             <option value="@null">@Localizer["PleaseSelect"]</option>
         </select>
         <span asp-validation-for="BlockId"></span>
@@ -30,7 +32,7 @@
 
     <div class="form-group">
         <label>@Localizer["Faction"]</label>
-        <select asp-for="FactionId" asp-items="@Model.FactionsAvailable" class="form-control">
+        <select id="factionSelect" asp-for="FactionId" asp-items="@Model.FactionsAvailable" class="form-control">
             <option value="@null">@Localizer["PleaseSelect"]</option>
         </select>
         <span asp-validation-for="FactionId"></span>

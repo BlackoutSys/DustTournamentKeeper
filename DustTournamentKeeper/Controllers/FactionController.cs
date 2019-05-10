@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DustTournamentKeeper.Controllers
 {
@@ -112,6 +114,18 @@ namespace DustTournamentKeeper.Controllers
             _repository.Delete(faction);
 
             return RedirectToAction(nameof(FactionController.Index));
+        }
+
+        public async Task<ActionResult<List<Faction>>> GetAvailableFactions(int blockId)
+        {
+            var factions = await _repository.Factions.Where(f => f.BlockId == blockId).ToListAsync();
+
+            if (factions == null)
+            {
+                return NotFound();
+            }
+
+            return factions;
         }
     }
 }

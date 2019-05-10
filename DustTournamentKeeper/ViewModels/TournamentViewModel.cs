@@ -73,6 +73,11 @@ namespace DustTournamentKeeper.ViewModels
         [Required]
         public int? GameId { get; set; }
 
+        public int? TieBreaker1 { get; set; }
+        public int? TieBreaker2 { get; set; }
+        public int? TieBreaker3 { get; set; }
+        public int? TieBreaker4 { get; set; }
+
 
         public string Organizer { get; set; }
         public int OrganizerId { get; set; }
@@ -93,6 +98,7 @@ namespace DustTournamentKeeper.ViewModels
         public List<SelectListItem> PlayersAvailable { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> GamesAvailable { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> StatusesAvailable { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> TieBreakersAvailable { get; set; } = new List<SelectListItem>();
 
         public TournamentViewModel()
         {
@@ -146,6 +152,18 @@ namespace DustTournamentKeeper.ViewModels
             OrganizerId = tournament.OrganizerId > 0 ? tournament.OrganizerId : userId;
             UserId = userId;
             GameId = tournament.GameId;
+            TieBreaker1 = tournament.TieBreaker1;
+            TieBreaker2 = tournament.TieBreaker2;
+            TieBreaker3 = tournament.TieBreaker3;
+            TieBreaker4 = tournament.TieBreaker4;
+
+            Enum.GetValues(typeof(TieBreaker)).Cast<TieBreaker>().ToList().ForEach(e => {
+                TieBreakersAvailable.Add(new SelectListItem
+                {
+                    Text = e.ToString(),
+                    Value = ((int)e).ToString()
+                });
+            });
 
             FirstRoundAvailable = tournament.OrganizerId == userId && tournament.RoundsNavigation.Count == 0;
             NextRoundAvailable = tournament.OrganizerId == userId && tournament.RoundsNavigation.Count < tournament.Rounds;
@@ -161,10 +179,11 @@ namespace DustTournamentKeeper.ViewModels
             {
                 PlayersList.Add(new PlayerViewModel(player));
             }
-            PlayersList = PlayersList.OrderByDescending(pl => pl.TotalBigPoints)
-                .ThenByDescending(pl => pl.Bp)
-                .ThenByDescending(pl => pl.Sp)
-                .ThenByDescending(pl => pl.SoS).ToList();
+            PlayersList = TournamentViewModelSorter.SortPlayerScoresUseTieBreakers(PlayersList, tournament);
+            //PlayersList = PlayersList.OrderByDescending(pl => pl.TotalBigPoints)
+            //    .ThenByDescending(pl => pl.Bp)
+            //    .ThenByDescending(pl => pl.Sp)
+            //    .ThenByDescending(pl => pl.SoS).ToList();
 
             Registered = tournament.TournamentUsers.Any(tu => tu.UserId == userId);
 

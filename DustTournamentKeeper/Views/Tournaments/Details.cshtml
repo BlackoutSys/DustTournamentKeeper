@@ -13,83 +13,115 @@
     <h3>@Model.Slogan</h3>
 }
 
-    <div id="tournamentDetails" class="container">
-        <div class="row">
-            <div class="col-md-4"><p>@Localizer["Status"]</p></div>
-            <div class="col-md-4"><p>@Model.Status</p></div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4"><p>@Localizer["Starts"]</p></div>
-            <div class="col-md-4"><p>@Model.DateStart</p></div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4"><p>@Localizer["Ends"]</p></div>
-            <div class="col-md-4"><p>@Model.DateEnd</p></div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4"><p>@Localizer["Country"]</p></div>
-            <div class="col-md-4"><p>@Model.Country</p></div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4"><p>@Localizer["City"]</p></div>
-            <div class="col-md-4"><p>@Model.City</p></div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4"><p>@Localizer["Address"]</p></div>
-            <div class="col-md-4"><p>@Model.Address</p></div>
-        </div>
-
-        @if (!string.IsNullOrEmpty(Model.Club))
-        {
-            <div class="row">
-                <div class="col-md-4"><p>@Localizer["Club"]</p></div>
-                <div class="col-md-4"><p>@Model.Club</p></div>
-            </div>
-        }
-
-        <div class="row">
-            <div class="col-md-4"><p>@Localizer["ArmyPoints"]</p></div>
-            <div class="col-md-4"><p>@Model.ArmyPoints</p></div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4"><p>@Localizer["Rounds"]</p></div>
-            <div class="col-md-4"><p>@Model.Rounds</p></div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4"><p>@Localizer["Fee"]</p></div>
-            <div class="col-md-4"><p>@Model.FeeText</p></div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4"><p>@Localizer["BPWin"]</p></div>
-            <div class="col-md-4"><p>@Model.Bpwin</p></div>
-        </div>
-        <div class="row">
-
-            <div class="col-md-4"><p>@Localizer["BPTie"]</p></div>
-            <div class="col-md-4"><p>@Model.Bptie</p></div>
-        </div>
-        <div class="row">
-
-            <div class="col-md-4"><p>@Localizer["BPLoss"]</p></div>
-            <div class="col-md-4"><p>@Model.Bploss</p></div>
-        </div>
-
-        @if (!string.IsNullOrEmpty(Model.SpecificRules))
-        {
-            <div class="row">
-                <div class="col-md-4"><p>@Localizer["SpecificRules"]</p></div>
-                <div class="col-md-4"><p>@Model.SpecificRules</p></div>
-            </div>
-        }
+<div id="tournamentDetails" class="container">
+    <div class="row">
+        <div class="col-md-4"><p>@Localizer["Status"]</p></div>
+        <div class="col-md-4"><p>@Model.Status</p></div>
     </div>
+
+    <div class="row">
+        <div class="col-md-4"><p>@Localizer["Starts"]</p></div>
+        <div class="col-md-4"><p>@Model.DateStart</p></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4"><p>@Localizer["Ends"]</p></div>
+        <div class="col-md-4"><p>@Model.DateEnd</p></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4"><p>@Localizer["Country"]</p></div>
+        <div class="col-md-4"><p>@Model.Country</p></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4"><p>@Localizer["City"]</p></div>
+        <div class="col-md-4"><p>@Model.City</p></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4"><p>@Localizer["Address"]</p></div>
+        <div class="col-md-4"><p>@Model.Address</p></div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Club))
+    {
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["Club"]</p></div>
+            <div class="col-md-4"><p>@Model.Club</p></div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-4"><p>@Localizer["ArmyPoints"]</p></div>
+        <div class="col-md-4"><p>@Model.ArmyPoints</p></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4"><p>@Localizer["Rounds"]</p></div>
+        <div class="col-md-4"><p>@Model.Rounds</p></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4"><p>@Localizer["Fee"]</p></div>
+        <div class="col-md-4"><p>@Model.FeeText</p></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4"><p>@Localizer["BPWin"]</p></div>
+        <div class="col-md-4"><p>@Model.Bpwin</p></div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-4"><p>@Localizer["BPTie"]</p></div>
+        <div class="col-md-4"><p>@Model.Bptie</p></div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-4"><p>@Localizer["BPLoss"]</p></div>
+        <div class="col-md-4"><p>@Model.Bploss</p></div>
+    </div>
+
+    @if (Model.TieBreaker1.HasValue)
+    {
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["TieBreaker1"]</p></div>
+            <div class="col-md-4"><p>@((TieBreaker)Model.TieBreaker1)</p></div>
+        </div>
+    }
+
+    @if (Model.TieBreaker2.HasValue)
+    {
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["TieBreaker2"]</p></div>
+            <div class="col-md-4"><p>@((TieBreaker)Model.TieBreaker2)</p></div>
+        </div>
+    }
+
+    @if (Model.TieBreaker3.HasValue)
+    {
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["TieBreaker3"]</p></div>
+            <div class="col-md-4"><p>@((TieBreaker)Model.TieBreaker3)</p></div>
+        </div>
+    }
+
+    @if (Model.TieBreaker4.HasValue)
+    {
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["TieBreaker4"]</p></div>
+            <div class="col-md-4"><p>@((TieBreaker)Model.TieBreaker4)</p></div>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.SpecificRules))
+    {
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["SpecificRules"]</p></div>
+            <div class="col-md-4"><p>@Model.SpecificRules</p></div>
+        </div>
+    }
+</div>
 
 <br />
 

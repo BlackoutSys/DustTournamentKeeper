@@ -265,6 +265,11 @@ namespace DustTournamentKeeper.Models
             tournament.SpecificRules = newTournament.SpecificRules;
             tournament.Status = newTournament.Status;
             tournament.Title = newTournament.Title;
+            tournament.TieBreaker1 = newTournament.TieBreaker1;
+            tournament.TieBreaker2 = newTournament.TieBreaker2;
+            tournament.TieBreaker3 = newTournament.TieBreaker3;
+            tournament.TieBreaker4 = newTournament.TieBreaker4;
+
 
             tournament.LastModified = DateTime.Now;
 

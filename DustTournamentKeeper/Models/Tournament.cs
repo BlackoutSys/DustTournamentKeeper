@@ -37,6 +37,10 @@ namespace DustTournamentKeeper.Models
         public int? Bploss { get; set; }
         public string Country { get; set; }
         public int? GameId { get; set; }
+        public int? TieBreaker1 { get; set; }
+        public int? TieBreaker2 { get; set; }
+        public int? TieBreaker3 { get; set; }
+        public int? TieBreaker4 { get; set; }
 
         public virtual Club ClubNavigation { get; set; }
         public virtual Game Game { get; set; }

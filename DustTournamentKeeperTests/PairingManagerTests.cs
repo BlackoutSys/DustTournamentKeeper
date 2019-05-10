@@ -595,6 +595,469 @@ namespace DustTournamentKeeper.Tests
             Assert.True(playersScoresSorted[3].TotalBigPoints >= playersScoresSorted[4].TotalBigPoints);
         }
 
+        [Theory]
+        [InlineData((int)TieBreaker.BigPoints, null)]
+        public void SortPlayersUsingMultipleLevelDeepTieBreakers_NextLevelNull_NoChangesInOrdering(int? tieBreaker1, int? tieBreaker2)
+        {
+            var tournament1 = new Tournament()
+            {
+                TieBreaker1 = tieBreaker1
+            };
+
+            var tournament2 = new Tournament()
+            {
+                TieBreaker1 = tieBreaker1,
+                TieBreaker2 = tieBreaker2
+            };
+
+            var playersScores = new List<PlayersTournamentScore>
+            {
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 1 },
+                    TotalBigPoints = 10,
+                    TotalSmallPoints = 50,
+                    TotalSoS = 15,
+                    Byes = 4
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 2 },
+                    TotalBigPoints = 20,
+                    TotalSmallPoints = 100,
+                    TotalSoS = 20,
+                    Byes = 5
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 3 },
+                    TotalBigPoints = 5,
+                    TotalSmallPoints = 25,
+                    TotalSoS = 30,
+                    Byes = 1
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 4 },
+                    TotalBigPoints = 15,
+                    TotalSmallPoints = 75,
+                    TotalSoS = 10,
+                    Byes = 3
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 5 },
+                    TotalBigPoints = 15,
+                    TotalSmallPoints = 75,
+                    TotalSoS = 60,
+                    Byes = 2
+                }
+            };
+
+            var playersScoresSorted1 = PairingManager.SortPlayerScoresUseTieBreakers(playersScores, tournament1);
+            var playersScoresSorted2 = PairingManager.SortPlayerScoresUseTieBreakers(playersScores, tournament2);
+
+            Assert.NotEmpty(playersScoresSorted1);
+            Assert.Equal(5, playersScoresSorted1.Count);
+            Assert.NotEmpty(playersScoresSorted2);
+            Assert.Equal(5, playersScoresSorted2.Count);
+            Assert.Equal(playersScoresSorted1[0].Player.Id, playersScoresSorted2[0].Player.Id);
+            Assert.Equal(playersScoresSorted1[1].Player.Id, playersScoresSorted2[1].Player.Id);
+            Assert.Equal(playersScoresSorted1[2].Player.Id, playersScoresSorted2[2].Player.Id);
+            Assert.Equal(playersScoresSorted1[3].Player.Id, playersScoresSorted2[3].Player.Id);
+            Assert.Equal(playersScoresSorted1[4].Player.Id, playersScoresSorted2[4].Player.Id);
+        }
+
+        [Theory]
+        [InlineData((int)TieBreaker.BigPoints, null, (int)TieBreaker.SmallPoints)]
+        public void SortPlayersUsingMultipleLevelDeepTieBreakers_SkippingLevelDoesNotBreak(int? tieBreaker1, int? tieBreaker2, int? tieBreaker3)
+        {
+            var tournament = new Tournament()
+            {
+                TieBreaker1 = tieBreaker1,
+                TieBreaker2 = tieBreaker2,
+                TieBreaker3 = tieBreaker3
+            };
+
+            var playersScores = new List<PlayersTournamentScore>
+            {
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 1 },
+                    TotalBigPoints = 10,
+                    TotalSmallPoints = 50,
+                    TotalSoS = 15,
+                    Byes = 4
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 2 },
+                    TotalBigPoints = 20,
+                    TotalSmallPoints = 100,
+                    TotalSoS = 20,
+                    Byes = 5
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 3 },
+                    TotalBigPoints = 5,
+                    TotalSmallPoints = 25,
+                    TotalSoS = 30,
+                    Byes = 1
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 4 },
+                    TotalBigPoints = 15,
+                    TotalSmallPoints = 75,
+                    TotalSoS = 10,
+                    Byes = 3
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 5 },
+                    TotalBigPoints = 15,
+                    TotalSmallPoints = 75,
+                    TotalSoS = 60,
+                    Byes = 2
+                }
+            };
+
+            var playersScoresSorted = PairingManager.SortPlayerScoresUseTieBreakers(playersScores, tournament);
+
+            Assert.NotEmpty(playersScoresSorted);
+            Assert.Equal(5, playersScoresSorted.Count);
+            Assert.NotEqual(playersScoresSorted[0].Player.Id, playersScores[0].Player.Id);
+            Assert.NotEqual(playersScoresSorted[1].Player.Id, playersScores[1].Player.Id);
+            Assert.NotEqual(playersScoresSorted[2].Player.Id, playersScores[2].Player.Id);
+            Assert.NotEqual(playersScoresSorted[3].Player.Id, playersScores[3].Player.Id);
+            Assert.NotEqual(playersScoresSorted[4].Player.Id, playersScores[4].Player.Id);
+        }
+
+        [Theory]
+        [InlineData((int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.SoS)]
+        [InlineData((int)TieBreaker.Bye)]
+        public void SortPlayersUsingOneLevelDeepTieBreaker(int tieBreaker)
+        {
+            var tournament = new Tournament()
+            {
+                TieBreaker1 = tieBreaker
+            };
+
+            var playersScores = new List<PlayersTournamentScore>
+            {
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 1 },
+                    TotalBigPoints = 10,
+                    TotalSmallPoints = 50,
+                    TotalSoS = 15,
+                    Byes = 4
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 2 },
+                    TotalBigPoints = 20,
+                    TotalSmallPoints = 100,
+                    TotalSoS = 20,
+                    Byes = 5
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 3 },
+                    TotalBigPoints = 5,
+                    TotalSmallPoints = 25,
+                    TotalSoS = 30,
+                    Byes = 1
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 4 },
+                    TotalBigPoints = 15,
+                    TotalSmallPoints = 75,
+                    TotalSoS = 10,
+                    Byes = 3
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 5 },
+                    TotalBigPoints = 15,
+                    TotalSmallPoints = 75,
+                    TotalSoS = 60,
+                    Byes = 2
+                }
+            };
+
+            var playersScoresSorted = PairingManager.SortPlayerScoresUseTieBreakers(playersScores, tournament);
+
+            Assert.NotEmpty(playersScoresSorted);
+            Assert.Equal(5, playersScoresSorted.Count);
+            Assert.NotEqual(playersScoresSorted[0].Player.Id, playersScores[0].Player.Id);
+            Assert.NotEqual(playersScoresSorted[1].Player.Id, playersScores[1].Player.Id);
+            Assert.NotEqual(playersScoresSorted[2].Player.Id, playersScores[2].Player.Id);
+            Assert.NotEqual(playersScoresSorted[3].Player.Id, playersScores[3].Player.Id);
+            Assert.NotEqual(playersScoresSorted[4].Player.Id, playersScores[4].Player.Id);
+        }
+
+        [Theory]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.SoS)]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.SoS)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.SoS)]
+        public void SortPlayersUsingTwoLevelsDeepTieBreaker(int tieBreaker1, int tieBreaker2)
+        {
+            var tournament = new Tournament()
+            {
+                TieBreaker1 = tieBreaker1,
+                TieBreaker2 = tieBreaker2
+            };
+
+            var playersScores = new List<PlayersTournamentScore>
+            {
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 1 },
+                    TotalBigPoints = 10,
+                    TotalSmallPoints = 50,
+                    TotalSoS = 15,
+                    Byes = 4
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 2 },
+                    TotalBigPoints = 20,
+                    TotalSmallPoints = 100,
+                    TotalSoS = 20,
+                    Byes = 5
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 3 },
+                    TotalBigPoints = 5,
+                    TotalSmallPoints = 25,
+                    TotalSoS = 30,
+                    Byes = 1
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 4 },
+                    TotalBigPoints = 15,
+                    TotalSmallPoints = 75,
+                    TotalSoS = 10,
+                    Byes = 3
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 5 },
+                    TotalBigPoints = 15,
+                    TotalSmallPoints = 75,
+                    TotalSoS = 60,
+                    Byes = 2
+                }
+            };
+
+            var playersScoresSorted = PairingManager.SortPlayerScoresUseTieBreakers(playersScores, tournament);
+
+            Assert.NotEmpty(playersScoresSorted);
+            Assert.Equal(5, playersScoresSorted.Count);
+            Assert.NotEqual(playersScoresSorted[0].Player.Id, playersScores[0].Player.Id);
+            Assert.NotEqual(playersScoresSorted[1].Player.Id, playersScores[1].Player.Id);
+            Assert.NotEqual(playersScoresSorted[2].Player.Id, playersScores[2].Player.Id);
+            Assert.NotEqual(playersScoresSorted[3].Player.Id, playersScores[3].Player.Id);
+            Assert.NotEqual(playersScoresSorted[4].Player.Id, playersScores[4].Player.Id);
+        }
+
+        [Theory]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.SmallPoints, (int)TieBreaker.SoS)]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.SmallPoints, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.SoS, (int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.SoS, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.Bye, (int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.Bye, (int)TieBreaker.SoS)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.BigPoints, (int)TieBreaker.SoS)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.BigPoints, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.SoS, (int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.SoS, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.Bye, (int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.Bye, (int)TieBreaker.SoS)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.BigPoints, (int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.BigPoints, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.SmallPoints, (int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.SmallPoints, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.Bye, (int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.Bye, (int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.BigPoints, (int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.BigPoints, (int)TieBreaker.SoS)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.SmallPoints, (int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.SmallPoints, (int)TieBreaker.SoS)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.SoS, (int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.SoS, (int)TieBreaker.SmallPoints)]
+
+        public void SortPlayersUsingThreeLevelsDeepTieBreaker(int tieBreaker1, int tieBreaker2, int tieBreaker3)
+        {
+            var tournament = new Tournament()
+            {
+                TieBreaker1 = tieBreaker1,
+                TieBreaker2 = tieBreaker2,
+                TieBreaker3 = tieBreaker3
+            };
+
+            var playersScores = new List<PlayersTournamentScore>
+            {
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 1 },
+                    TotalBigPoints = 10,
+                    TotalSmallPoints = 50,
+                    TotalSoS = 15,
+                    Byes = 4
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 2 },
+                    TotalBigPoints = 20,
+                    TotalSmallPoints = 100,
+                    TotalSoS = 20,
+                    Byes = 5
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 3 },
+                    TotalBigPoints = 5,
+                    TotalSmallPoints = 25,
+                    TotalSoS = 30,
+                    Byes = 1
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 4 },
+                    TotalBigPoints = 15,
+                    TotalSmallPoints = 75,
+                    TotalSoS = 10,
+                    Byes = 3
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 5 },
+                    TotalBigPoints = 15,
+                    TotalSmallPoints = 75,
+                    TotalSoS = 60,
+                    Byes = 2
+                }
+            };
+
+            var playersScoresSorted = PairingManager.SortPlayerScoresUseTieBreakers(playersScores, tournament);
+
+            Assert.NotEmpty(playersScoresSorted);
+            Assert.Equal(5, playersScoresSorted.Count);
+            Assert.NotEqual(playersScoresSorted[0].Player.Id, playersScores[0].Player.Id);
+            Assert.NotEqual(playersScoresSorted[1].Player.Id, playersScores[1].Player.Id);
+            Assert.NotEqual(playersScoresSorted[2].Player.Id, playersScores[2].Player.Id);
+            Assert.NotEqual(playersScoresSorted[3].Player.Id, playersScores[3].Player.Id);
+            Assert.NotEqual(playersScoresSorted[4].Player.Id, playersScores[4].Player.Id);
+        }
+
+        [Theory]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.SmallPoints, (int)TieBreaker.SoS, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.SmallPoints, (int)TieBreaker.Bye, (int)TieBreaker.SoS)]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.SoS, (int)TieBreaker.SmallPoints, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.SoS, (int)TieBreaker.Bye, (int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.Bye, (int)TieBreaker.SmallPoints, (int)TieBreaker.SoS)]
+        [InlineData((int)TieBreaker.BigPoints, (int)TieBreaker.Bye, (int)TieBreaker.SoS, (int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.BigPoints, (int)TieBreaker.SoS, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.BigPoints, (int)TieBreaker.Bye, (int)TieBreaker.SoS)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.SoS, (int)TieBreaker.BigPoints, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.SoS, (int)TieBreaker.Bye, (int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.Bye, (int)TieBreaker.BigPoints, (int)TieBreaker.SoS)]
+        [InlineData((int)TieBreaker.SmallPoints, (int)TieBreaker.Bye, (int)TieBreaker.SoS, (int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.BigPoints, (int)TieBreaker.SmallPoints, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.BigPoints, (int)TieBreaker.Bye, (int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.SmallPoints, (int)TieBreaker.BigPoints, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.SmallPoints, (int)TieBreaker.Bye, (int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.Bye, (int)TieBreaker.BigPoints, (int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.SoS, (int)TieBreaker.Bye, (int)TieBreaker.SmallPoints, (int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.BigPoints, (int)TieBreaker.SmallPoints, (int)TieBreaker.Bye)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.BigPoints, (int)TieBreaker.Bye, (int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.SmallPoints, (int)TieBreaker.BigPoints, (int)TieBreaker.SoS)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.SmallPoints, (int)TieBreaker.SoS, (int)TieBreaker.BigPoints)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.SoS, (int)TieBreaker.BigPoints, (int)TieBreaker.SmallPoints)]
+        [InlineData((int)TieBreaker.Bye, (int)TieBreaker.SoS, (int)TieBreaker.SmallPoints, (int)TieBreaker.BigPoints)]
+
+        public void SortPlayersUsingFourLevelsDeepTieBreaker(int tieBreaker1, int tieBreaker2, int tieBreaker3, int tieBreaker4)
+        {
+            var tournament = new Tournament()
+            {
+                TieBreaker1 = tieBreaker1,
+                TieBreaker2 = tieBreaker2,
+                TieBreaker3 = tieBreaker3,
+                TieBreaker4 = tieBreaker4
+            };
+
+            var playersScores = new List<PlayersTournamentScore>
+            {
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 1 },
+                    TotalBigPoints = 10,
+                    TotalSmallPoints = 50,
+                    TotalSoS = 15,
+                    Byes = 4
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 2 },
+                    TotalBigPoints = 20,
+                    TotalSmallPoints = 100,
+                    TotalSoS = 20,
+                    Byes = 5
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 3 },
+                    TotalBigPoints = 5,
+                    TotalSmallPoints = 25,
+                    TotalSoS = 30,
+                    Byes = 1
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 4 },
+                    TotalBigPoints = 15,
+                    TotalSmallPoints = 75,
+                    TotalSoS = 10,
+                    Byes = 3
+                },
+                new PlayersTournamentScore(new TournamentUser())
+                {
+                    Player = new TournamentUser() { Id = 5 },
+                    TotalBigPoints = 15,
+                    TotalSmallPoints = 75,
+                    TotalSoS = 60,
+                    Byes = 2
+                }
+            };
+
+            var playersScoresSorted = PairingManager.SortPlayerScoresUseTieBreakers(playersScores, tournament);
+
+            Assert.NotEmpty(playersScoresSorted);
+            Assert.Equal(5, playersScoresSorted.Count);
+            Assert.NotEqual(playersScoresSorted[0].Player.Id, playersScores[0].Player.Id);
+            Assert.NotEqual(playersScoresSorted[1].Player.Id, playersScores[1].Player.Id);
+            Assert.NotEqual(playersScoresSorted[2].Player.Id, playersScores[2].Player.Id);
+            Assert.NotEqual(playersScoresSorted[3].Player.Id, playersScores[3].Player.Id);
+            Assert.NotEqual(playersScoresSorted[4].Player.Id, playersScores[4].Player.Id);
+        }
+
         public void Dispose()
         {
             _fakeContext.Database.EnsureDeleted();

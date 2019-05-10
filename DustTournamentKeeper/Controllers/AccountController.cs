@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace DustTournamentKeeper.Controllers
@@ -146,31 +148,26 @@ namespace DustTournamentKeeper.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login");
         }
-
         public IActionResult GenerateClubs()
         {
             TestDataGenerator.GenerateClubs(5, _repository);
             return RedirectToAction("Login");
         }
-
         public async Task<IActionResult> GenerateUsers()
         {
             await TestDataGenerator.GenerateUsers(10, _repository, _userManager, _roleManager);
             return RedirectToAction("Login");
         }
-
         public IActionResult GenerateBoards()
         {
             TestDataGenerator.GenerateBoards(5, _repository);
             return RedirectToAction("Login");
         }
-
         public async Task<IActionResult> GenerateTournaments()
         {
             await TestDataGenerator.GenerateTournaments(5, _repository, _userManager, _roleManager);
             return RedirectToAction("Login");
         }
-
         public async Task<IActionResult> GenerateBundle()
         {
             TestDataGenerator.GenerateClubs(5, _repository);
@@ -180,7 +177,6 @@ namespace DustTournamentKeeper.Controllers
             await TestDataGenerator.GenerateTournaments(5, _repository, _userManager, _roleManager);
             return RedirectToAction("Login");
         }
-
         public async Task<IActionResult> NukeDb()
         {
             await TestDataGenerator.NukeDb(_repository, _userManager);
