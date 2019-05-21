@@ -9,6 +9,15 @@
 
 <h2>@Model.Name "@Model.UserName" @Model.Surname</h2>
 
+@if (Model.IsOwner || Model.IsAdmin)
+{
+    <a class="btn btn-secondary" asp-controller="Players" asp-action="Edit" asp-route-id="@Model.Id">@Localizer["Edit"]</a>
+}
+@if (Model.IsAdmin)
+{
+    <a class="btn btn-secondary" asp-controller="Players" asp-action="Remove" asp-route-id="@Model.Id">@Localizer["Remove"]</a>
+}
+<a class="btn btn-secondary" asp-controller="Players" asp-action="Index">@Localizer["List"]</a><br />
 <div class="container">
     <div class="row">
         <div class="col-md-4"><p>@Localizer["Name"]</p></div>

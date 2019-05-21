@@ -13,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using DustTournamentKeeper.Infrastructure;
+using System.Threading.Tasks;
 
 namespace DustTournamentKeeper
 {
@@ -81,7 +83,7 @@ namespace DustTournamentKeeper
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             var supportedCultures = new List<CultureInfo>
             {
@@ -124,6 +126,8 @@ namespace DustTournamentKeeper
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            await DbInitializer.Seed(app);
         }
     }
 }

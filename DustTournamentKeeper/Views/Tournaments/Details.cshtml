@@ -7,7 +7,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@Model.Title</h2><a class="btn btn-dark" asp-controller="Tournaments" asp-action="Upsert" asp-route-id="@Model.Id">@Localizer["Edit"]</a><br />
+<h2>@Model.Title</h2><a class="btn btn-secondary" asp-controller="Tournaments" asp-action="Upsert" asp-route-id="@Model.Id">@Localizer["Edit"]</a><br />
 @if (!string.IsNullOrEmpty(Model.Slogan))
 {
     <h3>@Model.Slogan</h3>
@@ -15,8 +15,8 @@
 
 <div id="tournamentDetails" class="container">
     <div class="row">
-        <div class="col-md-4"><p>@Localizer["Status"]</p></div>
-        <div class="col-md-4"><p>@Model.Status</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["Status"]</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Model.Status</p></div>
     </div>
 
     <div class="row">
@@ -25,8 +25,8 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4"><p>@Localizer["Ends"]</p></div>
-        <div class="col-md-4"><p>@Model.DateEnd</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["Ends"]</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Model.DateEnd</p></div>
     </div>
 
     <div class="row">
@@ -209,19 +209,19 @@
 }
 @if (Model.Status == nameof(TournamentStatus.Pending))
 {
-    <a class="btn btn-dark" asp-controller="Tournaments" asp-action="Begin" asp-route-id="@Model.Id">@Localizer["Begin"]</a>
+    <a class="btn btn-secondary" asp-controller="Tournaments" asp-action="Begin" asp-route-id="@Model.Id">@Localizer["Begin"]</a>
 }
 @if (Model.FirstRoundAvailable)
 {
-    <a class="btn btn-dark" asp-controller="Tournaments" asp-action="AssignPairsForFirstRound" asp-route-id="@Model.Id">@Localizer["GenerateFirstRound"]</a>
+    <a class="btn btn-secondary" asp-controller="Tournaments" asp-action="AssignPairsForFirstRound" asp-route-id="@Model.Id">@Localizer["GenerateFirstRound"]</a>
 }
 else if (!Model.FirstRoundAvailable && Model.NextRoundAvailable)
 {
-    <a class="btn btn-dark" asp-controller="Tournaments" asp-action="AssignPairsForNewRound" asp-route-id="@Model.Id"> @Localizer["GenerateNextRound"]</a>
+    <a class="btn btn-secondary" asp-controller="Tournaments" asp-action="AssignPairsForNewRound" asp-route-id="@Model.Id"> @Localizer["GenerateNextRound"]</a>
 }
 else if (!Model.FirstRoundAvailable && !Model.NextRoundAvailable && Model.FinishAvailable)
 {
-    <a class="btn btn-dark" asp-controller="Tournaments" asp-action="Finish" asp-route-id="@Model.Id"> @Localizer["Finish"]</a>
+    <a class="btn btn-secondary" asp-controller="Tournaments" asp-action="Finish" asp-route-id="@Model.Id"> @Localizer["Finish"]</a>
 }
 <br /><br />
 
@@ -230,10 +230,10 @@ else if (!Model.FirstRoundAvailable && !Model.NextRoundAvailable && Model.Finish
 {
     @if (Model.CanRegister && !Model.Registered)
     {
-        <a class="btn btn-dark" asp-controller="Tournaments" asp-action="Register" asp-route-tournamentId="@Model.Id" asp-route-user="@Model.UserId"> @Localizer["Register"]</a>
+        <a class="btn btn-secondary" asp-controller="Tournaments" asp-action="Register" asp-route-tournamentId="@Model.Id" asp-route-user="@Model.UserId"> @Localizer["Register"]</a>
     }
     else
     {
-        <a class="btn btn-dark" asp-controller="Tournaments" asp-action="Unregister" asp-route-tournamentId="@Model.Id" asp-route-userId="@Model.UserId"> @Localizer["Unregister"]</a>
+        <a class="btn btn-secondary" asp-controller="Tournaments" asp-action="Unregister" asp-route-tournamentId="@Model.Id" asp-route-userId="@Model.UserId"> @Localizer["Unregister"]</a>
     }
 }

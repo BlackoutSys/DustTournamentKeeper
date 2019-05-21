@@ -10,14 +10,14 @@
 
 Generowanie danych testowych: <br />
 
-<a class="btn btn-dark" asp-controller="Account" asp-action="GenerateClubs">Generate Clubs</a>
-<a class="btn btn-dark" asp-controller="Account" asp-action="GenerateBoards">Generate Boards</a>
-<a class="btn btn-dark" asp-controller="Account" asp-action="GenerateUsers">Generate Users</a>
-<a class="btn btn-dark" asp-controller="Account" asp-action="GenerateTournaments">Generate Tournaments</a>
-<a class="btn btn-dark" asp-controller="Account" asp-action="GenerateBundle">Generate Bundle</a>
+<a class="btn btn-secondary" asp-controller="Account" asp-action="GenerateClubs">Generate Clubs</a>
+<a class="btn btn-secondary" asp-controller="Account" asp-action="GenerateBoards">Generate Boards</a>
+<a class="btn btn-secondary" asp-controller="Account" asp-action="GenerateUsers">Generate Users</a>
+<a class="btn btn-secondary" asp-controller="Account" asp-action="GenerateTournaments">Generate Tournaments</a>
+<a class="btn btn-secondary" asp-controller="Account" asp-action="GenerateBundle">Generate Bundle</a>
 
 <br /><br />!!!Czyszczenie bazy!!! <br />
-<a class="btn btn-dark" asp-controller="Account" asp-action="NukeDb">Nuke Database</a>
+<a class="btn btn-secondary" asp-controller="Account" asp-action="NukeDb">Nuke Database</a>
 
 <br /><br /><br /><br /><br /><br />
 
@@ -25,8 +25,15 @@ Generowanie danych testowych: <br />
 
 @foreach (var game in Model)
 {
-    <a asp-action="Index" asp-controller="Tournaments" asp-route-gameId="@game.Id">
-        <img src="@game.Logo" alt="@game.Name" />
+    <a asp-action="Index" asp-controller="Tournaments" asp-route-gameId="@game.Id" class="btn btn-secondary">
+        @if (!string.IsNullOrWhiteSpace(game.Logo))
+        {
+            <img src="@game.Logo" alt="@game.Name" />
+        }
+        else
+        {
+            <span>@game.Name</span>
+        }
     </a>
 }
 

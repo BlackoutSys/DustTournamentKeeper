@@ -80,7 +80,7 @@
     </div>
     <div class="form-group">
         <label>@Localizer["SpecificRules"]</label>
-        <input asp-for="SpecificRules" class="form-control" />
+        <textarea asp-for="SpecificRules" rows="3" cols="50" class="form-control" />
         <span asp-validation-for="SpecificRules"></span>
     </div>
     <div class="form-group">
@@ -163,7 +163,7 @@
     <p>@Localizer["Players"]</p>
     <div class="container">
         <input type="text" id="regUserText" value="" />
-        <a id="regUserLink" asp-controller="Tournaments" asp-action="Register" asp-route-tournamentId="@Model.Id" asp-route-user="xxx" class="btn btn-dark">@Localizer["RegisterPlayer"]</a>
+        <a id="regUserLink" asp-controller="Tournaments" asp-action="Register" asp-route-tournamentId="@Model.Id" asp-route-user="xxx" class="btn btn-secondary">@Localizer["RegisterPlayer"]</a>
         <script>
             $(function () {
                 $('#regUserLink').click(function () {
@@ -201,7 +201,7 @@
                     <td>@Model.PlayersList[i].Sp</td>
                     <td>@Model.PlayersList[i].SoS</td>
                     <td>@Model.PlayersList[i].TotalBigPoints</td>
-                    <td><a class="btn btn-dark" asp-controller="Tournaments" asp-action="Unregister" asp-route-tournamentId="@Model.Id" asp-route-userId="@Model.PlayersList[i].UserId">@Localizer["Kick"]</a></td>
+                    <td><a class="btn btn-secondary" asp-controller="Tournaments" asp-action="Unregister" asp-route-tournamentId="@Model.Id" asp-route-userId="@Model.PlayersList[i].UserId">@Localizer["Kick"]</a></td>
                 </tr>
             }
         </tbody>
@@ -268,8 +268,8 @@
     }
 
     <div class="text-center">
-        <input class="btn btn-dark" type="submit" value="@Localizer["Save"]" />
-        <a class="btn btn-dark" asp-controller="Tournaments" asp-action="Index">@Localizer["Discard"]</a>
+        <input class="btn btn-secondary" type="submit" value="@Localizer["Save"]" />
+        <a class="btn btn-secondary" asp-controller="Tournaments" asp-action="Index">@Localizer["Discard"]</a>
     </div>
 </form>
 

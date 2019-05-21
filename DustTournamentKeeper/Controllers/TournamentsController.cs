@@ -91,6 +91,7 @@ namespace DustTournamentKeeper.Controllers
             return View("Details", tournamentViewModel);
         }
 
+        [Authorize(Roles = "Administrator,Organizer")]
         public async Task<ViewResult> Upsert(int? id)
         {
             var tournament = id.HasValue ? _repository.Tournaments
@@ -114,6 +115,7 @@ namespace DustTournamentKeeper.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator,Organizer")]
         public IActionResult Upsert(TournamentViewModel tournamentViewModel)
         {
             Tournament tournament = null;
@@ -280,6 +282,7 @@ namespace DustTournamentKeeper.Controllers
             return RedirectToAction("Details", new { id = tournament.Id });
         }
 
+        [Authorize(Roles = "Administrator,Organizer")]
         public IActionResult Begin(int id)
         {
             var tournament = _repository.Tournaments.FirstOrDefault(t => t.Id == id);
@@ -295,6 +298,7 @@ namespace DustTournamentKeeper.Controllers
             return NotFound();
         }
 
+        [Authorize(Roles = "Administrator,Organizer")]
         public IActionResult Finish(int id)
         {
             var tournament = _repository.Tournaments.FirstOrDefault(t => t.Id == id);
@@ -409,6 +413,7 @@ namespace DustTournamentKeeper.Controllers
             return RedirectToAction("Details", new { id = tournamentId });
         }
 
+        [Authorize(Roles = "Administrator,Organizer")]
         public IActionResult AssignPairsForFirstRound(int id)
         {
             var pairingSuccssfull = PairingManager.AssignPlayersForFirstRound(id, _repository);
@@ -421,6 +426,7 @@ namespace DustTournamentKeeper.Controllers
             return View("Error");
         }
 
+        [Authorize(Roles = "Administrator,Organizer")]
         public IActionResult AssignPairsForNewRound(int id)
         {
             var pairingSuccssfull = PairingManager.AssignPairsForNewRound(id, _repository);

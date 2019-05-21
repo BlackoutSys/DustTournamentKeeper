@@ -1,11 +1,13 @@
 ﻿@model FactionViewModel
 
-@inject  IViewLocalizer Localizer
+@inject IViewLocalizer Localizer
 
 @{
     ViewData["Title"] = Localizer["UpsertFaction"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<script src="~/js/RestUtility.js"></script>
 
 <h2>@(Model.Id > 0 ? Localizer["EditFaction"] : Localizer["CreateFaction"])</h2>
 
@@ -22,7 +24,7 @@
 
     <div class="form-group">
         <label>@Localizer["Game"]</label>
-        <select asp-for="GameId" asp-items="@Model.GamesAvailable" class="form-control">
+        <select id="gameSelect" asp-for="GameId" asp-items="@Model.GamesAvailable" class="form-control btn btn-secondary">
             <option value="@null">@Localizer["PleaseSelect"]</option>
         </select>
         <span asp-validation-for="GameId"></span>
@@ -30,7 +32,7 @@
 
     <div class="form-group">
         <label>@Localizer["Block"]</label>
-        <select asp-for="BlockId" asp-items="@Model.BlocksAvailable" class="form-control">
+        <select id="blockSelect" asp-for="BlockId" asp-items="@Model.BlocksAvailable" class="form-control btn btn-secondary">
             <option value="@null">@Localizer["PleaseSelect"]</option>
         </select>
         <span asp-validation-for="BlockId"></span>
@@ -45,19 +47,25 @@
     <div class="form-group">
         <label>@Localizer["Logo"]</label>
         <input asp-for="Logo" class="form-control" readonly />
-        <button class="btn btn-dark">@Localizer["UploadLogo"]</button>
+        <button class="btn btn-secondary">@Localizer["UploadLogo"]</button>
         <span asp-validation-for="Logo"></span>
     </div>
 
     <div class="form-group">
         <label>@Localizer["Icon"]</label>
         <input asp-for="Icon" class="form-control" readonly />
-        <button class="btn btn-dark">@Localizer["UploadIcon"]</button>
+        <button class="btn btn-secondary">@Localizer["UploadIcon"]</button>
         <span asp-validation-for="Icon"></span>
     </div>
 
     <div class="text-center">
-        <input class="btn btn-dark" type="submit" value="@Localizer["Save"]" />
-        <a class="btn btn-dark" asp-controller="Block" asp-action="Index">@Localizer["Discard"]</a>
+        <input class="btn btn-secondary" type="submit" value="@Localizer["Save"]" />
+        <a class="btn btn-secondary" asp-controller="Block" asp-action="Index">@Localizer["Discard"]</a>
     </div>
 </form>
+
+<script>
+    $(document).ready(function () {
+        $('#gameSelect').change(getAvailableBlocks);
+    });
+</script>

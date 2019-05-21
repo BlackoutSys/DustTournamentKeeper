@@ -7,7 +7,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<script src="~/js/RegisterToTournament.js"></script>
+<script src="~/js/RestUtility.js"></script>
 
 <div class="container">
     @Localizer["User"]: @Model.UserName <br />
@@ -24,7 +24,7 @@
 
     <div class="form-group">
         <label>@Localizer["Block"]</label>
-        <select id="blockSelect" asp-for="BlockId" asp-items="@Model.BlocksAvailable" class="form-control">
+        <select id="blockSelect" asp-for="BlockId" asp-items="@Model.BlocksAvailable" class="form-control btn btn-secondary">
             <option value="@null">@Localizer["PleaseSelect"]</option>
         </select>
         <span asp-validation-for="BlockId"></span>
@@ -32,15 +32,20 @@
 
     <div class="form-group">
         <label>@Localizer["Faction"]</label>
-        <select id="factionSelect" asp-for="FactionId" asp-items="@Model.FactionsAvailable" class="form-control">
+        <select id="factionSelect" asp-for="FactionId" asp-items="@Model.FactionsAvailable" class="form-control btn btn-secondary">
             <option value="@null">@Localizer["PleaseSelect"]</option>
         </select>
         <span asp-validation-for="FactionId"></span>
     </div>
 
     <div class="text-center">
-        <input class="btn btn-dark" type="submit" value="@Localizer["Save"]" />
-        <a class="btn btn-dark" asp-controller="Tournaments" asp-action="Details" asp-route-id="@Model.TournamentId">@Localizer["Cancel"]</a>
+        <input class="btn btn-secondary" type="submit" value="@Localizer["Save"]" />
+        <a class="btn btn-secondary" asp-controller="Tournaments" asp-action="Details" asp-route-id="@Model.TournamentId">@Localizer["Cancel"]</a>
     </div>
 </form>
 
+<script>
+    $(document).ready(function () {
+        $('#blockSelect').change(getAvailableFactions);
+    });
+</script>

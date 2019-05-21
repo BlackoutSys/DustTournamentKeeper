@@ -11,6 +11,13 @@ namespace DustTournamentKeeper.Models
             UserRoles = new List<UserRole>();
         }
 
+        public Role(string roleName)
+            : base(roleName)
+        {
+            RoleClaims = new List<RoleClaim>();
+            UserRoles = new List<UserRole>();
+        }
+
         public virtual IList<RoleClaim> RoleClaims { get; set; }
         public virtual IList<UserRole> UserRoles { get; set; }
     }

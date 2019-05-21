@@ -15,11 +15,13 @@ namespace DustTournamentKeeper.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly ITournamentRepository _repository;
+        private readonly RoleManager<Role> _roleManager;
 
-        public PlayersController(ITournamentRepository repository, UserManager<User> userManager)
+        public PlayersController(ITournamentRepository repository, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             _userManager = userManager;
             _repository = repository;
+            _roleManager = roleManager;
         }
 
         public IActionResult Index()
@@ -29,10 +31,14 @@ namespace DustTournamentKeeper.Controllers
 
         public async Task<IActionResult> Details(int? id)
         {
+            var currentUser = !string.IsNullOrEmpty(User.Identity.Name) ?
+                await _userManager.FindByNameAsync(User?.Identity?.Name) :
+                null;
+
             User user = null;
             if (id == null && User.Identity.IsAuthenticated)
             {
-                User userLoggedIn = await _userManager.FindByNameAsync(User.Identity.Name);
+                User userLoggedIn = await _userManager.FindByNameAsync(User?.Identity?.Name);
 
                 if (userLoggedIn != null)
                 {
@@ -47,7 +53,14 @@ namespace DustTournamentKeeper.Controllers
 
             if (user != null)
             {
-                return View(new UserViewModel(user));
+                string existingRole = _userManager.GetRolesAsync(user).Result.Single();
+                int existingRoleId = _roleManager.Roles.Single(r => r.Name == existingRole).Id;
+                return View(new UserViewModel(user)
+                {
+                    RoleId = existingRoleId,
+                    IsAdmin = User?.IsInRole(nameof(Roles.Administrator)) ?? false,
+                    IsOwner = currentUser != null ? currentUser.Id == user.Id : false
+                });
             }
 
             return RedirectToAction("Login", "Account");
@@ -57,14 +70,14 @@ namespace DustTournamentKeeper.Controllers
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
+            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+
             User user = null;
             if (id == null && User.Identity.IsAuthenticated)
             {
-                User userLoggedIn = await _userManager.FindByNameAsync(User.Identity.Name);
-
-                if (userLoggedIn != null)
+                if (currentUser != null)
                 {
-                    user = GetUser(userLoggedIn.Id);
+                    user = GetUser(currentUser.Id);
                 }
             }
             else if (id.HasValue)
@@ -78,14 +91,26 @@ namespace DustTournamentKeeper.Controllers
 
             if (user != null)
             {
-                return View(new UserViewModel(user));
+                string existingRole = _userManager.GetRolesAsync(user).Result.Single();
+                int existingRoleId = _roleManager.Roles.Single(r => r.Name == existingRole).Id;
+                var userViewModel = new UserViewModel(user)
+                {
+                    RoleId = existingRoleId,
+                    IsAdmin = User.IsInRole(nameof(Roles.Administrator)),
+                    IsOwner = currentUser.Id == user.Id
+                };
+
+                PrepareViewModel(userViewModel);
+
+                return View(userViewModel);
             }
 
             return RedirectToAction("Login", "Account");
         }
 
         [Authorize]
-        public IActionResult Edit(UserViewModel userViewModel)
+        [HttpPost]
+        public async Task<IActionResult> Edit(UserViewModel userViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -109,17 +134,79 @@ namespace DustTournamentKeeper.Controllers
                 }
 
                 _repository.Update(oldUser, user);
+
+                if (!string.IsNullOrWhiteSpace(userViewModel.Password))
+                {
+                    var result = await _userManager.RemovePasswordAsync(oldUser);
+                    if (result.Succeeded)
+                    {
+                        result = await _userManager.AddPasswordAsync(oldUser, userViewModel.Password);
+                        if (!result.Succeeded)
+                        {
+                            PrepareViewModel(userViewModel);
+                            return View(userViewModel);
+                        }
+                    }
+                }
+
+                string existingRole = _userManager.GetRolesAsync(user).Result.Single();
+                int existingRoleId = _roleManager.Roles.Single(r => r.Name == existingRole).Id;
+
+                if (existingRoleId != userViewModel.RoleId)
+                {
+                    IdentityResult roleResult = await _userManager.RemoveFromRoleAsync(oldUser, existingRole);
+                    if (roleResult.Succeeded)
+                    {
+                        var applicationRole = _roleManager.Roles.FirstOrDefault(r => r.Id == userViewModel.RoleId);
+                        if (applicationRole != null)
+                        {
+                            IdentityResult newRoleResult = await _userManager.AddToRoleAsync(oldUser, applicationRole.Name);
+                            if (newRoleResult.Succeeded)
+                            {
+                                return RedirectToAction("Details", new { id = userViewModel.Id });
+                            }
+                        }
+                    }
+                }
+
                 return RedirectToAction("Details", new { id = userViewModel.Id });
             }
             else
             {
-                userViewModel.ClubsAvailable = _repository.Clubs.Select(c => new SelectListItem
-                {
-                    Text = c.Name,
-                    Value = c.Id.ToString()
-                }).ToList();
+                PrepareViewModel(userViewModel);
+
                 return View(userViewModel);
             }
+        }
+
+        [Authorize(Roles=nameof(Roles.Administrator))]
+        public IActionResult Remove(int id)
+        {
+            var user = _repository.Users.FirstOrDefault(u => u.Id == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            _repository.Delete(user);
+
+            return RedirectToAction(nameof(FactionController.Index));
+        }
+
+        private void PrepareViewModel(UserViewModel userViewModel)
+        {
+            userViewModel.ClubsAvailable = _repository.Clubs.Select(c => new SelectListItem
+            {
+                Text = c.Name,
+                Value = c.Id.ToString()
+            }).ToList();
+
+            userViewModel.RolesAvailable = _repository.Roles.Select(r => new SelectListItem
+            {
+                Text = r.Name,
+                Value = r.Id.ToString()
+            }).ToList();
         }
 
         private User GetUser(int id)

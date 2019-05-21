@@ -19,6 +19,9 @@ namespace DustTournamentKeeper.ViewModels
         [Required]
         public string Surname { get; set; }
 
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
         [Required]
         public string Country { get; set; }
 
@@ -32,8 +35,14 @@ namespace DustTournamentKeeper.ViewModels
         [Required, EmailAddress]
         public string Email { get; set; }
 
+        public int RoleId { get; set; }
+
+        public bool IsAdmin { get; set; }
+        public bool IsOwner { get; set; }
+
         public List<UserHistoryViewModel> History { get; set; }
         public List<SelectListItem> ClubsAvailable { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> RolesAvailable { get; set; } = new List<SelectListItem>();
 
         public UserViewModel()
         {
@@ -42,6 +51,7 @@ namespace DustTournamentKeeper.ViewModels
 
         public UserViewModel(User user)
         {
+            Id = user.Id;
             Name = user.Name;
             UserName = user.UserName;
             Surname = user.Surname;

@@ -41,12 +41,12 @@
     <div class="form-group">
         <label>@Localizer["Logo"]</label>
         <input asp-for="Logo" class="form-control" readonly />
-        <button class="btn btn-dark">@Localizer["UploadLogo"]</button>
+        <button class="btn btn-secondary">@Localizer["UploadLogo"]</button>
         <span asp-validation-for="Slogan"></span>
     </div>
 
     <div class="text-center">
-        <input class="btn btn-dark" type="submit" value="@Localizer["Save"]" />
-        <a class="btn btn-dark" asp-controller="Clubs" asp-action="Index">@Localizer["Discard"]</a>
+        <input class="btn btn-secondary" type="submit" value="@Localizer["Save"]" />
+        <a class="btn btn-secondary" asp-controller="Clubs" asp-action="Index">@Localizer["Discard"]</a>
     </div>
 </form>

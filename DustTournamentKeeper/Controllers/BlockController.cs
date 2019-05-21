@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DustTournamentKeeper.Controllers
 {
@@ -96,6 +98,24 @@ namespace DustTournamentKeeper.Controllers
             _repository.Delete(block);
 
             return RedirectToAction(nameof(BlockController.Index));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<List<Block>>> GetAvailableBlocks(int gameId)
+        {
+            if (gameId == 0)
+            {
+                return new List<Block>();
+            }
+
+            var blocks = await _repository.Blocks.Where(b => b.GameId == gameId).ToListAsync();
+
+            if (blocks == null)
+            {
+                return NotFound();
+            }
+
+            return blocks;
         }
     }
 }

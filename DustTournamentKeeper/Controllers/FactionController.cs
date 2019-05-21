@@ -80,10 +80,10 @@ namespace DustTournamentKeeper.Controllers
                 Value = g.Id.ToString()
             }).ToList();
 
-            factionViewModel.BlocksAvailable = _repository.Blocks.Select(g => new SelectListItem
+            factionViewModel.BlocksAvailable = _repository.Blocks.Select(b => new SelectListItem
             {
-                Text = g.Name,
-                Value = g.Id.ToString()
+                Text = b.Name,
+                Value = b.Id.ToString()
             }).ToList();
         }
 
@@ -116,8 +116,14 @@ namespace DustTournamentKeeper.Controllers
             return RedirectToAction(nameof(FactionController.Index));
         }
 
+        [HttpPost]
         public async Task<ActionResult<List<Faction>>> GetAvailableFactions(int blockId)
         {
+            if (blockId == 0)
+            {
+                return new List<Faction>();
+            }
+
             var factions = await _repository.Factions.Where(f => f.BlockId == blockId).ToListAsync();
 
             if (factions == null)

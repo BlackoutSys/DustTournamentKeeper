@@ -180,10 +180,6 @@ namespace DustTournamentKeeper.ViewModels
                 PlayersList.Add(new PlayerViewModel(player));
             }
             PlayersList = TournamentViewModelSorter.SortPlayerScoresUseTieBreakers(PlayersList, tournament);
-            //PlayersList = PlayersList.OrderByDescending(pl => pl.TotalBigPoints)
-            //    .ThenByDescending(pl => pl.Bp)
-            //    .ThenByDescending(pl => pl.Sp)
-            //    .ThenByDescending(pl => pl.SoS).ToList();
 
             Registered = tournament.TournamentUsers.Any(tu => tu.UserId == userId);
 

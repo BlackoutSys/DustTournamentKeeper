@@ -60,5 +60,19 @@ namespace DustTournamentKeeper.Controllers
 
             return RedirectToAction("Details", new { id = club.Id });
         }
+
+        public IActionResult Remove(int id)
+        {
+            var club = _repository.Clubs.FirstOrDefault(c => c.Id == id);
+
+            if (club == null)
+            {
+                return NotFound();
+            }
+
+            _repository.Delete(club);
+
+            return RedirectToAction(nameof(ClubsController.Index));
+        }
     }
 }

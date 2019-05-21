@@ -33,6 +33,12 @@
     </div>
 
     <div class="form-group">
+        <label>@Localizer["Password"]</label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password"></span>
+    </div>
+
+    <div class="form-group">
         <label>@Localizer["Email"]</label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email"></span>
@@ -52,9 +58,25 @@
 
     <div class="form-group">
         <label>@Localizer["Club"]</label>
-        <select asp-for="ClubId" asp-items="@Model.ClubsAvailable" class="form-control">
+        <select asp-for="ClubId" asp-items="@Model.ClubsAvailable" class="form-control btn btn-secondary">
             <option value="@null">@Localizer["PleaseSelect"]</option>
         </select>
         <span asp-validation-for="ClubId"></span>
+    </div>
+
+    @if (Model.IsAdmin)
+    {
+        <div class="form-group">
+            <label>@Localizer["Role"]</label>
+            <select asp-for="RoleId" asp-items="@Model.RolesAvailable" class="form-control btn btn-secondary">
+                <option value="@null">@Localizer["PleaseSelect"]</option>
+            </select>
+            <span asp-validation-for="RoleId"></span>
+        </div>
+    }
+
+    <div class="text-center">
+        <input class="btn btn-secondary" type="submit" value="@Localizer["Save"]" />
+        <a class="btn btn-secondary" asp-controller="Players" asp-action="Index">@Localizer["Discard"]</a>
     </div>
 </form>
