@@ -117,22 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="LoginTitle" xml:space="preserve">
-    <value>Login</value>
-  </data>
-  <data name="Password" xml:space="preserve">
-    <value>Password</value>
-  </data>
-  <data name="Register" xml:space="preserve">
-    <value>Register</value>
-  </data>
-  <data name="RememberMe" xml:space="preserve">
-    <value>Remember me</value>
-  </data>
-  <data name="UseAccountToLogin" xml:space="preserve">
-    <value>Use your account to log in</value>
-  </data>
-  <data name="UserName" xml:space="preserve">
-    <value>User name</value>
+  <data name="InvalidLogin" xml:space="preserve">
+    <value>Zła nazwa użytkownika lub hasło!</value>
   </data>
 </root>

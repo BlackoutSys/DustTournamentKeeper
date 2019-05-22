@@ -120,6 +120,9 @@
   <data name="Address" xml:space="preserve">
     <value>Adres</value>
   </data>
+  <data name="ChooseFile" xml:space="preserve">
+    <value>Wybierz plik</value>
+  </data>
   <data name="City" xml:space="preserve">
     <value>Miasto</value>
   </data>
@@ -147,7 +150,7 @@
   <data name="Slogan" xml:space="preserve">
     <value>Slogan</value>
   </data>
-  <data name="UploadLogo" xml:space="preserve">
+  <data name="Upload" xml:space="preserve">
     <value>Wgraj logo</value>
   </data>
   <data name="UpsertClub" xml:space="preserve">

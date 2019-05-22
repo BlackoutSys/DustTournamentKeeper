@@ -219,6 +219,9 @@
   <data name="PleaseSelect" xml:space="preserve">
     <value>Wybierz</value>
   </data>
+  <data name="RegisterPlayer" xml:space="preserve">
+    <value>Zarejestruj gracza</value>
+  </data>
   <data name="Round" xml:space="preserve">
     <value>Runda</value>
   </data>
@@ -235,10 +238,10 @@
     <value>Strength of Schedule</value>
   </data>
   <data name="SoSa" xml:space="preserve">
-    <value>Strength of Schedule A</value>
+    <value>SoS A</value>
   </data>
   <data name="SoSb" xml:space="preserve">
-    <value>Strength of Schedule B</value>
+    <value>SoS B</value>
   </data>
   <data name="Sp" xml:space="preserve">
     <value>Małe punkty</value>

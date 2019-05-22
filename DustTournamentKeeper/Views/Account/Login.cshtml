@@ -3,7 +3,7 @@
 @inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = Localizer["Login"];
+    ViewData["Title"] = Localizer["LoginTitle"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -16,7 +16,7 @@
             <div class="panel-body">
                 <section>
                     <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-                        <h4>@Localizer["UseAccountToLogIn"]</h4>
+                        <h4>@Localizer["UseAccountToLogin"]</h4>
                         <hr />
                         <div asp-validation-summary="All" class="text-danger"></div>
                         <div class="form-group">

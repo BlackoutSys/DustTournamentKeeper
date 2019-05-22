@@ -120,6 +120,9 @@
   <data name="Block" xml:space="preserve">
     <value>Block</value>
   </data>
+  <data name="ChooseFile" xml:space="preserve">
+    <value>Choose file</value>
+  </data>
   <data name="CreateFaction" xml:space="preserve">
     <value>Create faction</value>
   </data>

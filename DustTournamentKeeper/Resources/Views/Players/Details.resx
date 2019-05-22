@@ -132,6 +132,9 @@
   <data name="Date" xml:space="preserve">
     <value>Date</value>
   </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
   <data name="Faction" xml:space="preserve">
     <value>Faction</value>
   </data>
@@ -141,6 +144,9 @@
   <data name="History" xml:space="preserve">
     <value>History</value>
   </data>
+  <data name="List" xml:space="preserve">
+    <value>List</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
@@ -149,6 +155,9 @@
   </data>
   <data name="PlayerDetails" xml:space="preserve">
     <value>Player details</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
   </data>
   <data name="Surname" xml:space="preserve">
     <value>Surname</value>

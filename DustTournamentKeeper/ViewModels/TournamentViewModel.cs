@@ -52,7 +52,9 @@ namespace DustTournamentKeeper.ViewModels
         [Range(1, 100000)]
         public int ArmyPoints { get; set; }
 
+        [DataType(DataType.MultilineText)]
         public string SpecificRules { get; set; }
+
         public DateTime Created { get; set; }
         public DateTime? LastModified { get; set; }
 

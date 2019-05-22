@@ -34,18 +34,26 @@
         <span asp-validation-for="Slogan"></span>
     </div>
 
-    <div class="form-group">
-        <label>@Localizer["Logo"]</label>
-        <input asp-for="Logo" class="form-control" readonly />
-        <button class="btn btn-secondary">@Localizer["UploadLogo"]</button>
-        <span asp-validation-for="Logo"></span>
+    <div class="input-group form-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="uploadLogoFileLabel">@Localizer["UploadLogo"]</span>
+        </div>
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="uploadLogoFile"
+                   aria-describedby="uploadLogoFileLabel">
+            <label class="custom-file-label" for="inputGroupFile01">@Localizer["ChooseFile"]</label>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label>@Localizer["Icon"]</label>
-        <input asp-for="Icon" class="form-control" readonly />
-        <button class="btn btn-secondary">@Localizer["UploadIcon"]</button>
-        <span asp-validation-for="Icon"></span>
+    <div class="input-group form-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="uploadIconFileLabel">@Localizer["UploadIcon"]</span>
+        </div>
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="uploadIconFile"
+                   aria-describedby="uploadIconFileLabel">
+            <label class="custom-file-label" for="inputGroupFile01">@Localizer["ChooseFile"]</label>
+        </div>
     </div>
 
     <div class="text-center">

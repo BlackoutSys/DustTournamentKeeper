@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Localization;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Localization;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 
 namespace DustTournamentKeeper.Controllers
 {
@@ -122,7 +122,7 @@ namespace DustTournamentKeeper.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, _localizer["InvalidLogin"]);
+                    ModelState.AddModelError("LoginOrPassword", _localizer["InvalidLogin"]);
                     return View(model);
                 }
             }
@@ -148,6 +148,14 @@ namespace DustTournamentKeeper.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login");
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public bool CheckPlayer(string name)
+        {
+            return _repository.Users.Any(u => u.UserName == name);
+        }
+
         public IActionResult GenerateClubs()
         {
             TestDataGenerator.GenerateClubs(5, _repository);

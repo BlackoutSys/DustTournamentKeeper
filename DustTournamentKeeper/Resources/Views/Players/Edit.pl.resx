@@ -117,7 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="City" xml:space="preserve">
+    <value>Miasto</value>
+  </data>
+  <data name="Club" xml:space="preserve">
+    <value>Klub</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Państwo</value>
+  </data>
+  <data name="Discard" xml:space="preserve">
+    <value>Odrzuć</value>
+  </data>
   <data name="EditPlayer" xml:space="preserve">
     <value>Edytuj gracza</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Imię</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Hasło</value>
+  </data>
+  <data name="PleaseSelect" xml:space="preserve">
+    <value>Wybierz</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Rola</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <data name="Surname" xml:space="preserve">
+    <value>Nazwisko</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>Nick</value>
   </data>
 </root>

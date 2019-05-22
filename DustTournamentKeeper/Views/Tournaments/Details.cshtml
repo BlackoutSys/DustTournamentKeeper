@@ -7,7 +7,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@Model.Title</h2><a class="btn btn-secondary" asp-controller="Tournaments" asp-action="Upsert" asp-route-id="@Model.Id">@Localizer["Edit"]</a><br />
+<h2>@Model.Title</h2>
+<a class="btn btn-secondary m-1" asp-controller="Tournaments" asp-action="Upsert" asp-route-id="@Model.Id">@Localizer["Edit"]</a>
+<br />
 @if (!string.IsNullOrEmpty(Model.Slogan))
 {
     <h3>@Model.Slogan</h3>
@@ -35,8 +37,8 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4"><p>@Localizer["City"]</p></div>
-        <div class="col-md-4"><p>@Model.City</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["City"]</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Model.City</p></div>
     </div>
 
     <div class="row">
@@ -44,17 +46,9 @@
         <div class="col-md-4"><p>@Model.Address</p></div>
     </div>
 
-    @if (!string.IsNullOrEmpty(Model.Club))
-    {
-        <div class="row">
-            <div class="col-md-4"><p>@Localizer["Club"]</p></div>
-            <div class="col-md-4"><p>@Model.Club</p></div>
-        </div>
-    }
-
     <div class="row">
-        <div class="col-md-4"><p>@Localizer["ArmyPoints"]</p></div>
-        <div class="col-md-4"><p>@Model.ArmyPoints</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["ArmyPoints"]</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Model.ArmyPoints</p></div>
     </div>
 
     <div class="row">
@@ -63,8 +57,8 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4"><p>@Localizer["Fee"]</p></div>
-        <div class="col-md-4"><p>@Model.FeeText</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["Fee"]</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Model.FeeText</p></div>
     </div>
 
     <div class="row">
@@ -73,8 +67,8 @@
     </div>
     <div class="row">
 
-        <div class="col-md-4"><p>@Localizer["BPTie"]</p></div>
-        <div class="col-md-4"><p>@Model.Bptie</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["BPTie"]</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Model.Bptie</p></div>
     </div>
     <div class="row">
 
@@ -82,11 +76,21 @@
         <div class="col-md-4"><p>@Model.Bploss</p></div>
     </div>
 
+    @if (!string.IsNullOrEmpty(Model.Club))
+    {
+        <div class="row">
+            <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["Club"]</p></div>
+            <div class="col-md-4 border border-secondary bg-secondary"><p>@Model.Club</p></div>
+        </div>
+    }
+
+    <hr />
+
     @if (Model.TieBreaker1.HasValue)
     {
         <div class="row">
-            <div class="col-md-4"><p>@Localizer["TieBreaker1"]</p></div>
-            <div class="col-md-4"><p>@((TieBreaker)Model.TieBreaker1)</p></div>
+            <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["TieBreaker1"]</p></div>
+            <div class="col-md-4 border border-secondary bg-secondary"><p>@((TieBreaker)Model.TieBreaker1)</p></div>
         </div>
     }
 
@@ -101,8 +105,8 @@
     @if (Model.TieBreaker3.HasValue)
     {
         <div class="row">
-            <div class="col-md-4"><p>@Localizer["TieBreaker3"]</p></div>
-            <div class="col-md-4"><p>@((TieBreaker)Model.TieBreaker3)</p></div>
+            <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["TieBreaker3"]</p></div>
+            <div class="col-md-4 border border-secondary bg-secondary"><p>@((TieBreaker)Model.TieBreaker3)</p></div>
         </div>
     }
 
@@ -114,20 +118,22 @@
         </div>
     }
 
+    <hr />
+
     @if (!string.IsNullOrEmpty(Model.SpecificRules))
     {
         <div class="row">
-            <div class="col-md-4"><p>@Localizer["SpecificRules"]</p></div>
-            <div class="col-md-4"><p>@Model.SpecificRules</p></div>
+            <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["SpecificRules"]</p></div>
+            <div class="col-md-4 border border-secondary bg-secondary"><p>@Model.SpecificRules</p></div>
         </div>
     }
 </div>
 
 <br />
 
-<div id="players" class="container">
-    <p>@Localizer["Players"]</p>
-    <table class="table table-striped table-dark">
+<div id="players" class="container row">
+    <h3>@Localizer["Players"]</h3>
+    <table class="table table-striped table-dark table-hover table-sm table-responsive-sm">
         <thead>
             <tr>
                 <th scope="col">@Localizer["Player"]</th>
@@ -165,12 +171,11 @@
 @if (Model.RoundsList.Count > 0)
 {
     <div id="rounds" class="container">
-        <p>@Localizer["Rounds"]</p>
         @foreach (var round in Model.RoundsList)
         {
             <div class="row">
-                <p>@Localizer["Round"] @round.Number</p>
-                <table class="table table-striped table-dark">
+                <h4>@Localizer["Round"] @round.Number</h4>
+                <table class="table table-striped table-dark table-hover table-sm table-responsive-sm">
                     <thead>
                         <tr>
                             <th scope="col">@Localizer["PlayerA"]</th>

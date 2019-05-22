@@ -219,6 +219,9 @@
   <data name="PleaseSelect" xml:space="preserve">
     <value>Please select</value>
   </data>
+  <data name="RegisterPlayer" xml:space="preserve">
+    <value>Register player</value>
+  </data>
   <data name="Round" xml:space="preserve">
     <value>Round</value>
   </data>

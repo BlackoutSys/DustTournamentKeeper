@@ -117,7 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="RoundPending" xml:space="preserve">
-    <value>Pending</value>
+  <data name="Privacy" xml:space="preserve">
+    <value>Polityka prywatności</value>
+  </data>
+  <data name="PrivacyTitle" xml:space="preserve">
+    <value>Polityka prywatności</value>
   </data>
 </root>

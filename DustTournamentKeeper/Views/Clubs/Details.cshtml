@@ -7,30 +7,37 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@Model.Name</h2><a class="btn btn-secondary" asp-controller="Clubs" asp-action="Upsert" asp-route-id="@Model.Id">@Localizer["Edit"]</a><br />
+<h2>@Model.Name</h2>
+<a class="btn btn-secondary mb-1" asp-controller="Clubs" asp-action="Upsert" asp-route-id="@Model.Id">@Localizer["Edit"]</a>
+<a class="btn btn-secondary mb-1" asp-controller="Clubs" asp-action="Remove" asp-route-id="@Model.Id">@Localizer["Delete"]</a>
+<a class="btn btn-secondary mb-1" asp-controller="Clubs" asp-action="Index">@Localizer["List"]</a>
+<br />
 <div class="container">
     <div class="row">
-        <div class="col-md-4"><p>@Localizer["Name"]</p></div>
-        <div class="col-md-4"><p>@Model.Name</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["Name"]</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Model.Name</p></div>
     </div>
     <div class="row">
         <div class="col-md-4"><p>@Localizer["City"]</p></div>
         <div class="col-md-4"><p>@Model.City</p></div>
     </div>
     <div class="row">
-        <div class="col-md-4"><p>@Localizer["Address"]</p></div>
-        <div class="col-md-4"><p>@Model.Address</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["Address"]</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Model.Address</p></div>
     </div>
     <div class="row">
         <div class="col-md-4"><p>@Localizer["Slogan"]</p></div>
         <div class="col-md-4"><p>@Model.Slogan</p></div>
     </div>
     <div class="row">
-        <div class="col-md-4"><p>@Localizer["City"]</p></div>
-        <div class="col-md-4"><p>@Model.City</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["City"]</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Model.City</p></div>
     </div>
-    <div class="row">
-        <div class="col-md-4"><p>@Localizer["Logo"]</p></div>
-        <div class="col-md-4"><img src="@Model.Logo" alt="@Model.Name" /></div>
-    </div>
+    @if (!string.IsNullOrEmpty(Model.Logo))
+    {
+        <div class="row">
+            <div class="col-md-4"><p>@Localizer["Logo"]</p></div>
+            <div class="col-md-4"><img src="@Model.Logo" alt="@Model.Name" /></div>
+        </div>
+    }
 </div>

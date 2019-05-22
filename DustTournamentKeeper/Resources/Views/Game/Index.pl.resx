@@ -120,29 +120,32 @@
   <data name="Action" xml:space="preserve">
     <value>Akcje</value>
   </data>
-  <data name="Adress" xml:space="preserve">
-    <value>Adres</value>
-  </data>
-  <data name="City" xml:space="preserve">
-    <value>Miasto</value>
-  </data>
-  <data name="Clubs" xml:space="preserve">
-    <value>Kluby</value>
-  </data>
-  <data name="ClubsTitle" xml:space="preserve">
-    <value>Lista klubów</value>
-  </data>
-  <data name="Country" xml:space="preserve">
-    <value>Państwo</value>
-  </data>
   <data name="Create" xml:space="preserve">
     <value>Utwórz</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Opis</value>
+  </data>
+  <data name="Games" xml:space="preserve">
+    <value>Gry</value>
+  </data>
+  <data name="GamesTitle" xml:space="preserve">
+    <value>Lista gier</value>
+  </data>
+  <data name="Icon" xml:space="preserve">
+    <value>Ikona</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>Lista</value>
+  </data>
+  <data name="Logo" xml:space="preserve">
+    <value>Logo</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Nazwa</value>
   </data>
-  <data name="NoClubs" xml:space="preserve">
-    <value>Brak klubów</value>
+  <data name="NoGames" xml:space="preserve">
+    <value>Brak gier</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Usuń</value>

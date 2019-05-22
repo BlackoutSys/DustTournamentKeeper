@@ -45,6 +45,8 @@ namespace DustTournamentKeeper
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix,
                     options => options.ResourcesPath = "Resources"
                 )
+                .AddMvcLocalization(LanguageViewLocationExpanderFormat.Suffix,
+                    options => options.AllowDataAnnotationsLocalizationForEnumDisplayAttributes = true)
                 .AddDataAnnotationsLocalization();
 
             services.Configure<RequestLocalizationOptions>(options =>

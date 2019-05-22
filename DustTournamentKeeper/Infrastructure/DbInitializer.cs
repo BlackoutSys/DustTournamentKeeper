@@ -57,6 +57,18 @@ namespace DustTournamentKeeper.Infrastructure
                         }
                     }
                 }
+                else
+                {
+                    var isAdmin = await userManager.IsInRoleAsync(admin, nameof(Roles.Administrator));
+                    if (!isAdmin)
+                    {
+                        var applicationRole = await roleManager.FindByNameAsync(nameof(Roles.Administrator));
+                        if (applicationRole != null)
+                        {
+                            IdentityResult roleResult = await userManager.AddToRoleAsync(admin, applicationRole.NormalizedName);
+                        }
+                    }
+                }
             }
         }
     }

@@ -117,22 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="LoginTitle" xml:space="preserve">
-    <value>Login</value>
+  <data name="BlackoutSystemsDescription" xml:space="preserve">
+    <value>Blackout Systems jest firmą dostarczającą kompleksowe oprogramowanie na zamówienie. Odpowiedzialni jesteśmy m. in. za ten portal. </value>
   </data>
-  <data name="Password" xml:space="preserve">
-    <value>Password</value>
+  <data name="BlackoutSystemsEmail" xml:space="preserve">
+    <value>Jeżeli masz pytania albo chciałbyś złożyć zamówienie na projekt, napisz do nas</value>
   </data>
-  <data name="Register" xml:space="preserve">
-    <value>Register</value>
+  <data name="BlackoutSystemsHeader" xml:space="preserve">
+    <value>Blackout Systems</value>
   </data>
-  <data name="RememberMe" xml:space="preserve">
-    <value>Remember me</value>
+  <data name="BlackoutSystemsWebsite" xml:space="preserve">
+    <value>Zajrzyj na naszą stronę aby zobaczyć inne realizacje i usługi, które oferujemy</value>
   </data>
-  <data name="UseAccountToLogin" xml:space="preserve">
-    <value>Use your account to log in</value>
+  <data name="Contact" xml:space="preserve">
+    <value>Kontakt</value>
   </data>
-  <data name="UserName" xml:space="preserve">
-    <value>User name</value>
+  <data name="ContactTitle" xml:space="preserve">
+    <value>Skontaktuj się z nami</value>
+  </data>
+  <data name="WarFactoryDescription" xml:space="preserve">
+    <value>Warfactory jest sklepem internetowym specjalizującym się w modelach i akcesoriach z linii Dust</value>
+  </data>
+  <data name="WarFactoryEmail" xml:space="preserve">
+    <value>W razie pytań - napisz do nas</value>
+  </data>
+  <data name="WarFactoryHeader" xml:space="preserve">
+    <value>War Factory</value>
+  </data>
+  <data name="WarFactoryWebsite" xml:space="preserve">
+    <value>Zajrzyj na naszą stronę</value>
   </data>
 </root>

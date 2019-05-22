@@ -7,19 +7,21 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@Model.Name</h2> <a class="btn btn-secondary" asp-controller="Block" asp-action="Upsert" asp-route-id="@Model.Id">@Localizer["Edit"]</a> <a class="btn btn-secondary" asp-controller="Block" asp-action="Index">@Localizer["List"]</a><br />
+<h2>@Model.Name</h2>
+<a class="btn btn-secondary mb-1" asp-controller="Block" asp-action="Upsert" asp-route-id="@Model.Id">@Localizer["Edit"]</a>
+<a class="btn btn-secondary mb-1" asp-controller="Block" asp-action="Index">@Localizer["List"]</a><br />
 <div class="container">
     <div class="row">
-        <div class="col-md-4"><p>@Localizer["Name"]</p></div>
-        <div class="col-md-4"><p>@Model.Name</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["Name"]</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Model.Name</p></div>
     </div>
     <div class="row">
         <div class="col-md-4"><p>@Localizer["Game"]</p></div>
-        <div class="col-md-4"><a asp-controller="Game" asp-action="Details" asp-route-id="@Model.GameId">@Model.Game?.Name</a></div>
+        <div class="col-md-4"><a class="alert-link" asp-controller="Game" asp-action="Details" asp-route-id="@Model.GameId">@Model.Game?.Name</a></div>
     </div>
     <div class="row">
-        <div class="col-md-4"><p>@Localizer["Slogan"]</p></div>
-        <div class="col-md-4"><p>@Model.Slogan</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["Slogan"]</p></div>
+        <div class="col-md-4 border border-secondary bg-secondary"><p>@Model.Slogan</p></div>
     </div>
     @if (Model.Logo != null)
     {
