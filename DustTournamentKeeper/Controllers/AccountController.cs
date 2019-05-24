@@ -5,14 +5,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Localization;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Localization;
 
 namespace DustTournamentKeeper.Controllers
 {
+    [Authorize(Roles = nameof(Roles.Administrator))]
     public class AccountController : Controller
     {
         private readonly ITournamentRepository _repository;
@@ -33,6 +32,7 @@ namespace DustTournamentKeeper.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -50,6 +50,7 @@ namespace DustTournamentKeeper.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterUserViewModel registerUserViewModel)
         {
             if (ModelState.IsValid)
@@ -101,6 +102,7 @@ namespace DustTournamentKeeper.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;

@@ -8,19 +8,6 @@
     ViewData["Title"] = Localizer["GameTitle"];
 }
 
-Generowanie danych testowych: <br />
-
-<a class="btn btn-secondary" asp-controller="Account" asp-action="GenerateClubs">Generate Clubs</a>
-<a class="btn btn-secondary" asp-controller="Account" asp-action="GenerateBoards">Generate Boards</a>
-<a class="btn btn-secondary" asp-controller="Account" asp-action="GenerateUsers">Generate Users</a>
-<a class="btn btn-secondary" asp-controller="Account" asp-action="GenerateTournaments">Generate Tournaments</a>
-<a class="btn btn-secondary" asp-controller="Account" asp-action="GenerateBundle">Generate Bundle</a>
-
-<br /><br />!!!Czyszczenie bazy!!! <br />
-<a class="btn btn-secondary" asp-controller="Account" asp-action="NukeDb">Nuke Database</a>
-
-<br /><br /><br /><br /><br /><br />
-
 <h2>@Localizer["ChooseYourGame"]</h2>
 
 @foreach (var game in Model)
