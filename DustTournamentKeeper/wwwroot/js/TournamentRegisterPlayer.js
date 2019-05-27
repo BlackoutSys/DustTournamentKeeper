@@ -24,7 +24,7 @@
     });
 
     $('#regUserLink').click(function () {
-        var userName = $("#regUserText").val();
-        $("#regUserText").href = $("#regUserText").href.replace("xxx", userName);
+        var userName = $('#regUserText').val();
+        $("#regUserLink")[0].href = $("#regUserLink")[0].href.replace("xxx", userName);
     });
 });

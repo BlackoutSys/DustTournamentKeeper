@@ -1,0 +1,12 @@
+﻿@model string
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = @Localizer["ErrorTitle"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Localizer["Error"]</h1>
+<p>@Model</p>
+

@@ -195,6 +195,9 @@
   <data name="Game" xml:space="preserve">
     <value>Game</value>
   </data>
+  <data name="InsertSpecificRules" xml:space="preserve">
+    <value>Insert specific rules</value>
+  </data>
   <data name="Kick" xml:space="preserve">
     <value>Kick out</value>
   </data>

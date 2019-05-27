@@ -228,6 +228,10 @@ else if (!Model.FirstRoundAvailable && !Model.NextRoundAvailable && Model.Finish
 {
     <a class="btn btn-secondary" asp-controller="Tournaments" asp-action="Finish" asp-route-id="@Model.Id"> @Localizer["Finish"]</a>
 }
+@if (Model.RoundsList.Count > 0)
+{
+<a class="btn btn-secondary" asp-controller="Tournaments" asp-action="DropMostRecentRound" asp-route-id="@Model.Id"> @Localizer["DropRound"]</a>
+}
 <br /><br />
 
 

@@ -230,20 +230,20 @@ namespace DustTournamentKeeper.Controllers
 
                     if (tournamentUserA != null)
                     {
-                        tournamentUserA.Bp = tournamentUserA.Bp.GetValueOrDefault() + matchViewModel.Bpa;
-                        tournamentUserA.Sp = tournamentUserA.Sp.GetValueOrDefault() + matchViewModel.Spa;
-                        tournamentUserA.SoS = tournamentUserA.SoS.GetValueOrDefault() + matchViewModel.SoSa;
+                        tournamentUserA.Bp = tournamentUserA.Bp.GetValueOrDefault() + matchViewModel.Bpa ?? 0;
+                        tournamentUserA.Sp = tournamentUserA.Sp.GetValueOrDefault() + matchViewModel.Spa ?? 0;
+                        tournamentUserA.SoS = tournamentUserA.SoS.GetValueOrDefault() + matchViewModel.SoSa ?? 0;
 
-                        _repository.Update(oldTournamentUsers.FirstOrDefault(tu => tu.Id == tournamentUserA.Id), tournamentUserA);
+                        _repository.Update(_repository.TournamentUsers.FirstOrDefault(tu => tu.Id == tournamentUserA.Id), tournamentUserA);
                     }
 
                     if (tournamentUserB != null)
                     {
-                        tournamentUserB.Bp = tournamentUserB.Bp.GetValueOrDefault() + matchViewModel.Bpb;
-                        tournamentUserB.Sp = tournamentUserB.Sp.GetValueOrDefault() + matchViewModel.Spb;
-                        tournamentUserB.SoS = tournamentUserB.SoS.GetValueOrDefault() + matchViewModel.SoSb;
+                        tournamentUserB.Bp = tournamentUserB.Bp.GetValueOrDefault() + matchViewModel.Bpb ?? 0;
+                        tournamentUserB.Sp = tournamentUserB.Sp.GetValueOrDefault() + matchViewModel.Spb ?? 0;
+                        tournamentUserB.SoS = tournamentUserB.SoS.GetValueOrDefault() + matchViewModel.SoSb ?? 0;
 
-                        _repository.Update(oldTournamentUsers.FirstOrDefault(tu => tu.Id == tournamentUserB.Id), tournamentUserB);
+                        _repository.Update(_repository.TournamentUsers.FirstOrDefault(tu => tu.Id == tournamentUserB.Id), tournamentUserB);
                     }
                 }
 
@@ -259,9 +259,13 @@ namespace DustTournamentKeeper.Controllers
                 _repository.Add(tournament);
             }
 
-            foreach (var tournamentBoardType in tournament.TournamentBoardTypes)
+            if (oldTournament != null)
             {
-                _repository.Delete(tournamentBoardType);
+                int count = oldTournament.TournamentBoardTypes.Count;
+                for (int i=0; i<count; i++)
+                {
+                    _repository.Delete(oldTournament.TournamentBoardTypes[0]);
+                }
             }
 
             int counter = 1;
@@ -437,8 +441,39 @@ namespace DustTournamentKeeper.Controllers
             }
             else
             {
-                return View("Error");
+                return View("Error", "Could not assign pairs for new round");
             }
+        }
+
+        [Authorize(Roles = "Administrator,Organizer")]
+        public IActionResult DropMostRecentRound(int id)
+        {
+            var tournament = _repository.Tournaments
+                .Include(t => t.RoundsNavigation)
+                .ThenInclude(r => r.Matches)
+                .FirstOrDefault(t => t.Id == id);
+
+            if (tournament == null)
+            {
+                return NotFound("Tournament was not found");
+            }
+
+            var lastRound = tournament.RoundsNavigation.Last();
+
+            if (lastRound.Matches.Any(m => m.Bpa != null))
+            {
+                return View("Error", "Could not drop round - there are matches with results");
+            }
+
+            var count = lastRound.Matches.Count;
+            for (int i = 0; i < count; i++)
+            {
+                _repository.Delete(lastRound.Matches[0]);
+            }
+
+            _repository.Delete(lastRound);
+
+            return RedirectToAction("Details", new { id });
         }
 
         private void PrepareViewModel(TournamentViewModel tournamentViewModel, Tournament tournament)

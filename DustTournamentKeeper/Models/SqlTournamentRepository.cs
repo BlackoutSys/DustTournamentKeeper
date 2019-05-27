@@ -321,7 +321,7 @@ namespace DustTournamentKeeper.Models
             tournamentUser.TournamentId = newTournamentUser.TournamentId;
             tournamentUser.UserId = newTournamentUser.UserId;
 
-            _context.SaveChanges();
+            _context.SaveChanges(true);
         }
 
         public void Update(Game game, Game newGame)
@@ -341,6 +341,11 @@ namespace DustTournamentKeeper.Models
             tournamentBoardType.Number = newTournamentBoardType.Number;
             tournamentBoardType.TournamentId = newTournamentBoardType.TournamentId;
 
+            _context.SaveChanges();
+        }
+
+        public void SaveContext()
+        {
             _context.SaveChanges();
         }
     }

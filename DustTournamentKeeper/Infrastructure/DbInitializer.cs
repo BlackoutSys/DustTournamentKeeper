@@ -137,6 +137,16 @@ namespace DustTournamentKeeper.Infrastructure
                     repository.Add(block);
                 }
 
+                if (blocks.FirstOrDefault(b => b.Name == "Mythos") == null)
+                {
+                    var block = new Block
+                    {
+                        Name = "Mythos",
+                        GameId = dustGame.Id
+                    };
+                    repository.Add(block);
+                }
+
                 // Factions
                 var factions = repository.Factions.ToList();
 

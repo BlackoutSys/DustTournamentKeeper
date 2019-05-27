@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DustTournamentKeeper.Models;
+﻿using DustTournamentKeeper.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace DustTournamentKeeper.Controllers
 {
@@ -33,6 +31,7 @@ namespace DustTournamentKeeper.Controllers
             return View(club);
         }
 
+        [Authorize]
         public IActionResult Upsert(int? id)
         {
             var club = id.HasValue ? _repository.Clubs.FirstOrDefault(c => c.Id == id.Value) : new Club();
@@ -41,6 +40,7 @@ namespace DustTournamentKeeper.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Upsert(Club club)
         {
             if (club.Id < 1)
@@ -61,6 +61,7 @@ namespace DustTournamentKeeper.Controllers
             return RedirectToAction("Details", new { id = club.Id });
         }
 
+        [Authorize]
         public IActionResult Remove(int id)
         {
             var club = _repository.Clubs.FirstOrDefault(c => c.Id == id);

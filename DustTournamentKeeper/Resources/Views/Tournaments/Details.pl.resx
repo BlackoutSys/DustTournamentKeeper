@@ -246,4 +246,7 @@
   <data name="Begin" xml:space="preserve">
     <value>Rozpocznij</value>
   </data>
+  <data name="DropRound" xml:space="preserve">
+    <value>Usuń ostatnią rundę</value>
+  </data>
 </root>

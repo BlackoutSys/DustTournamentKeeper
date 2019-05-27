@@ -67,5 +67,7 @@ namespace DustTournamentKeeper.Models
         void Add(TournamentBoardType tournamentBoardType);
         void Update(TournamentBoardType tournamentBoardType, TournamentBoardType newTournamentBoardType);
         void Delete(TournamentBoardType tournamentBoardType);
+
+        void SaveContext();
     }
 }
