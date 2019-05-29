@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DustTournamentKeeper.Models
 {
@@ -17,5 +16,15 @@ namespace DustTournamentKeeper.Models
 
         public virtual IList<Match> Matches { get; set; }
         public virtual IList<TournamentBoardType> TournamentBoardTypes { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return (obj as BoardType).Id == this.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

@@ -118,57 +118,57 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ApplyFilter" xml:space="preserve">
-    <value>Apply filter</value>
+    <value>Filtruj</value>
   </data>
   <data name="BigPoints" xml:space="preserve">
-    <value>Big points</value>
+    <value>Duże punkty</value>
   </data>
   <data name="BigPointsMaxFilter" xml:space="preserve">
-    <value>Big points - range to</value>
+    <value>Duże punkty - zakres do</value>
   </data>
   <data name="BigPointsMinFilter" xml:space="preserve">
-    <value>Big points - range from</value>
+    <value>Duże punkty - zakres od</value>
   </data>
   <data name="CityFilter" xml:space="preserve">
-    <value>City filter</value>
+    <value>Filtr miasta</value>
   </data>
   <data name="ClearFilter" xml:space="preserve">
-    <value>Clear filter</value>
+    <value>Wyczyść filtry</value>
   </data>
   <data name="ClubFilter" xml:space="preserve">
-    <value>Club filter - type name</value>
+    <value>Filtr klubu - wpisz nazwę</value>
   </data>
   <data name="ClubIdFilter" xml:space="preserve">
-    <value>Club filter - choose existing</value>
+    <value>Filtr klubu - wybierz klub</value>
   </data>
   <data name="CountryFilter" xml:space="preserve">
-    <value>Country filter</value>
+    <value>Filtr państwa</value>
   </data>
   <data name="NoRanking" xml:space="preserve">
-    <value>No rankings yet!</value>
+    <value>Brak rankingów!</value>
   </data>
   <data name="Player" xml:space="preserve">
-    <value>Player</value>
+    <value>Gracz</value>
   </data>
   <data name="Rankings" xml:space="preserve">
-    <value>Rankings</value>
+    <value>Rankingi</value>
   </data>
   <data name="RankingsTitle" xml:space="preserve">
-    <value>Rankings</value>
+    <value>Rankingi</value>
   </data>
   <data name="SmallPoints" xml:space="preserve">
-    <value>Small points</value>
+    <value>Małe punkty</value>
   </data>
   <data name="SmallPointsMaxFilter" xml:space="preserve">
-    <value>Small points - range to</value>
+    <value>Małe punkty - zakres do</value>
   </data>
   <data name="SmallPointsMinFilter" xml:space="preserve">
-    <value>Small points - range from</value>
+    <value>Małe punkty - zakres od</value>
   </data>
   <data name="TournamentsPlayed" xml:space="preserve">
-    <value>Tournaments played</value>
+    <value>Rozegrane turnieje</value>
   </data>
   <data name="TournamentsWon" xml:space="preserve">
-    <value>Tournaments won</value>
+    <value>Wygrane turnieje</value>
   </data>
 </root>

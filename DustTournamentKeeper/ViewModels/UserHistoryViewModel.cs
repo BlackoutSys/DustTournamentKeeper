@@ -27,7 +27,7 @@ namespace DustTournamentKeeper.ViewModels
             Game = tournament.Game.Name;
             Country = tournament.Country ?? "-";
             City = tournament.City ?? "-";
-            Date = tournament.DateEnd.Date.ToString();
+            Date = tournament.DateEnd.Date.ToShortDateString();
 
             var userToTournament = tournament.TournamentUsers.FirstOrDefault(u => u.UserId == userId);
             Block = userToTournament?.Block?.Name ?? "-";

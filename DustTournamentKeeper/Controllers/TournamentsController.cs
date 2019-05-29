@@ -50,6 +50,7 @@ namespace DustTournamentKeeper.Controllers
                 .Include(t => t.ClubNavigation)
                 .Include(t => t.Organizer)
                 .Where(t => t.GameId == gameId)
+                .OrderByDescending(t => t.DateStart)
                 .ToList());
         }
 
@@ -259,27 +260,30 @@ namespace DustTournamentKeeper.Controllers
                 _repository.Add(tournament);
             }
 
-            if (oldTournament != null)
+            if (tournament.Status == nameof(TournamentStatus.Draft) || tournament.Status == nameof(TournamentStatus.Pending))
             {
-                int count = oldTournament.TournamentBoardTypes.Count;
-                for (int i=0; i<count; i++)
+                if (oldTournament != null)
                 {
-                    _repository.Delete(oldTournament.TournamentBoardTypes[0]);
-                }
-            }
-
-            int counter = 1;
-            foreach (var boardSelection in tournamentViewModel.BoardsSelection)
-            {
-                for (int i = 0; i < boardSelection.Count; i++)
-                {
-                    _repository.Add(new TournamentBoardType()
+                    int count = oldTournament.TournamentBoardTypes.Count;
+                    for (int i = 0; i < count; i++)
                     {
-                        BoardTypeId = boardSelection.Id,
-                        Number = counter,
-                        TournamentId = tournament.Id
-                    });
-                    counter++;
+                        _repository.Delete(oldTournament.TournamentBoardTypes[0]);
+                    }
+                }
+
+                int counter = 1;
+                foreach (var boardSelection in tournamentViewModel.BoardsSelection)
+                {
+                    for (int i = 0; i < boardSelection.Count; i++)
+                    {
+                        _repository.Add(new TournamentBoardType()
+                        {
+                            BoardTypeId = boardSelection.Id,
+                            Number = counter,
+                            TournamentId = tournament.Id
+                        });
+                        counter++;
+                    }
                 }
             }
             

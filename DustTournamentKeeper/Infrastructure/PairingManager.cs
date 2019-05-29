@@ -165,6 +165,13 @@ namespace DustTournamentKeeper.Infrastructure
                 var playerA = playerScoresSorted[i];
                 var playerB = playerScoresSorted[i + 1];
 
+                var index = i + 1;
+                while (playerA.Opponents.Contains(playerB.Player) && index+1 < playerScoresSorted.Count)
+                {
+                    index++;
+                    playerB = playerScoresSorted[index];
+                }
+
                 var uniqueBoardsA = availableBoards.Where(b =>
                     !playerA.Boards.Contains(b.BoardType));
 
@@ -188,8 +195,8 @@ namespace DustTournamentKeeper.Infrastructure
                 pairings.Add(Tuple.Create(playerA.Player.UserId,
                     (int?)playerB.Player.UserId,
                     chosenBoard));
-                playerScoresSorted.RemoveAt(i);
-                playerScoresSorted.RemoveAt(i);
+                playerScoresSorted.Remove(playerA);
+                playerScoresSorted.Remove(playerB);
             }
 
             // Assign bye
