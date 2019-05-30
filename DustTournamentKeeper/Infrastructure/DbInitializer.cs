@@ -53,7 +53,7 @@ namespace DustTournamentKeeper.Infrastructure
                         var applicationRole = await roleManager.FindByNameAsync(nameof(Roles.Administrator));
                         if (applicationRole != null)
                         {
-                            IdentityResult roleResult = await userManager.AddToRoleAsync(admin, applicationRole.NormalizedName);
+                            await userManager.AddToRoleAsync(admin, applicationRole.NormalizedName);
                         }
                     }
                 }
@@ -65,7 +65,7 @@ namespace DustTournamentKeeper.Infrastructure
                         var applicationRole = await roleManager.FindByNameAsync(nameof(Roles.Administrator));
                         if (applicationRole != null)
                         {
-                            IdentityResult roleResult = await userManager.AddToRoleAsync(admin, applicationRole.NormalizedName);
+                            await userManager.AddToRoleAsync(admin, applicationRole.NormalizedName);
                         }
                     }
                 }

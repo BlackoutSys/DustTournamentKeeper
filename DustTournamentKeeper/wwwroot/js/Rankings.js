@@ -1,8 +1,8 @@
-﻿function applyFilter(event) {
+﻿function applyFilter() {
     var link = $("#applyFilter")[0];
 
-    //link.href = link.href.replace("dateFrom=null", "dateFrom=" + $('#countryFilter').val());
-    //link.href = link.href.replace("dateTo=null", "dateTo=" + $('#cityFilter').val());
+    link.href = link.href.replace("dateFrom=null", "dateFrom=" + $('#dateFromFilter').val());
+    link.href = link.href.replace("dateTo=null", "dateTo=" + $('#dateToFilter').val());
     link.href = link.href.replace("country=null", "country=" + $('#countryFilter').val());
     link.href = link.href.replace("city=null", "city=" + $('#cityFilter').val());
     link.href = link.href.replace("clubId=null", "clubId=" + $('#clubIdFilter').val());

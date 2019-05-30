@@ -12,6 +12,16 @@
 
 <div class="table-bordered border-info rounded p-xl-1 mb-1">
     <div class="form-group">
+        <label>@Localizer["DateFromFilter"]</label>
+        <input id="dateFromFilter" type="date" class="form-control" value="@ViewBag.Filter.DateFrom" />
+    </div>
+    
+    <div class="form-group">
+        <label>@Localizer["DateToFilter"]</label>
+        <input id="dateToFilter" type="date" class="form-control" value="@ViewBag.Filter.DateTo" />
+    </div>
+
+    <div class="form-group">
         <label>@Localizer["CountryFilter"]</label>
         <input id="countryFilter" class="form-control" value="@ViewBag.Filter.Country" />
     </div>
@@ -64,8 +74,8 @@
        asp-route-smallPointsMax="null">@Localizer["ApplyFilter"]</a>
 
     <a id="clearFilter" class="btn btn-secondary mb-1" asp-controller="Rankings" asp-action="Index"
-       asp-route-dateFrom="null"
-       asp-route-dateTo="null"
+       asp-route-dateFrom=""
+       asp-route-dateTo=""
        asp-route-country=""
        asp-route-city=""
        asp-route-clubId="null"

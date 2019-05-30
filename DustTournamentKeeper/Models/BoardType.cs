@@ -24,7 +24,7 @@ namespace DustTournamentKeeper.Models
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return Id.GetHashCode();
         }
     }
 }
