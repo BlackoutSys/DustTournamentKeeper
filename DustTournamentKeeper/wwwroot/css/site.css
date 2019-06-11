@@ -9,3 +9,27 @@
     vertical-align: middle;
     float: none;
 }
+
+.flex-div-main {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.flex-div {
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.flex-div-inner-l {
+    width: 100px;
+    text-align: center;
+}
+
+.flex-div-inner-sm {
+    width: 50px;
+    text-align: center;
+}

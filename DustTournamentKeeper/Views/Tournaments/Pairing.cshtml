@@ -1,0 +1,30 @@
+﻿@model TournamentPairingViewModel
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = @Localizer["PairingTitle"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2><b>@Model.TournamentTitle</b> - @Localizer["Round"] @Model.RoundNumber</h2>
+
+<div class="container flex-div-main">
+    @foreach (var match in Model.Matches)
+    {
+        <div class="container flex-div">
+            <div class="border flex-div-inner-l"><a asp-controller="Players" asp-action="Details" asp-route-id="@match.PlayerA.Id">@match.PlayerA.UserName</a></div>
+            <div class="border flex-div-inner-sm"><p class="font-weight-bold">@match.BoardNumber</p></div>
+            <div class="border flex-div-inner-l">
+                @if (match.PlayerB != null)
+                {
+                    <a asp-controller="Players" asp-action="Details" asp-route-id="@match.PlayerB.Id">@match.PlayerB.UserName</a>
+                }
+                else
+                {
+                    <p>BYE</p>
+                }
+            </div>
+        </div>
+    }
+</div>

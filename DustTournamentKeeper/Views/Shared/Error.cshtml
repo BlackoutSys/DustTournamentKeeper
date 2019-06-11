@@ -1,6 +1,4 @@
-﻿@model string
-
-@inject IViewLocalizer Localizer
+﻿@inject IViewLocalizer Localizer
 
 @{
     ViewData["Title"] = @Localizer["ErrorTitle"];
@@ -8,5 +6,8 @@
 }
 
 <h1>@Localizer["Error"]</h1>
-<p>@Model</p>
+@if (ViewData["Error"] != null)
+{
+    <p>@ViewData["Error"]</p>
+}
 

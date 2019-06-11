@@ -174,12 +174,11 @@
                     <th width="10%" scope="col">@Localizer["Player"]</th>
                     <th width="7%" scope="col">@Localizer["Block"]</th>
                     <th scope="col">@Localizer["Faction"]</th>
-                    <th width="7%" scope="col">@Localizer["BonusPoints"]</th>
-                    <th width="7%" scope="col">@Localizer["PenaltyPoints"]</th>
                     <th width="7%" scope="col">@Localizer["Bp"]</th>
                     <th width="7%" scope="col">@Localizer["Sp"]</th>
                     <th width="7%" scope="col">@Localizer["SoS"]</th>
-                    <th width="7%" scope="col">@Localizer["TotalBigPoints"]</th>
+                    <th width="7%" scope="col">@Localizer["BonusPoints"]</th>
+                    <th width="7%" scope="col">@Localizer["PenaltyPoints"]</th>
                     <th width="10%" scope="col">@Localizer["Action"]</th>
                 </tr>
             </thead>
@@ -190,12 +189,11 @@
                         <th scope="col"><input type="hidden" asp-for="@Model.PlayersList[i].Id" /> @Model.PlayersList[i].User</th>
                         <td>@Model.PlayersList[i].Block</td>
                         <td>@Model.PlayersList[i].Faction</td>
-                        <td><input asp-for="@Model.PlayersList[i].BonusPoints" /></td>
-                        <td><input asp-for="@Model.PlayersList[i].PenaltyPoints" /></td>
                         <td>@Model.PlayersList[i].Bp</td>
                         <td>@Model.PlayersList[i].Sp</td>
                         <td>@Model.PlayersList[i].SoS</td>
-                        <td>@Model.PlayersList[i].TotalBigPoints</td>
+                        <td><input asp-for="@Model.PlayersList[i].BonusPoints" /></td>
+                        <td><input asp-for="@Model.PlayersList[i].PenaltyPoints" /></td>
                         <td><a class="btn btn-secondary" asp-controller="Tournaments" asp-action="Unregister" asp-route-tournamentId="@Model.Id" asp-route-userId="@Model.PlayersList[i].UserId">@Localizer["Kick"]</a></td>
                     </tr>
                 }

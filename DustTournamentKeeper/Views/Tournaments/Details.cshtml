@@ -8,6 +8,7 @@
 }
 
 <h2>@Model.Title</h2>
+<a class="btn btn-secondary m-1" asp-controller="Tournaments" asp-action="ShowPairings" asp-route-id="@Model.Id">@Localizer["Pairings"]</a>
 <a class="btn btn-secondary m-1" asp-controller="Tournaments" asp-action="Upsert" asp-route-id="@Model.Id">@Localizer["Edit"]</a>
 <br />
 @if (!string.IsNullOrEmpty(Model.Slogan))
@@ -139,12 +140,11 @@
                 <th scope="col">@Localizer["Player"]</th>
                 <th scope="col">@Localizer["Block"]</th>
                 <th scope="col">@Localizer["Faction"]</th>
-                <th scope="col">@Localizer["BonusPoints"]</th>
-                <th scope="col">@Localizer["PenaltyPoints"]</th>
                 <th scope="col">@Localizer["Bp"]</th>
                 <th scope="col">@Localizer["Sp"]</th>
                 <th scope="col">@Localizer["SoS"]</th>
-                <th scope="col">@Localizer["TotalBigPoints"]</th>
+                <th scope="col">@Localizer["BonusPoints"]</th>
+                <th scope="col">@Localizer["PenaltyPoints"]</th>
             </tr>
         </thead>
         <tbody>
@@ -154,12 +154,11 @@
                     <th scope="col"><a asp-controller="Players" asp-action="Details" asp-route-id="@player.UserId">@player.User</a></th>
                     <td>@player.Block</td>
                     <td>@player.Faction</td>
-                    <td>@player.BonusPoints</td>
-                    <td>@player.PenaltyPoints</td>
                     <td>@player.Bp</td>
                     <td>@player.Sp</td>
                     <td>@player.SoS</td>
-                    <td>@player.TotalBigPoints</td>
+                    <td>@player.BonusPoints</td>
+                    <td>@player.PenaltyPoints</td>
                 </tr>
             }
         </tbody>

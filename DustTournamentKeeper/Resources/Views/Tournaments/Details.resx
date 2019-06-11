@@ -249,4 +249,7 @@
   <data name="DropRound" xml:space="preserve">
     <value>Drop most recent round</value>
   </data>
+  <data name="Pairings" xml:space="preserve">
+    <value>Pairings</value>
+  </data>
 </root>

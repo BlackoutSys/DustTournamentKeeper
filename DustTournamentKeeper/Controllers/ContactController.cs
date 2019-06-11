@@ -4,6 +4,10 @@ namespace DustTournamentKeeper.Controllers
 {
     public class ContactController : Controller
     {
-        public IActionResult Index => View();
+
+        public IActionResult Index()
+        {
+            return View();
+        }
     }
 }

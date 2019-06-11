@@ -20,11 +20,13 @@ namespace DustTournamentKeeper.Controllers
     {
         private readonly ITournamentRepository _repository;
         private readonly UserManager<User> _userManager;
+        IStringLocalizer<TournamentsController> _localizer;
 
         public TournamentsController(ITournamentRepository repository, IStringLocalizer<TournamentsController> localizer, UserManager<User> userManager)
         {
             _repository = repository;
             _userManager = userManager;
+            _localizer = localizer;
         }
 
         [AllowAnonymous]
@@ -431,6 +433,7 @@ namespace DustTournamentKeeper.Controllers
                 return RedirectToAction("Details", new { id });
             }
 
+            ViewData["Error"] = _localizer["AssignmentError"];
             return View("Error");
         }
 
@@ -445,7 +448,8 @@ namespace DustTournamentKeeper.Controllers
             }
             else
             {
-                return View("Error", "Could not assign pairs for new round");
+                ViewData["Error"] = _localizer["AssignmentError"];
+                return View("Error");
             }
         }
 
@@ -466,7 +470,8 @@ namespace DustTournamentKeeper.Controllers
 
             if (lastRound.Matches.Any(m => m.Bpa != null))
             {
-                return View("Error", "Could not drop round - there are matches with results");
+                ViewData["Error"] = _localizer["DropRoundError"];
+                return View("Error");
             }
 
             var count = lastRound.Matches.Count;
@@ -478,6 +483,39 @@ namespace DustTournamentKeeper.Controllers
             _repository.Delete(lastRound);
 
             return RedirectToAction("Details", new { id });
+        }
+
+        [AllowAnonymous]
+        public IActionResult ShowPairings(int id)
+        {
+            var tournament = _repository.Tournaments
+                .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches).ThenInclude(m => m.PlayerA)
+                .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches).ThenInclude(m => m.PlayerB)
+                .FirstOrDefault(t => t.Id == id);
+
+            if (tournament == null)
+            {
+                ViewData["Error"] = _localizer["NoTournament"];
+                return View("Error");
+            }
+
+            if (tournament.RoundsNavigation.Count == 0)
+            {
+                ViewData["Error"] = _localizer["NoPairings"];
+                return View("Error");
+            }
+
+            var lastRound = tournament.RoundsNavigation.Last();
+
+            var viewModel = new TournamentPairingViewModel
+            {
+                TournamentId = tournament.Id,
+                TournamentTitle = tournament.Title,
+                RoundNumber = lastRound.Number,
+                Matches = lastRound.Matches
+            };
+
+            return View("Pairing", viewModel);
         }
 
         private void PrepareViewModel(TournamentViewModel tournamentViewModel, Tournament tournament)
