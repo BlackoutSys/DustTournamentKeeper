@@ -144,7 +144,7 @@ namespace DustTournamentKeeper.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> SignOff()
         {
             await _signInManager.SignOutAsync();

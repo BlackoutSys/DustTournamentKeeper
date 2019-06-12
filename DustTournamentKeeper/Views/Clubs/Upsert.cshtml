@@ -21,6 +21,12 @@
     </div>
 
     <div class="form-group">
+        <label>@Localizer["Country"]</label>
+        <input asp-for="Country" class="form-control" />
+        <span asp-validation-for="Country"></span>
+    </div>
+
+    <div class="form-group">
         <label>@Localizer["City"]</label>
         <input asp-for="City" class="form-control" />
         <span asp-validation-for="City"></span>

@@ -152,7 +152,7 @@ namespace DustTournamentKeeper.Controllers
                 string existingRole = _userManager.GetRolesAsync(user).Result.Single();
                 int existingRoleId = _roleManager.Roles.Single(r => r.Name == existingRole).Id;
 
-                if (existingRoleId != userViewModel.RoleId)
+                if (userViewModel.RoleId > 0 && existingRoleId != userViewModel.RoleId)
                 {
                     IdentityResult roleResult = await _userManager.RemoveFromRoleAsync(oldUser, existingRole);
                     if (roleResult.Succeeded)
@@ -191,7 +191,7 @@ namespace DustTournamentKeeper.Controllers
 
             _repository.Delete(user);
 
-            return RedirectToAction(nameof(FactionController.Index));
+            return RedirectToAction(nameof(PlayersController.Index));
         }
 
         private void PrepareViewModel(UserViewModel userViewModel)
