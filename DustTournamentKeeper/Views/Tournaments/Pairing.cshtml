@@ -14,7 +14,7 @@
     {
         <div class="container flex-div">
             <div class="border flex-div-inner-l"><a asp-controller="Players" asp-action="Details" asp-route-id="@match.PlayerA.Id">@match.PlayerA.UserName</a></div>
-            <div class="border flex-div-inner-sm"><p class="font-weight-bold">@match.BoardNumber</p></div>
+            <div class="border flex-div-inner-l"><p><strong>@match.BoardNumber</strong> | @match.BoardType.Name</p></div>
             <div class="border flex-div-inner-l">
                 @if (match.PlayerB != null)
                 {

@@ -47,18 +47,18 @@ namespace DustTournamentKeeper.Infrastructure
                 TournamentUser playerB;
 
                 var playersUniqueLevel3 = availablePlayers
-                    .Where(ap => ap.User.City != playerA.User.City
+                    .Where(ap => ap.User.ClubId != playerA.User.ClubId
                         && ap.BlockId != playerA.BlockId
                         && ap.FactionId != playerA.FactionId
                         && ap.UserId != playerA.UserId).ToList();
 
                 var playersUniqueLevel2 = availablePlayers
-                    .Where(ap => ap.User.City != playerA.User.City
+                    .Where(ap => ap.User.ClubId != playerA.User.ClubId
                         && ap.BlockId != playerA.BlockId
                         && ap.UserId != playerA.UserId).ToList();
 
                 var playersUniqueLevel1 = availablePlayers
-                    .Where(ap => ap.User.City != playerA.User.City
+                    .Where(ap => ap.User.ClubId != playerA.User.ClubId
                         && ap.UserId != playerA.UserId).ToList();
 
                 if (playersUniqueLevel3.Count > 0)

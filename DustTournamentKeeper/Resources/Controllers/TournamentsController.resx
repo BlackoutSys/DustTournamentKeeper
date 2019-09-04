@@ -120,6 +120,9 @@
   <data name="AssignmentError" xml:space="preserve">
     <value>Could not assign pairs for new round.</value>
   </data>
+  <data name="CannotKick" xml:space="preserve">
+    <value>Cannot unregister player who's assigned to match.</value>
+  </data>
   <data name="DropRoundError" xml:space="preserve">
     <value>Could not drop round - there are matches with results.</value>
   </data>

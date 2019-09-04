@@ -120,4 +120,7 @@
   <data name="InvalidLogin" xml:space="preserve">
     <value>Zła nazwa użytkownika lub hasło!</value>
   </data>
+  <data name="Unathorized" xml:space="preserve">
+    <value>Użytkownik nie ma wystarczających uprawnień do korzystania z tej funkcjonalności</value>
+  </data>
 </root>

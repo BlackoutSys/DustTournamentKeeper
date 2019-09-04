@@ -40,9 +40,12 @@ namespace DustTournamentKeeper.ViewModels
         public bool IsAdmin { get; set; }
         public bool IsOwner { get; set; }
 
+        public bool? LockoutEnabled { get; set; }
+
         public List<UserHistoryViewModel> History { get; set; }
         public List<SelectListItem> ClubsAvailable { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> RolesAvailable { get; set; } = new List<SelectListItem>();
+
 
         public UserViewModel()
         {

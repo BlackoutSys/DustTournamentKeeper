@@ -119,6 +119,7 @@ namespace DustTournamentKeeper.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Administrator,Organizer")]
+        [RequestSizeLimit(52428800)]
         public IActionResult Upsert(TournamentViewModel tournamentViewModel)
         {
             Tournament tournament = null;
@@ -401,6 +402,7 @@ namespace DustTournamentKeeper.Controllers
         {
             var tournament = _repository.Tournaments
                 .Include(t => t.TournamentUsers)
+                .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches)
                 .FirstOrDefault(t => t.Id == tournamentId);
             if (tournament == null)
             {
@@ -411,6 +413,13 @@ namespace DustTournamentKeeper.Controllers
             if (user == null)
             {
                 return NotFound();
+            }
+
+            if (tournament.RoundsNavigation.FirstOrDefault(r =>
+                 r.Matches.FirstOrDefault(m =>
+                     m.PlayerAid == userId || m.PlayerBid == userId) != null) != null)
+            {
+                return View("Error", new ErrorViewModel { ErrorText = _localizer["CannotKick"] });
             }
 
             var tournamentUser = _repository.TournamentUsers.FirstOrDefault(tu => tu.TournamentId == tournamentId && tu.UserId == userId);
@@ -433,8 +442,7 @@ namespace DustTournamentKeeper.Controllers
                 return RedirectToAction("Details", new { id });
             }
 
-            ViewData["Error"] = _localizer["AssignmentError"];
-            return View("Error");
+            return View("Error", new ErrorViewModel { ErrorText = _localizer["AssignmentError"] });
         }
 
         [Authorize(Roles = "Administrator,Organizer")]
@@ -448,8 +456,7 @@ namespace DustTournamentKeeper.Controllers
             }
             else
             {
-                ViewData["Error"] = _localizer["AssignmentError"];
-                return View("Error");
+                return View("Error", new ErrorViewModel { ErrorText = _localizer["AssignmentError"] });
             }
         }
 
@@ -470,8 +477,7 @@ namespace DustTournamentKeeper.Controllers
 
             if (lastRound.Matches.Any(m => m.Bpa != null))
             {
-                ViewData["Error"] = _localizer["DropRoundError"];
-                return View("Error");
+                return View("Error", new ErrorViewModel { ErrorText = _localizer["DropRoundError"] });
             }
 
             var count = lastRound.Matches.Count;
@@ -491,18 +497,17 @@ namespace DustTournamentKeeper.Controllers
             var tournament = _repository.Tournaments
                 .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches).ThenInclude(m => m.PlayerA)
                 .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches).ThenInclude(m => m.PlayerB)
+                .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches).ThenInclude(m => m.BoardType)
                 .FirstOrDefault(t => t.Id == id);
 
             if (tournament == null)
             {
-                ViewData["Error"] = _localizer["NoTournament"];
-                return View("Error");
+                return View("Error", new ErrorViewModel { ErrorText = _localizer["NoTournament"] });
             }
 
             if (tournament.RoundsNavigation.Count == 0)
             {
-                ViewData["Error"] = _localizer["NoPairings"];
-                return View("Error");
+                return View("Error", new ErrorViewModel { ErrorText = _localizer["NoPairings"] });
             }
 
             var lastRound = tournament.RoundsNavigation.Last();

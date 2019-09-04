@@ -114,6 +114,8 @@ namespace DustTournamentKeeper.ViewModels
                         .Include(t => t.Organizer)
                         .Include(t => t.TournamentBoardTypes)
                         .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches).ThenInclude(m => m.BoardType)
+                        .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches).ThenInclude(m => m.PlayerA)
+                        .Include(t => t.RoundsNavigation).ThenInclude(r => r.Matches).ThenInclude(m => m.PlayerB)
                         .Include(t => t.TournamentUsers).ThenInclude(u => u.User)
                         .Include(t => t.TournamentUsers).ThenInclude(u => u.Block)
                         .Include(t => t.TournamentUsers).ThenInclude(u => u.Faction)

@@ -131,7 +131,7 @@ namespace DustTournamentKeeper.Controllers
 
             ViewBag.Filter = filter;
 
-            return View(rankings);
+            return View(rankings.Where(r => r.Player.LockoutEnd == null || r.Player.LockoutEnd < DateTimeOffset.Now).ToList());
         }
     }
 }

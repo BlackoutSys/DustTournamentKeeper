@@ -1,4 +1,5 @@
-﻿using DustTournamentKeeper.Models;
+﻿using DustTournamentKeeper.Infrastructure;
+using DustTournamentKeeper.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -61,7 +62,7 @@ namespace DustTournamentKeeper.Controllers
             return RedirectToAction("Details", new { id = club.Id });
         }
 
-        [Authorize]
+        [Authorize(Roles = nameof(Roles.Administrator))]
         public IActionResult Remove(int id)
         {
             var club = _repository.Clubs.FirstOrDefault(c => c.Id == id);

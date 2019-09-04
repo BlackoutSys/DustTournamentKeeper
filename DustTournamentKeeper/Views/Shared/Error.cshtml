@@ -1,4 +1,6 @@
-﻿@inject IViewLocalizer Localizer
+﻿@model  ErrorViewModel
+
+@inject IViewLocalizer Localizer
 
 @{
     ViewData["Title"] = @Localizer["ErrorTitle"];
@@ -6,8 +8,8 @@
 }
 
 <h1>@Localizer["Error"]</h1>
-@if (ViewData["Error"] != null)
+@if (Model.ErrorText != null)
 {
-    <p>@ViewData["Error"]</p>
+    <p>@Model.ErrorText</p>
 }
 

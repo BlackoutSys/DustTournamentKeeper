@@ -304,7 +304,9 @@ namespace DustTournamentKeeper.Models
             user.Email = newUser.Email;
             user.Name = newUser.Name;
             user.UserName = newUser.UserName;
+            user.NormalizedUserName = newUser.UserName.ToUpper();
             user.Surname = newUser.Surname;
+            user.LockoutEnd = newUser.LockoutEnd;
 
             _context.SaveChanges();
         }

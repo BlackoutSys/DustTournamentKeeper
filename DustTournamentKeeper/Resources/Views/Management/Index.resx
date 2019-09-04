@@ -132,4 +132,7 @@
   <data name="ManagementTitle" xml:space="preserve">
     <value>Management</value>
   </data>
+  <data name="Players" xml:space="preserve">
+    <value>Players</value>
+  </data>
 </root>

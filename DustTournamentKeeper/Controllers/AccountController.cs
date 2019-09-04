@@ -122,6 +122,11 @@ namespace DustTournamentKeeper.Controllers
                 {
                     return RedirectToLocal(returnUrl);
                 }
+                else if (result.IsLockedOut)
+                {
+                    ModelState.AddModelError("LockedOut", _localizer["LockedOut"]);
+                    return View(model);
+                }
                 else
                 {
                     ModelState.AddModelError("LoginOrPassword", _localizer["InvalidLogin"]);
@@ -158,39 +163,45 @@ namespace DustTournamentKeeper.Controllers
             return _repository.Users.Any(u => u.UserName == name);
         }
 
-        public IActionResult GenerateClubs()
+        //public IActionResult GenerateClubs()
+        //{
+        //    TestDataGenerator.GenerateClubs(5, _repository);
+        //    return RedirectToAction("Login");
+        //}
+        //public async Task<IActionResult> GenerateUsers()
+        //{
+        //    await TestDataGenerator.GenerateUsers(10, _repository, _userManager, _roleManager);
+        //    return RedirectToAction("Login");
+        //}
+        //public IActionResult GenerateBoards()
+        //{
+        //    TestDataGenerator.GenerateBoards(5, _repository);
+        //    return RedirectToAction("Login");
+        //}
+        //public async Task<IActionResult> GenerateTournaments()
+        //{
+        //    await TestDataGenerator.GenerateTournaments(5, _repository, _userManager, _roleManager);
+        //    return RedirectToAction("Login");
+        //}
+        //public async Task<IActionResult> GenerateBundle()
+        //{
+        //    TestDataGenerator.GenerateClubs(5, _repository);
+        //    await TestDataGenerator.GenerateUsers(30, _repository, _userManager, _roleManager);
+        //    await TestDataGenerator.GenerateAdmin(_repository, _userManager, _roleManager);
+        //    TestDataGenerator.GenerateBoards(10, _repository);
+        //    await TestDataGenerator.GenerateTournaments(5, _repository, _userManager, _roleManager);
+        //    return RedirectToAction("Login");
+        //}
+        //public async Task<IActionResult> NukeDb()
+        //{
+        //    await TestDataGenerator.NukeDb(_repository, _userManager);
+        //    return RedirectToAction("Login");
+        //}
+
+        [AllowAnonymous]
+        public IActionResult AccessDenied(string returnUrl = null)
         {
-            TestDataGenerator.GenerateClubs(5, _repository);
-            return RedirectToAction("Login");
-        }
-        public async Task<IActionResult> GenerateUsers()
-        {
-            await TestDataGenerator.GenerateUsers(10, _repository, _userManager, _roleManager);
-            return RedirectToAction("Login");
-        }
-        public IActionResult GenerateBoards()
-        {
-            TestDataGenerator.GenerateBoards(5, _repository);
-            return RedirectToAction("Login");
-        }
-        public async Task<IActionResult> GenerateTournaments()
-        {
-            await TestDataGenerator.GenerateTournaments(5, _repository, _userManager, _roleManager);
-            return RedirectToAction("Login");
-        }
-        public async Task<IActionResult> GenerateBundle()
-        {
-            TestDataGenerator.GenerateClubs(5, _repository);
-            await TestDataGenerator.GenerateUsers(30, _repository, _userManager, _roleManager);
-            await TestDataGenerator.GenerateAdmin(_repository, _userManager, _roleManager);
-            TestDataGenerator.GenerateBoards(10, _repository);
-            await TestDataGenerator.GenerateTournaments(5, _repository, _userManager, _roleManager);
-            return RedirectToAction("Login");
-        }
-        public async Task<IActionResult> NukeDb()
-        {
-            await TestDataGenerator.NukeDb(_repository, _userManager);
-            return RedirectToAction("Login");
+            return View("Error", new ErrorViewModel { ErrorText = _localizer["Unathorized"] });
         }
     }
 }

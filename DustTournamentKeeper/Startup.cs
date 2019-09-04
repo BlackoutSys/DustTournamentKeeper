@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using DustTournamentKeeper.Infrastructure;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace DustTournamentKeeper
 {
@@ -49,6 +50,7 @@ namespace DustTournamentKeeper
                     options => options.AllowDataAnnotationsLocalizationForEnumDisplayAttributes = true)
                 .AddDataAnnotationsLocalization();
 
+            services.Configure<FormOptions>(x => x.ValueCountLimit = 16384);
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 var supportedCultures = new List<CultureInfo>
@@ -105,15 +107,21 @@ namespace DustTournamentKeeper
             };
             app.UseRequestLocalization(locOptions);
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                //app.UseExceptionHandler("/Shared/Error");
-                app.UseHsts();
-            }
+            app.UseDeveloperExceptionPage();
+            app.UseDatabaseErrorPage();
+            //app.UseExceptionHandler("/Error/Error");
+            app.UseHsts();
+
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //    app.UseDatabaseErrorPage();
+            //}
+            //else
+            //{
+            //    app.UseExceptionHandler("/Shared/Error");
+            //    app.UseHsts();
+            //}
 
             app.UseAuthentication();
             app.UseHttpsRedirection();

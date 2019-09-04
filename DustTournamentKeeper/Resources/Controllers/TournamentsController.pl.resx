@@ -120,6 +120,9 @@
   <data name="AssignmentError" xml:space="preserve">
     <value>Nie udało się przydzelić par.</value>
   </data>
+  <data name="CannotKick" xml:space="preserve">
+    <value>Nie można usunąć gracza przydzielonego do meczu.</value>
+  </data>
   <data name="DropRoundError" xml:space="preserve">
     <value>Nie udało się usunąć rundy - istnieją mecze z przypisaną punktacją.</value>
   </data>

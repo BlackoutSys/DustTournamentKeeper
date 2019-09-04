@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,7 +27,18 @@ namespace DustTournamentKeeper.Controllers
 
         public IActionResult Index()
         {
-            return View(_repository.Users.Include(u => u.Club).ToList());
+            return View(_repository.Users
+                .Where(u => u.LockoutEnd == null || u.LockoutEnd < DateTimeOffset.Now)
+                .Include(u => u.Club)
+                .ToList());
+        }
+
+        [Authorize(Roles = nameof(Roles.Administrator))]
+        public IActionResult AdminIndex()
+        {
+            return View(_repository.Users
+                .Include(u => u.Club)
+                .ToList());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -97,7 +109,8 @@ namespace DustTournamentKeeper.Controllers
                 {
                     RoleId = existingRoleId,
                     IsAdmin = User.IsInRole(nameof(Roles.Administrator)),
-                    IsOwner = currentUser.Id == user.Id
+                    IsOwner = currentUser.Id == user.Id,
+                    LockoutEnabled = user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.Now
                 };
 
                 PrepareViewModel(userViewModel);
@@ -123,7 +136,11 @@ namespace DustTournamentKeeper.Controllers
                     UserName = userViewModel.UserName,
                     Surname = userViewModel.Surname,
                     Email = userViewModel.Email,
-                    ClubId = userViewModel.ClubId
+                    ClubId = userViewModel.ClubId,
+                    LockoutEnd = userViewModel.LockoutEnabled.HasValue 
+                        && userViewModel.LockoutEnabled.Value 
+                        ? (DateTimeOffset?)DateTimeOffset.Now.AddYears(100) 
+                        : null
                 };
 
                 var oldUser = _repository.Users.FirstOrDefault(u => u.Id == userViewModel.Id);
@@ -189,7 +206,8 @@ namespace DustTournamentKeeper.Controllers
                 return NotFound();
             }
 
-            _repository.Delete(user);
+            user.LockoutEnd = DateTimeOffset.Now.AddYears(100);
+            _repository.SaveContext();
 
             return RedirectToAction(nameof(PlayersController.Index));
         }

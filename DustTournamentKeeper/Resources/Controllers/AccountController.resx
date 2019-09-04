@@ -120,4 +120,7 @@
   <data name="InvalidLogin" xml:space="preserve">
     <value>Wrong username or password!</value>
   </data>
+  <data name="Unathorized" xml:space="preserve">
+    <value>User is not authorized to use this functionality</value>
+  </data>
 </root>
