@@ -160,6 +160,10 @@ namespace DustTournamentKeeper.Controllers
                         result = await _userManager.AddPasswordAsync(oldUser, userViewModel.Password);
                         if (!result.Succeeded)
                         {
+                            foreach (var error in result.Errors)
+                            {
+                                ModelState.AddModelError(error.Code, error.Description);
+                            }
                             PrepareViewModel(userViewModel);
                             return View(userViewModel);
                         }

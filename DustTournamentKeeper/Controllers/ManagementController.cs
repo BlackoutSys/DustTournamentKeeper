@@ -9,5 +9,6 @@ namespace DustTournamentKeeper.Controllers
     {
         public IActionResult Index() => View();
 
+        public IActionResult HowTo() => View();
     }
 }

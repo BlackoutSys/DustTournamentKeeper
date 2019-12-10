@@ -8,6 +8,10 @@
 
         factionSelect.attr('disabled', factions.length == 0);
 
+        var optionNull = $('<option/>');
+        optionNull.attr('value', null).text("---");
+        factionSelect.append(optionNull);
+
         for (var i = 0; i < factions.length; i++) {
             var option = $('<option/>');
             option.attr('value', factions[i].id).text(factions[i].name);

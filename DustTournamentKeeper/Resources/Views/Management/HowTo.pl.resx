@@ -117,25 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Blocks" xml:space="preserve">
-    <value>Bloki</value>
+  <data name="Cancelled" xml:space="preserve">
+    <value>Turniej anulowany. Status informacyjny. Będzie miał też znaczenie przy wyliczeniach rankingowych.</value>
   </data>
-  <data name="BoardTypes" xml:space="preserve">
-    <value>Stoły</value>
+  <data name="Draft" xml:space="preserve">
+    <value>Turniej w przygotowaniu. Zwykli użytkownicy nie mogą się zapisywać.</value>
   </data>
-  <data name="Factions" xml:space="preserve">
-    <value>Frakcje</value>
+  <data name="Finished" xml:space="preserve">
+    <value>Turniej zakończony. Do tego statusu przechodzimy przyciskiem Zakończ. W tym stanie nie można generować kolejnych rund i meczy.</value>
   </data>
-  <data name="Games" xml:space="preserve">
-    <value>Gry</value>
+  <data name="HowToSubtitle" xml:space="preserve">
+    <value>Przewodnik po statusach turniejów:</value>
   </data>
-  <data name="HowTo" xml:space="preserve">
-    <value>Przewodnik po statusach</value>
+  <data name="HowToTitle" xml:space="preserve">
+    <value>Statusy turniejów</value>
   </data>
-  <data name="ManagementTitle" xml:space="preserve">
-    <value>Zarządzanie</value>
+  <data name="Ongoing" xml:space="preserve">
+    <value>Turniej trwa. Do tego statusu przechodzimy przyciskiem Rozpocznij na widoku turnieju (jako organizator lub admin).</value>
   </data>
-  <data name="Players" xml:space="preserve">
-    <value>Gracze</value>
+  <data name="Pending" xml:space="preserve">
+    <value>Turniej gotowy, zapisy otwarte. Zwykli użytkownicy mogą się zapisywać.</value>
   </data>
 </root>

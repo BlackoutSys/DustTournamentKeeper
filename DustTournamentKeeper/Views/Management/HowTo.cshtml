@@ -1,0 +1,16 @@
+﻿@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["HowToTitle"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Localizer["HowToSubtitle"]</h1>
+<ol>
+    <li><strong>Draft</strong> - @Localizer["Draft"]</li>
+    <li><strong>Pending</strong> - @Localizer["Pending"]</li>
+    <li><strong>Ongoing</strong> - @Localizer["Ongoing"]</li>
+    <li><strong>Finished</strong> - @Localizer["Finished"]</li>
+    <li><strong>Cancelled</strong> - @Localizer["Cancelled"]</li>
+</ol>
+
