@@ -169,8 +169,8 @@ namespace DustTournamentKeeper.ViewModels
                 });
             });
 
-            FirstRoundAvailable = tournament.OrganizerId == userId && tournament.RoundsNavigation.Count == 0;
-            NextRoundAvailable = tournament.OrganizerId == userId && tournament.RoundsNavigation.Count < tournament.Rounds;
+            FirstRoundAvailable = (tournament.OrganizerId == userId || userId == 1) && tournament.RoundsNavigation.Count == 0;
+            NextRoundAvailable = (tournament.OrganizerId == userId || userId == 1) && tournament.RoundsNavigation.Count < tournament.Rounds;
 
             RoundsList = new List<RoundViewModel>();
             foreach (var round in tournament.RoundsNavigation)

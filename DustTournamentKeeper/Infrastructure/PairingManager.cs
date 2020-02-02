@@ -37,7 +37,7 @@ namespace DustTournamentKeeper.Infrastructure
             repository.Add(round);
 
             var availablePlayers = tournament.TournamentUsers.ToList();
-            var availableBoards = tournament.TournamentBoardTypes.ToList();
+            Stack<TournamentBoardType> availableBoards = new Stack<TournamentBoardType>(tournament.TournamentBoardTypes.OrderByDescending(t => t.Number).ToList());
             var pairings = new List<Tuple<int, int?, TournamentBoardType>>();
 
             var rand = new Random();
@@ -82,10 +82,7 @@ namespace DustTournamentKeeper.Infrastructure
                     playerB = availablePlayers[index];
                 }
 
-                TournamentBoardType chosenBoard = availableBoards[0];
-                availableBoards.Remove(chosenBoard);
-
-                pairings.Add(Tuple.Create(playerA.UserId, (int?)playerB.UserId, chosenBoard));
+                pairings.Add(Tuple.Create(playerA.UserId, (int?)playerB.UserId, availableBoards.Pop()));
 
                 availablePlayers.Remove(playerA);
                 availablePlayers.Remove(playerB);
@@ -94,7 +91,7 @@ namespace DustTournamentKeeper.Infrastructure
             // Assign bye
             if (availablePlayers.Count == 1)
             {
-                pairings.Add(Tuple.Create(availablePlayers[0].UserId, (int?)null, availableBoards[0]));
+                pairings.Add(Tuple.Create(availablePlayers[0].UserId, (int?)null, availableBoards.Pop()));
             }
 
             // Create Match entities
