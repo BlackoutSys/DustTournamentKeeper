@@ -252,4 +252,7 @@
   <data name="Pairings" xml:space="preserve">
     <value>Paringi</value>
   </data>
+  <data name="WarningsHeader" xml:space="preserve">
+    <value>Wykryto poniższe problemy</value>
+  </data>
 </root>

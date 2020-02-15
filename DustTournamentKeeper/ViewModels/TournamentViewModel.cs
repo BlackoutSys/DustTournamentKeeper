@@ -1,7 +1,9 @@
-﻿using DustTournamentKeeper.Infrastructure;
+﻿using DustTournamentKeeper.Controllers;
+using DustTournamentKeeper.Infrastructure;
 using DustTournamentKeeper.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -92,6 +94,8 @@ namespace DustTournamentKeeper.ViewModels
         public bool Registered { get; set; }
         public bool CanRegister => PlayersList.Count < PlayerLimit;
 
+        public List<string> WarningMessages { get; set; } = new List<string>();
+        public bool UserAllowedToManage => (OrganizerId == UserId || UserId == 1);
 
         public List<BoardType> Boards { get; set; } = new List<BoardType>();
         public List<BoardSelectionFilter> BoardsSelection { get; set; } = new List<BoardSelectionFilter>();
@@ -102,13 +106,16 @@ namespace DustTournamentKeeper.ViewModels
         public List<SelectListItem> StatusesAvailable { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> TieBreakersAvailable { get; set; } = new List<SelectListItem>();
 
+        private IStringLocalizer<TournamentsController> _localizer;
+
         public TournamentViewModel()
         {
 
         }
 
-        public TournamentViewModel(int id, ITournamentRepository repository, int userId)
+        public TournamentViewModel(int id, ITournamentRepository repository, int userId, IStringLocalizer<TournamentsController> localizer)
         {
+            _localizer = localizer;
             var tournament = repository.Tournaments
                         .Include(t => t.ClubNavigation)
                         .Include(t => t.Organizer)
@@ -123,8 +130,9 @@ namespace DustTournamentKeeper.ViewModels
             PrepareViewModel(tournament, userId);
         }
 
-        public TournamentViewModel(Tournament tournament, int userId)
+        public TournamentViewModel(Tournament tournament, int userId, IStringLocalizer<TournamentsController> localizer)
         {
+            _localizer = localizer;
             PrepareViewModel(tournament, userId);
         }
 
@@ -187,13 +195,22 @@ namespace DustTournamentKeeper.ViewModels
 
             Registered = tournament.TournamentUsers.Any(tu => tu.UserId == userId);
 
+            var boardsCountTotal = 0;
             foreach (var tournamentBoardType in tournament.TournamentBoardTypes)
             {
                 var boardSelection = BoardsSelection.Find(bs => bs.Id == tournamentBoardType.BoardTypeId);
                 if (boardSelection != null)
                 {
                     boardSelection.Count++;
+                    boardsCountTotal++;
                 }
+            }
+
+            if (Math.Floor((double)PlayersList.Count / 2d) > boardsCountTotal)
+            {
+                FirstRoundAvailable = false;
+                NextRoundAvailable = false;
+                WarningMessages.Add(_localizer["LessBoardsThanPlayerPairs"]);
             }
         }
     }

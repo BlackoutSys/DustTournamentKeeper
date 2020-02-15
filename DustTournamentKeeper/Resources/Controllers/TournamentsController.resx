@@ -126,6 +126,9 @@
   <data name="DropRoundError" xml:space="preserve">
     <value>Could not drop round - there are matches with results.</value>
   </data>
+  <data name="LessBoardsThanPlayerPairs" xml:space="preserve">
+    <value>There are more player pairs registered than tables configured for the tournament! </value>
+  </data>
   <data name="NoPairings" xml:space="preserve">
     <value>No pairings are available yet.</value>
   </data>

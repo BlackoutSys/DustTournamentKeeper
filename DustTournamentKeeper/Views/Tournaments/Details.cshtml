@@ -17,6 +17,16 @@
 }
 
 <div id="tournamentDetails" class="container">
+    @if (Model.UserAllowedToManage && Model.WarningMessages.Count > 0)
+    {
+        <div class="row">
+            <div class="col-md-8 bg-warning"><strong>@Localizer["WarningsHeader"]:</strong></div>
+            @foreach (var warningMessage in Model.WarningMessages)
+            {
+                <div class="col-md-8 bg-warning"><p>@warningMessage</p></div>
+            }
+        </div>
+    }
     <div class="row">
         <div class="col-md-4 border border-secondary bg-secondary"><p>@Localizer["Status"]</p></div>
         <div class="col-md-4 border border-secondary bg-secondary"><p>@Model.Status</p></div>

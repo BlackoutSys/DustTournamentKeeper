@@ -83,7 +83,7 @@ namespace DustTournamentKeeper.Controllers
             User user = !string.IsNullOrEmpty(currentUserName) ? await _userManager.FindByNameAsync(currentUserName) : null;
             int userId = user?.Id ?? 0;
 
-            var tournamentViewModel = new TournamentViewModel(tournament, userId)
+            var tournamentViewModel = new TournamentViewModel(tournament, userId, _localizer)
             {
                 FinishAvailable =
                 (tournament.OrganizerId == userId
@@ -111,7 +111,7 @@ namespace DustTournamentKeeper.Controllers
             User user = await _userManager.FindByNameAsync(currentUserName);
             tournament.Organizer = user;
 
-            var tournamentViewModel = new TournamentViewModel(tournament, user.Id);
+            var tournamentViewModel = new TournamentViewModel(tournament, user.Id, _localizer);
             PrepareViewModel(tournamentViewModel, tournament);
 
             return View(tournamentViewModel);

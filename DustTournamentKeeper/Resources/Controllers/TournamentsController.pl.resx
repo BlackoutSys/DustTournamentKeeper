@@ -126,6 +126,9 @@
   <data name="DropRoundError" xml:space="preserve">
     <value>Nie udało się usunąć rundy - istnieją mecze z przypisaną punktacją.</value>
   </data>
+  <data name="LessBoardsThanPlayerPairs" xml:space="preserve">
+    <value>Jest więcej zarejestrowanych par graczy niż stołów skonfigurowanych dla turnieju!</value>
+  </data>
   <data name="NoPairings" xml:space="preserve">
     <value>Brak dostępnych paringów.</value>
   </data>
