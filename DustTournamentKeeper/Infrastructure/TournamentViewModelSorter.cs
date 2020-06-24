@@ -20,13 +20,13 @@ namespace DustTournamentKeeper.Infrastructure
                 switch ((TieBreaker)tieBreaker)
                 {
                     case TieBreaker.BigPoints:
-                        return ps.TotalBigPoints + ps.BonusPoints - ps.PenaltyPoints;
+                        return ps.TotalBigPoints;
                     case TieBreaker.SmallPoints:
                         return ps.Sp;
                     case TieBreaker.SoS:
                         return ps.SoS;
                     default:
-                        return ps.TotalBigPoints + ps.BonusPoints - ps.PenaltyPoints;
+                        return ps.TotalBigPoints;
                 }
             }
 
@@ -36,7 +36,7 @@ namespace DustTournamentKeeper.Infrastructure
                 switch ((TieBreaker)tournament.TieBreaker2)
                 {
                     case TieBreaker.BigPoints:
-                        return ps.TotalBigPoints + ps.BonusPoints - ps.PenaltyPoints;
+                        return ps.TotalBigPoints;
                     case TieBreaker.SmallPoints:
                         return ps.Sp;
                     case TieBreaker.SoS:
@@ -52,7 +52,7 @@ namespace DustTournamentKeeper.Infrastructure
                 switch ((TieBreaker)tournament.TieBreaker3)
                 {
                     case TieBreaker.BigPoints:
-                        return ps.TotalBigPoints + ps.BonusPoints - ps.PenaltyPoints;
+                        return ps.TotalBigPoints;
                     case TieBreaker.SmallPoints:
                         return ps.Sp;
                     case TieBreaker.SoS:
@@ -68,7 +68,7 @@ namespace DustTournamentKeeper.Infrastructure
                 switch ((TieBreaker)tournament.TieBreaker4)
                 {
                     case TieBreaker.BigPoints:
-                        return ps.TotalBigPoints + ps.BonusPoints - ps.PenaltyPoints;
+                        return ps.TotalBigPoints;
                     case TieBreaker.SmallPoints:
                         return ps.Sp;
                     case TieBreaker.SoS:

@@ -169,7 +169,8 @@ namespace DustTournamentKeeper.ViewModels
             TieBreaker3 = tournament.TieBreaker3;
             TieBreaker4 = tournament.TieBreaker4;
 
-            Enum.GetValues(typeof(TieBreaker)).Cast<TieBreaker>().ToList().ForEach(e => {
+            Enum.GetValues(typeof(TieBreaker)).Cast<TieBreaker>().ToList().ForEach(e =>
+            {
                 TieBreakersAvailable.Add(new SelectListItem
                 {
                     Text = e.ToString(),
@@ -195,18 +196,7 @@ namespace DustTournamentKeeper.ViewModels
 
             Registered = tournament.TournamentUsers.Any(tu => tu.UserId == userId);
 
-            var boardsCountTotal = 0;
-            foreach (var tournamentBoardType in tournament.TournamentBoardTypes)
-            {
-                var boardSelection = BoardsSelection.Find(bs => bs.Id == tournamentBoardType.BoardTypeId);
-                if (boardSelection != null)
-                {
-                    boardSelection.Count++;
-                    boardsCountTotal++;
-                }
-            }
-
-            if (Math.Floor((double)PlayersList.Count / 2d) > boardsCountTotal)
+            if (Math.Floor((double)PlayersList.Count / 2d) > tournament.TournamentBoardTypes.Count)
             {
                 FirstRoundAvailable = false;
                 NextRoundAvailable = false;
