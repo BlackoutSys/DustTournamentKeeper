@@ -1,21 +1,21 @@
-﻿using DustTournamentKeeper.Models;
+﻿using DustTournamentKeeper.Infrastructure;
+using DustTournamentKeeper.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using DustTournamentKeeper.Infrastructure;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace DustTournamentKeeper
 {
@@ -109,19 +109,18 @@ namespace DustTournamentKeeper
 
             app.UseDeveloperExceptionPage();
             app.UseDatabaseErrorPage();
-            //app.UseExceptionHandler("/Error/Error");
             app.UseHsts();
 
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //    app.UseDatabaseErrorPage();
-            //}
-            //else
-            //{
-            //    app.UseExceptionHandler("/Shared/Error");
-            //    app.UseHsts();
-            //}
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Shared/Error");
+                app.UseHsts();
+            }
 
             app.UseAuthentication();
             app.UseHttpsRedirection();

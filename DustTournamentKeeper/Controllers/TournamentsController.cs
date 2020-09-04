@@ -20,7 +20,7 @@ namespace DustTournamentKeeper.Controllers
     {
         private readonly ITournamentRepository _repository;
         private readonly UserManager<User> _userManager;
-        IStringLocalizer<TournamentsController> _localizer;
+        private readonly IStringLocalizer<TournamentsController> _localizer;
 
         public TournamentsController(ITournamentRepository repository, IStringLocalizer<TournamentsController> localizer, UserManager<User> userManager)
         {
@@ -354,6 +354,30 @@ namespace DustTournamentKeeper.Controllers
 
             return RegisterInternal(tournament, userObj);
         }
+        
+        [HttpPost]
+        public IActionResult Register(RegisterToTournamentViewModel reg)
+        {
+            var tournamentUser = _repository.TournamentUsers.FirstOrDefault(x => x.TournamentId == reg.TournamentId && x.UserId == reg.UserId);
+            var newTournamentUser = new TournamentUser
+            {
+                TournamentId = reg.TournamentId,
+                UserId = reg.UserId,
+                BlockId = reg.BlockId,
+                FactionId = reg.FactionId
+            };
+
+            if (tournamentUser == null)
+            {
+                _repository.Add(newTournamentUser);
+            }
+            else 
+            {
+                _repository.Update(tournamentUser, newTournamentUser);
+            }
+
+            return RedirectToAction("Details", new { id = reg.TournamentId });
+        }
 
         private IActionResult RegisterInternal(Tournament tournament, User user)
         {
@@ -381,29 +405,6 @@ namespace DustTournamentKeeper.Controllers
             return View(registerToTournamentViewModel);
         }
 
-        [HttpPost]
-        public IActionResult Register(RegisterToTournamentViewModel reg)
-        {
-            var tournamentUser = _repository.TournamentUsers.FirstOrDefault(x => x.TournamentId == reg.TournamentId && x.UserId == reg.UserId);
-            var newTournamentUser = new TournamentUser
-            {
-                TournamentId = reg.TournamentId,
-                UserId = reg.UserId,
-                BlockId = reg.BlockId,
-                FactionId = reg.FactionId
-            };
-
-            if (tournamentUser == null)
-            {
-                _repository.Add(newTournamentUser);
-            }
-            else 
-            {
-                _repository.Update(tournamentUser, newTournamentUser);
-            }
-
-            return RedirectToAction("Details", new { id = reg.TournamentId });
-        }
 
         public IActionResult Unregister(int tournamentId, int userId)
         {

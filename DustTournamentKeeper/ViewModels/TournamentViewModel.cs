@@ -106,7 +106,7 @@ namespace DustTournamentKeeper.ViewModels
         public List<SelectListItem> StatusesAvailable { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> TieBreakersAvailable { get; set; } = new List<SelectListItem>();
 
-        private IStringLocalizer<TournamentsController> _localizer;
+        private readonly IStringLocalizer<TournamentsController> _localizer;
 
         public TournamentViewModel()
         {

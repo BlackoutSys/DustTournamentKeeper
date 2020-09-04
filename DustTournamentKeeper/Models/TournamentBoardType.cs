@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DustTournamentKeeper.Models
+﻿namespace DustTournamentKeeper.Models
 {
     public partial class TournamentBoardType
     {

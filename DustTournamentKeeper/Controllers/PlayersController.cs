@@ -71,7 +71,7 @@ namespace DustTournamentKeeper.Controllers
                 {
                     RoleId = existingRoleId,
                     IsAdmin = User?.IsInRole(nameof(Roles.Administrator)) ?? false,
-                    IsOwner = currentUser != null ? currentUser.Id == user.Id : false
+                    IsOwner = currentUser != null && currentUser.Id == user.Id
                 });
             }
 

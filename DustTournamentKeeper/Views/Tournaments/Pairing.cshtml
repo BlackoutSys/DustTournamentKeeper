@@ -7,7 +7,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2><b>@Model.TournamentTitle</b> - @Localizer["Round"] @Model.RoundNumber</h2>
+<h2><strong>@Model.TournamentTitle</strong> - @Localizer["Round"] @Model.RoundNumber</h2>
 
 <div class="container flex-div-main">
     @foreach (var match in Model.Matches)
