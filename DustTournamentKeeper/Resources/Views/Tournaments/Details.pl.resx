@@ -255,4 +255,7 @@
   <data name="WarningsHeader" xml:space="preserve">
     <value>Wykryto poniższe problemy</value>
   </data>
+  <data name="FullName" xml:space="preserve">
+    <value>Imię i nazwisko</value>
+  </data>
 </root>

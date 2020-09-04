@@ -148,6 +148,7 @@
         <thead>
             <tr>
                 <th scope="col">@Localizer["Player"]</th>
+                <th scope="col">@Localizer["FullName"]</th>
                 <th scope="col">@Localizer["Block"]</th>
                 <th scope="col">@Localizer["Faction"]</th>
                 <th scope="col">@Localizer["Bp"]</th>
@@ -162,6 +163,7 @@
             {
                 <tr>
                     <th scope="col"><a asp-controller="Players" asp-action="Details" asp-route-id="@player.UserId">@player.User</a></th>
+                    <td>@player.FullName</td>
                     <td>@player.Block</td>
                     <td>@player.Faction</td>
                     <td>@player.Bp</td>

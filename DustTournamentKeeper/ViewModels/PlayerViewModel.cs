@@ -15,6 +15,7 @@ namespace DustTournamentKeeper.ViewModels
         public string Block { get; set; }
         public string Faction { get; set; }
         public string User { get; set; }
+        public string FullName { get; set; }
         public int UserId { get; set; }
 
         public PlayerViewModel()
@@ -37,6 +38,7 @@ namespace DustTournamentKeeper.ViewModels
             Faction = player?.Faction?.Name ?? "-";
             User = player?.User?.UserName ?? player?.User?.Name ?? "-";
             UserId = player?.User?.Id ?? 0;
+            FullName = $"{player?.User.Name} {player?.User.Surname}";
         }
     }
 }

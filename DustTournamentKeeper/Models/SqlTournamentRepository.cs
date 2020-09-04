@@ -313,17 +313,15 @@ namespace DustTournamentKeeper.Models
 
         public void Update(TournamentUser tournamentUser, TournamentUser newTournamentUser)
         {
-            tournamentUser.BlockId = newTournamentUser.BlockId;
-            tournamentUser.BonusPoints = newTournamentUser.BonusPoints;
-            tournamentUser.Bp = newTournamentUser.Bp;
-            tournamentUser.FactionId = newTournamentUser.FactionId;
-            tournamentUser.PenaltyPoints = newTournamentUser.PenaltyPoints;
-            tournamentUser.SoS = newTournamentUser.SoS;
-            tournamentUser.Sp = newTournamentUser.Sp;
-            tournamentUser.TournamentId = newTournamentUser.TournamentId;
-            tournamentUser.UserId = newTournamentUser.UserId;
+            _context.Attach(tournamentUser);
 
-            _context.SaveChanges(true);
+            tournamentUser.BlockId = newTournamentUser.BlockId;
+            tournamentUser.FactionId = newTournamentUser.FactionId;
+
+            _context.Entry(tournamentUser).Property(x => x.BlockId).IsModified = true;
+            _context.Entry(tournamentUser).Property(x => x.FactionId).IsModified = true;
+
+            _context.SaveChanges();
         }
 
         public void Update(Game game, Game newGame)

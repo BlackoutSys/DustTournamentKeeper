@@ -268,7 +268,8 @@ namespace DustTournamentKeeper.Infrastructure
                         score.Opponents.Add(playerB);
                         score.TotalBigPoints += match.Bpa ?? 0;
                         score.TotalSmallPoints += match.Spa ?? 0;
-                        score.TotalSoS = Math.Max(score.TotalSoS, match.SoSa ?? 0);
+                        //score.TotalSoS = Math.Max(score.TotalSoS, match.SoSa ?? 0);
+                        score.TotalSoS += match.SoSa ?? 0;
 
                         if (match.PlayerBid == null)
                         {
@@ -292,7 +293,8 @@ namespace DustTournamentKeeper.Infrastructure
                         score.Opponents.Add(playerA);
                         score.TotalBigPoints += match.Bpb ?? 0;
                         score.TotalSmallPoints += match.Spb ?? 0;
-                        score.TotalSoS = Math.Max(score.TotalSoS, match.SoSb ?? 0);
+                        //score.TotalSoS = Math.Max(score.TotalSoS, match.SoSb ?? 0);
+                        score.TotalSoS += match.SoSb ?? 0;
 
                         if (match.Bpb > match.Bpa)
                         {

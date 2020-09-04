@@ -221,7 +221,9 @@ namespace DustTournamentKeeper.Controllers
                         Spa = matchViewModel.Spa,
                         Spb = matchViewModel.Spb,
                         PlayerAid = matchViewModel.PlayerAid,
-                        PlayerBid = matchViewModel.PlayerBid
+                        PlayerBid = matchViewModel.PlayerBid,
+                        SoSa = matchViewModel.SoSa,
+                        SoSb = matchViewModel.SoSb
                     };
                     round.Matches.Add(match);
                     if (matchViewModel.Id > 0)
@@ -355,45 +357,50 @@ namespace DustTournamentKeeper.Controllers
 
         private IActionResult RegisterInternal(Tournament tournament, User user)
         {
-            if (!tournament.TournamentUsers.Any(utt => utt.UserId == user.Id))
+            var blocks = _repository.Blocks.Where(b => b.GameId == tournament.GameId).ToList();
+            var factions = _repository.Factions.Where(f => f.GameId == tournament.GameId).ToList();
+
+            var registerToTournamentViewModel = new RegisterToTournamentViewModel()
             {
-                var blocks = _repository.Blocks.Where(b => b.GameId == tournament.GameId).ToList();
-                var factions = _repository.Factions.Where(f => f.GameId == tournament.GameId).ToList();
-
-                var registerToTournamentViewModel = new RegisterToTournamentViewModel()
+                TournamentId = tournament.Id,
+                TournamentTitle = tournament.Title,
+                UserId = user.Id,
+                UserName = user.UserName,
+                BlocksAvailable = blocks.Select(b => new SelectListItem
                 {
-                    TournamentId = tournament.Id,
-                    TournamentTitle = tournament.Title,
-                    UserId = user.Id,
-                    UserName = user.UserName,
-                    BlocksAvailable = blocks.Select(b => new SelectListItem
-                    {
-                        Text = b.Name,
-                        Value = b.Id.ToString()
-                    }).ToList(),
-                    FactionsAvailable = factions.Select(f => new SelectListItem
-                    {
-                        Text = f.Name,
-                        Value = f.Id.ToString()
-                    }).ToList()
-                };
+                    Text = b.Name,
+                    Value = b.Id.ToString()
+                }).ToList(),
+                FactionsAvailable = factions.Select(f => new SelectListItem
+                {
+                    Text = f.Name,
+                    Value = f.Id.ToString()
+                }).ToList()
+            };
 
-                return View(registerToTournamentViewModel);
-            }
-
-            return RedirectToAction("Details", new { id = tournament.Id });
+            return View(registerToTournamentViewModel);
         }
 
         [HttpPost]
         public IActionResult Register(RegisterToTournamentViewModel reg)
         {
-            _repository.Add(new TournamentUser
+            var tournamentUser = _repository.TournamentUsers.FirstOrDefault(x => x.TournamentId == reg.TournamentId && x.UserId == reg.UserId);
+            var newTournamentUser = new TournamentUser
             {
                 TournamentId = reg.TournamentId,
                 UserId = reg.UserId,
                 BlockId = reg.BlockId,
                 FactionId = reg.FactionId
-            });
+            };
+
+            if (tournamentUser == null)
+            {
+                _repository.Add(newTournamentUser);
+            }
+            else 
+            {
+                _repository.Update(tournamentUser, newTournamentUser);
+            }
 
             return RedirectToAction("Details", new { id = reg.TournamentId });
         }
@@ -531,6 +538,7 @@ namespace DustTournamentKeeper.Controllers
                 {
                     Id = b.Id,
                     Name = b.Name,
+                    Description = b.Description,
                     Count = 0
                 }).ToList();
 

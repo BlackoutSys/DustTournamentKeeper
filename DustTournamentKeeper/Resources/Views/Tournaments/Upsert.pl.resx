@@ -156,6 +156,9 @@
   <data name="Bpwin" xml:space="preserve">
     <value>Duże punkty za zwycięstwo</value>
   </data>
+  <data name="ChangeFaction" xml:space="preserve">
+    <value>Zmień frakcję</value>
+  </data>
   <data name="City" xml:space="preserve">
     <value>Miasto</value>
   </data>
@@ -200,6 +203,9 @@
   </data>
   <data name="Kick" xml:space="preserve">
     <value>Wykop</value>
+  </data>
+  <data name="NumberOfTables" xml:space="preserve">
+    <value>Układ stołów</value>
   </data>
   <data name="Organizer" xml:space="preserve">
     <value>Organizator</value>
@@ -263,6 +269,15 @@
   </data>
   <data name="Status" xml:space="preserve">
     <value>Status</value>
+  </data>
+  <data name="TableCount" xml:space="preserve">
+    <value>Liczba stołów</value>
+  </data>
+  <data name="TableDescription" xml:space="preserve">
+    <value>Opis</value>
+  </data>
+  <data name="TableName" xml:space="preserve">
+    <value>Nazwa typu</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Tytuł</value>

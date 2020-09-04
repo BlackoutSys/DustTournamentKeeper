@@ -163,3 +163,4 @@ $RECYCLE.BIN/
 *.jfm
 DustTournamentKeeper/wwwroot/lib/
 DustTournamentKeeper/node_modules/
+DustTournamentKeeper/Migrations/
