@@ -231,6 +231,11 @@ namespace DustTournamentKeeper.Controllers
                         _repository.Update(_repository.Matches.FirstOrDefault(m => m.Id == matchViewModel.Id), match);
                     }
 
+                    if (matchViewModel.Bpa == null && matchViewModel.Bpb == null) 
+                    {
+                        continue;
+                    }
+
                     var tournamentUserA = tournamentUsers.FirstOrDefault(tu => tu.UserId == matchViewModel.PlayerAid);
                     var tournamentUserB = tournamentUsers.FirstOrDefault(tu => tu.UserId == matchViewModel.PlayerBid);
 
@@ -373,7 +378,7 @@ namespace DustTournamentKeeper.Controllers
             }
             else 
             {
-                _repository.Update(tournamentUser, newTournamentUser);
+                _repository.Update(tournamentUser, newTournamentUser, true);
             }
 
             return RedirectToAction("Details", new { id = reg.TournamentId });
@@ -404,7 +409,6 @@ namespace DustTournamentKeeper.Controllers
 
             return View(registerToTournamentViewModel);
         }
-
 
         public IActionResult Unregister(int tournamentId, int userId)
         {

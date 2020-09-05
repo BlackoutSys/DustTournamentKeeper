@@ -26,11 +26,11 @@ namespace DustTournamentKeeper.ViewModels
         public PlayerViewModel(TournamentUser player)
         {
             Id = player.Id;
-            BonusPoints = player.BonusPoints.HasValue ? player.BonusPoints.Value : 0;
-            PenaltyPoints = player.PenaltyPoints.HasValue ? player.PenaltyPoints.Value : 0;
-            Bp = player.Bp.HasValue ? player.Bp.Value : 0;
-            Sp = player.Sp.HasValue ? player.Sp.Value : 0;
-            SoS = player.SoS.HasValue ? player.SoS.Value : 0;
+            BonusPoints = player.BonusPoints ?? 0;
+            PenaltyPoints = player.PenaltyPoints ?? 0;
+            Bp = player.Bp ?? 0;
+            Sp = player.Sp ?? 0;
+            SoS = player.SoS ?? 0;
             TotalBigPoints = ((player?.BonusPoints ?? 0)
                 - (player?.PenaltyPoints ?? 0)
                 + (player?.Bp ?? 0));

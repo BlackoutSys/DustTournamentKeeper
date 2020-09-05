@@ -54,7 +54,7 @@ namespace DustTournamentKeeper.Models
         void Delete(User user);
 
         void Add(TournamentUser tournamentUser);
-        void Update(TournamentUser tournamentUser, TournamentUser newTournamentUser);
+        void Update(TournamentUser tournamentUser, TournamentUser newTournamentUser, bool reRegister = false);
         void Delete(TournamentUser tournamentUser);
 
         void Add(Game game);
